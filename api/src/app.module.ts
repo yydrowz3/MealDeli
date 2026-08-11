@@ -10,6 +10,7 @@ import { join } from "node:path";
 import { PrismaModule } from "./prisma/prisma.module";
 import { AuthModule } from "./auth/auth.module";
 import { JwtModule } from "./jwt/jwt.module";
+import { MailsModule } from "./mails/mails.module";
 
 @Module({
   imports: [
@@ -20,7 +21,28 @@ import { JwtModule } from "./jwt/jwt.module";
       sortSchema: true,
       graphiql: true,
       subscriptions: {
-        "graphql-ws": true,
+        "graphql-ws": {
+          onConnect: (context: any) => {
+            const { connectionParams, extra } = context;
+            if (connectionParams && connectionParams.authorization) {
+              const [type, token] = connectionParams.authorization.split(" ");
+              if (type === "Bearer" && token) {
+                extra.token = token;
+              }
+            }
+          },
+        },
+      },
+      context: ({ req, extra }: { req: any; extra: any }) => {
+        if (extra && extra.token) {
+          return { token: extra.token };
+        }
+        if (req && req.headers.authorization) {
+          const [type, token] = req.headers.authorization.split(" ");
+          if (type === "Bearer" && token) {
+            return { token };
+          }
+        }
       },
     }),
     PrismaModule,
@@ -30,6 +52,7 @@ import { JwtModule } from "./jwt/jwt.module";
     JwtModule.forRoot({
       privateKey: String(process.env.JWT_SECRET),
     }),
+    MailsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
