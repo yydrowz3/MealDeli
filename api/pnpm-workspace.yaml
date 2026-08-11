@@ -1,0 +1,4 @@
+allowBuilds:
+  "@apollo/protobufjs": true
+  argon2: true
+  unrs-resolver: true

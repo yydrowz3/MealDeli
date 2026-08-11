@@ -1,0 +1,228 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  CUSTOMER
+  OWNER
+  COURIER
+}
+
+enum OrderStatus {
+  PENDING
+  COOKING
+  COOKED
+  PICKED_UP
+  DELIVERED
+}
+
+enum PaymentProvider {
+  PADDLE
+}
+
+enum PromotionCheckoutStatus {
+  PENDING
+  READY
+  FAILED
+  COMPLETED
+}
+
+model User {
+  id           String    @id @default(uuid(7)) @db.Uuid
+  email        String    @unique(map: "users_email_key") @db.VarChar(254)
+  passwordHash String    @map("password_hash") @db.VarChar(255)
+  role         UserRole  @default(CUSTOMER)
+  verifiedAt   DateTime? @map("verified_at") @db.Timestamptz(3)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  emailVerification  EmailVerification?
+  restaurants        Restaurant[]
+  customerOrders     Order[]             @relation("OrderCustomer")
+  courierOrders      Order[]             @relation("OrderCourier")
+  promotionCheckouts PromotionCheckout[]
+  payments           Payment[]
+
+  @@map("users")
+}
+
+model EmailVerification {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  userId    String   @unique(map: "email_verifications_user_id_key") @map("user_id") @db.Uuid
+  tokenHash String   @unique(map: "email_verifications_token_hash_key") @map("token_hash") @db.Char(64)
+  expiresAt DateTime @map("expires_at") @db.Timestamptz(3)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([expiresAt], map: "email_verifications_expires_at_idx")
+  @@map("email_verifications")
+}
+
+model Category {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  name           String       @db.VarChar(80)
+  normalizedName String       @unique(map: "categories_normalized_name_key") @map("normalized_name") @db.VarChar(80)
+  slug           String       @unique(map: "categories_slug_key") @db.VarChar(100)
+  coverImageUrl  String?      @map("cover_image_url") @db.VarChar(2048)
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
+  restaurants    Restaurant[]
+
+  @@map("categories")
+}
+
+model Restaurant {
+  id            String    @id @default(uuid(7)) @db.Uuid
+  ownerId       String    @map("owner_id") @db.Uuid
+  categoryId    String    @map("category_id") @db.Uuid
+  name          String    @db.VarChar(120)
+  address       String    @db.VarChar(255)
+  coverImageUrl String    @map("cover_image_url") @db.VarChar(2048)
+  promotedUntil DateTime? @map("promoted_until") @db.Timestamptz(3)
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  owner              User                @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  category           Category            @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  dishes             Dish[]
+  orders             Order[]
+  promotionCheckouts PromotionCheckout[]
+  payments           Payment[]
+
+  @@index([createdAt(sort: Desc), id(sort: Desc)], map: "restaurants_created_at_id_idx")
+  @@index([ownerId, createdAt(sort: Desc), id(sort: Desc)], map: "restaurants_owner_page_idx")
+  @@index([categoryId, createdAt(sort: Desc), id(sort: Desc)], map: "restaurants_category_page_idx")
+  @@index([promotedUntil, createdAt(sort: Desc), id(sort: Desc)], map: "restaurants_promotion_page_idx")
+  @@index([ownerId, promotedUntil, createdAt(sort: Desc), id(sort: Desc)], map: "restaurants_owner_promotion_page_idx")
+  @@index([categoryId, promotedUntil, createdAt(sort: Desc), id(sort: Desc)], map: "restaurants_category_promotion_page_idx")
+  @@map("restaurants")
+}
+
+model Dish {
+  id           String     @id @default(uuid(7)) @db.Uuid
+  restaurantId String     @map("restaurant_id") @db.Uuid
+  name         String     @db.VarChar(120)
+  description  String     @db.VarChar(500)
+  priceMinor   Int        @map("price_minor")
+  photoUrl     String?    @map("photo_url") @db.VarChar(2048)
+  options      Json       @default("[]") @db.JsonB
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime   @updatedAt @map("updated_at") @db.Timestamptz(3)
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId, createdAt, id], map: "dishes_restaurant_menu_idx")
+  @@map("dishes")
+}
+
+model Order {
+  id             String      @id @default(uuid(7)) @db.Uuid
+  customerId     String      @map("customer_id") @db.Uuid
+  restaurantId   String      @map("restaurant_id") @db.Uuid
+  courierId      String?     @map("courier_id") @db.Uuid
+  status         OrderStatus @default(PENDING)
+  totalMinor     Int         @map("total_minor")
+  version        Int         @default(0)
+  idempotencyKey String      @map("idempotency_key") @db.Uuid
+  requestHash    String      @map("request_hash") @db.Char(64)
+  createdAt      DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime    @updatedAt @map("updated_at") @db.Timestamptz(3)
+  customer       User        @relation("OrderCustomer", fields: [customerId], references: [id], onDelete: Restrict)
+  courier        User?       @relation("OrderCourier", fields: [courierId], references: [id], onDelete: Restrict)
+  restaurant     Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  items          OrderItem[]
+
+  @@unique([customerId, idempotencyKey], map: "orders_customer_idempotency_key")
+  @@index([customerId, createdAt(sort: Desc), id(sort: Desc)], map: "orders_customer_page_idx")
+  @@index([restaurantId, status, createdAt(sort: Desc), id(sort: Desc)], map: "orders_restaurant_status_page_idx")
+  @@index([courierId, status, createdAt(sort: Desc), id(sort: Desc)], map: "orders_courier_status_page_idx")
+  @@map("orders")
+}
+
+model OrderItem {
+  id                String   @id @default(uuid(7)) @db.Uuid
+  orderId           String   @map("order_id") @db.Uuid
+  position          Int
+  dishId            String   @map("dish_id") @db.Uuid
+  dishName          String   @map("dish_name") @db.VarChar(120)
+  basePriceMinor    Int      @map("base_price_minor")
+  selectedOptions   Json     @default("[]") @map("selected_options") @db.JsonB
+  optionsExtraMinor Int      @map("options_extra_minor")
+  lineTotalMinor    Int      @map("line_total_minor")
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  order             Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@unique([orderId, position], map: "order_items_order_position_key")
+  @@map("order_items")
+}
+
+model PromotionCheckout {
+  id                    String                  @id @default(uuid(7)) @db.Uuid
+  provider              PaymentProvider         @default(PADDLE)
+  ownerId               String                  @map("owner_id") @db.Uuid
+  restaurantId          String                  @map("restaurant_id") @db.Uuid
+  providerTransactionId String?                 @unique(map: "promotion_checkouts_provider_transaction_key") @map("provider_transaction_id") @db.VarChar(64)
+  status                PromotionCheckoutStatus @default(PENDING)
+  failedAt              DateTime?               @map("failed_at") @db.Timestamptz(3)
+  completedAt           DateTime?               @map("completed_at") @db.Timestamptz(3)
+  createdAt             DateTime                @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt             DateTime                @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  owner      User       @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  payment    Payment?
+
+  @@index([ownerId, createdAt(sort: Desc), id(sort: Desc)], map: "promotion_checkouts_owner_page_idx")
+  @@index([restaurantId, createdAt(sort: Desc), id(sort: Desc)], map: "promotion_checkouts_restaurant_idx")
+  @@map("promotion_checkouts")
+}
+
+model PaymentWebhookEvent {
+  id                     String          @id @default(uuid(7)) @db.Uuid
+  provider               PaymentProvider @default(PADDLE)
+  providerEventId        String          @unique(map: "payment_webhook_events_provider_event_key") @map("provider_event_id") @db.VarChar(64)
+  providerNotificationId String          @map("provider_notification_id") @db.VarChar(64)
+  eventType              String          @map("event_type") @db.VarChar(80)
+  providerTransactionId  String          @map("provider_transaction_id") @db.VarChar(64)
+  occurredAt             DateTime        @map("occurred_at") @db.Timestamptz(3)
+  receivedAt             DateTime        @map("received_at") @db.Timestamptz(3)
+  payment                Payment?
+
+  @@index([providerTransactionId], map: "payment_webhook_events_transaction_idx")
+  @@index([receivedAt(sort: Desc), id(sort: Desc)], map: "payment_webhook_events_received_idx")
+  @@map("payment_webhook_events")
+}
+
+model Payment {
+  id                    String          @id @default(uuid(7)) @db.Uuid
+  provider              PaymentProvider @default(PADDLE)
+  ownerId               String          @map("owner_id") @db.Uuid
+  restaurantId          String          @map("restaurant_id") @db.Uuid
+  checkoutId            String          @unique(map: "payments_checkout_key") @map("checkout_id") @db.Uuid
+  webhookEventId        String          @unique(map: "payments_webhook_event_key") @map("webhook_event_id") @db.Uuid
+  providerTransactionId String          @unique(map: "payments_provider_transaction_key") @map("provider_transaction_id") @db.VarChar(64)
+  priceId               String          @map("price_id") @db.VarChar(64)
+  unitAmountMinor       Int             @map("unit_amount_minor")
+  amountMinor           Int             @map("amount_minor")
+  currency              String          @db.Char(3)
+  promotionStartsAt     DateTime        @map("promotion_starts_at") @db.Timestamptz(3)
+  promotionEndsAt       DateTime        @map("promotion_ends_at") @db.Timestamptz(3)
+  createdAt             DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  owner        User                @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  restaurant   Restaurant          @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  checkout     PromotionCheckout   @relation(fields: [checkoutId], references: [id], onDelete: Restrict)
+  webhookEvent PaymentWebhookEvent @relation(fields: [webhookEventId], references: [id], onDelete: Restrict)
+
+  @@index([ownerId, createdAt(sort: Desc), id(sort: Desc)], map: "payments_owner_page_idx")
+  @@index([restaurantId, createdAt(sort: Desc), id(sort: Desc)], map: "payments_restaurant_idx")
+  @@map("payments")
+}
