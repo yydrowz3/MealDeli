@@ -8,6 +8,7 @@ import { EditProfileInput, EditProfileOutput } from "./dto/edit-profile.dto";
 import { VerifyEmailInput, VerifyEmailOutput } from "./dto/verify-email.dto";
 import { Roles } from "../auth/decorator/roles.decorator";
 import { AuthUser } from "../auth/decorator/auth-user.decorator";
+import { MeOutput } from "./dto/me.dto";
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -23,10 +24,10 @@ export class UsersResolver {
     return this.usersService.signIn(signInInput);
   }
 
-  @Query(() => User)
   @Roles("Any")
-  me(@AuthUser() authUser: User) {
-    return authUser;
+  @Query(() => MeOutput)
+  me(@AuthUser() authUser: User): MeOutput {
+    return this.usersService.me(authUser);
   }
 
   @Roles("Any")

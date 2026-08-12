@@ -8,13 +8,14 @@ import { SignInInput, SignInOutput } from "./dto/sign-in.dto";
 import * as argon2 from "argon2";
 import { EditProfileInput, EditProfileOutput } from "./dto/edit-profile.dto";
 import { VerifyEmailOutput } from "./dto/verify-email.dto";
+import { MeOutput } from "./dto/me.dto";
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
-    // private readonly mailService: MailService,
+    private readonly mailService: MailService,
   ) {}
 
   async signUp({ email, name, password }: SignUpInput): Promise<SignUpOutput> {
@@ -27,12 +28,12 @@ export class UsersService {
         };
       }
       const passwordHash = await argon2.hash(password);
-      await this.prismaService.user.create({
-        data: { email, passwordHash, name, verifiedAt: new Date() },
-      });
-      // const user = await this.prismaService.user.create({
-      //   data: { email, passwordHash, name },
+      // await this.prismaService.user.create({
+      //   data: { email, passwordHash, name, verifiedAt: new Date() },
       // });
+      const user = await this.prismaService.user.create({
+        data: { email, passwordHash, name },
+      });
       //TODO: Create email verification
       // const verification = await this.prismaService.emailVerification.create({
       //   data: {
@@ -204,5 +205,18 @@ export class UsersService {
         error: "Could not verify email.",
       };
     }
+  }
+
+  me(user: User): MeOutput {
+    return {
+      ok: true,
+      id: user.id,
+      email: user.email,
+      address: user.address,
+      role: user.role,
+      image: user.image,
+      name: user.name,
+      verifiedAt: user.verifiedAt,
+    };
   }
 }

@@ -20,6 +20,18 @@ type EditProfileOutput {
   ok: Boolean!
 }
 
+type MeOutput {
+  address: String
+  email: String!
+  error: String
+  id: String!
+  image: String
+  name: String!
+  ok: Boolean!
+  role: UserRole!
+  verifiedAt: DateTime
+}
+
 type Mutation {
   editProfile(input: EditProfileInput!): EditProfileOutput!
   signIn(input: SignInInput!): SignInOutput!
@@ -28,7 +40,7 @@ type Mutation {
 }
 
 type Query {
-  me: User!
+  me: MeOutput!
   userProfile(userId: String!): UserProfileOutput!
 }
 

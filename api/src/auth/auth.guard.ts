@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
         if (!user) {
           return false;
         }
-        gqlContext["User"] = user;
+        gqlContext["user"] = user;
         if (roles.includes("Any")) {
           return true;
         }
