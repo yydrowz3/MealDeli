@@ -1,6 +1,13 @@
-import { Field, InputType, ObjectType } from "@nestjs/graphql";
-import { CoreOutput } from "../../common/dto/output.dto";
-import { IsEmail, IsOptional, IsString, IsUrl, MaxLength, MinLength } from "class-validator";
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { CoreOutput } from '../../common/dto/output.dto';
+import {
+  IsEmail,
+  IsOptional,
+  IsString,
+  IsUrl,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 // @InputType()
 // export class EditProfileInput extends PartialType(
@@ -13,6 +20,7 @@ import { IsEmail, IsOptional, IsString, IsUrl, MaxLength, MinLength } from "clas
 @InputType()
 export class EditProfileInput {
   @Field(() => String, { nullable: true })
+  @IsOptional()
   @IsEmail()
   email?: string;
 
@@ -24,11 +32,13 @@ export class EditProfileInput {
   name?: string;
 
   @Field(() => String, { nullable: true })
+  @IsOptional()
   @IsString()
   @MaxLength(500)
   address?: string | null;
 
   @Field(() => String, { nullable: true })
+  @IsOptional()
   @IsUrl()
   image?: string | null;
 

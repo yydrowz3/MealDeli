@@ -56,10 +56,13 @@ type SignUpOutput {
 
 type User {
   address: String
+  createdAt: DateTime!
   email: String!
+  id: String!
   image: String
   name: String!
   role: UserRole!
+  updatedAt: DateTime!
   verifiedAt: DateTime
 }
 
