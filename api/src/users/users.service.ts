@@ -75,7 +75,7 @@ export class UsersService {
         return {
           ok: false,
           error: "User not found",
-          token: null,
+          accessToken: null,
         };
       }
       const passwordMatches = await argon2.verify(user.passwordHash, signInInput.password);
@@ -83,7 +83,7 @@ export class UsersService {
         return {
           ok: false,
           error: "Incorrect email or password.",
-          token: null,
+          accessToken: null,
         };
       }
       const token = await this.jwtService.signAsync({
@@ -91,13 +91,13 @@ export class UsersService {
       });
       return {
         ok: true,
-        token: token,
+        accessToken: token,
       };
     } catch {
       return {
         ok: false,
         error: "Login Failed",
-        token: null,
+        accessToken: null,
       };
     }
   }
