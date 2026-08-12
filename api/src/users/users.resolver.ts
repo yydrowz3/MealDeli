@@ -8,7 +8,6 @@ import { EditProfileInput, EditProfileOutput } from "./dto/edit-profile.dto";
 import { VerifyEmailInput, VerifyEmailOutput } from "./dto/verify-email.dto";
 import { Roles } from "../auth/decorator/roles.decorator";
 import { AuthUser } from "../auth/decorator/auth-user.decorator";
-import { MeOutput } from "./dto/me.dto";
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -25,9 +24,9 @@ export class UsersResolver {
   }
 
   @Roles("Any")
-  @Query(() => MeOutput)
-  me(@AuthUser() authUser: User): MeOutput {
-    return this.usersService.me(authUser);
+  @Query(() => User)
+  me(@AuthUser() authUser: User): User {
+    return authUser;
   }
 
   @Roles("Any")
@@ -47,6 +46,6 @@ export class UsersResolver {
 
   @Mutation(() => VerifyEmailOutput)
   async verifyEmail(@Args("input") verifyEmailInput: VerifyEmailInput): Promise<VerifyEmailOutput> {
-    return this.usersService.verifyEmail(verifyEmailInput.tokenHash);
+    return this.usersService.verifyEmail(verifyEmailInput.token);
   }
 }

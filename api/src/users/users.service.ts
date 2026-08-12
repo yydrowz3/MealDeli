@@ -8,14 +8,16 @@ import { SignInInput, SignInOutput } from "./dto/sign-in.dto";
 import * as argon2 from "argon2";
 import { EditProfileInput, EditProfileOutput } from "./dto/edit-profile.dto";
 import { VerifyEmailOutput } from "./dto/verify-email.dto";
-import { MeOutput } from "./dto/me.dto";
+import { MailsService } from "../mails/mails.service";
+import { createHash, randomBytes } from "node:crypto";
+import { Prisma } from "../generated/prisma/client";
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
-    private readonly mailService: MailService,
+    private readonly mailsService: MailsService,
   ) {}
 
   async signUp({ email, name, password }: SignUpInput): Promise<SignUpOutput> {
@@ -28,21 +30,26 @@ export class UsersService {
         };
       }
       const passwordHash = await argon2.hash(password);
-      // await this.prismaService.user.create({
-      //   data: { email, passwordHash, name, verifiedAt: new Date() },
-      // });
       const user = await this.prismaService.user.create({
         data: { email, passwordHash, name },
       });
-      //TODO: Create email verification
-      // const verification = await this.prismaService.emailVerification.create({
-      //   data: {
-      //     userId: user.id,
-      //     tokenHash: "",
-      //     expiresAt: new Date(Date.now() + 3600 * 1000), // 1 hour
-      //   }
-      // })
-      // await this.mailService.sendVarificationEmail(user.email, user.)
+
+      const token = this.generateVerificationToken();
+      const tokenHash = this.hashVerificationToken(token);
+      const expiresAt = new Date(Date.now() + 3600 * 1000); // 1 hour
+      await this.prismaService.emailVerification.upsert({
+        where: { userId: user.id },
+        update: {
+          tokenHash,
+          expiresAt,
+        },
+        create: {
+          userId: user.id,
+          tokenHash,
+          expiresAt,
+        },
+      });
+      await this.mailsService.sendVerificationEmail(user.email, token);
 
       return {
         ok: true,
@@ -68,6 +75,7 @@ export class UsersService {
         return {
           ok: false,
           error: "User not found",
+          token: null,
         };
       }
       const passwordMatches = await argon2.verify(user.passwordHash, signInInput.password);
@@ -75,6 +83,7 @@ export class UsersService {
         return {
           ok: false,
           error: "Incorrect email or password.",
+          token: null,
         };
       }
       const token = this.jwtService.sign(user.id);
@@ -86,17 +95,25 @@ export class UsersService {
       return {
         ok: false,
         error: "Login Failed",
+        token: null,
       };
     }
   }
 
   async findById(id: string): Promise<UserProfileOutput> {
     try {
-      const user = (await this.prismaService.user.findUnique({
+      const user = await this.prismaService.user.findUnique({
         where: {
           id,
         },
-      })) as User;
+      });
+      if (!user) {
+        return {
+          ok: false,
+          error: "User Not Found",
+          user: null,
+        };
+      }
       return {
         ok: true,
         user: user,
@@ -105,8 +122,15 @@ export class UsersService {
       return {
         ok: false,
         error: "User Not Found",
+        user: null,
       };
     }
+  }
+
+  async findOneById(id: string): Promise<User | null> {
+    return this.prismaService.user.findUnique({
+      where: { id },
+    });
   }
 
   async editProfile(
@@ -114,58 +138,34 @@ export class UsersService {
     editProfileInput: EditProfileInput,
   ): Promise<EditProfileOutput> {
     try {
-      const user = await this.prismaService.user.findUnique({
-        where: { id: userId },
-      });
-      if (!user) {
-        return {
-          ok: false,
-          error: "User Not Found",
-        };
-      }
-      if (editProfileInput.email) {
-        const exists = await this.prismaService.user.findUnique({
-          where: { email: editProfileInput.email },
-        });
-        if (exists) {
-          return {
-            ok: false,
-            error: "Email already exists.",
-          };
-        }
-        user.email = editProfileInput.email;
-        user.verifiedAt = null;
-        // await this.prismaService.emailVerification.delete({ where: { userId: userId } });
-        // const verification = await this.prismaService.emailVerification.create({
-        //   data: {
-        //     userId: user.id,
-        //     tokenHash: "",
-        //     expiresAt: new Date(Date.now() + 3600 * 1000), // 1 hour
-        //   },
-        // });
-        // await this.mailService.sendVarificationEmail(user.email, verification.tokenHash);
-      }
-      if (editProfileInput.password) {
-        user.passwordHash = await argon2.hash(editProfileInput.password);
-      }
-      if (editProfileInput.name) {
-        user.name = editProfileInput.name;
-      }
-      if (editProfileInput.address) {
-        user.address = editProfileInput.address;
-      }
-      if (editProfileInput.image) {
-        user.image = editProfileInput.image;
-      }
+      const { password, email, ...profileData } = editProfileInput;
+      const passwordHash = password ? await argon2.hash(password) : undefined;
       await this.prismaService.user.update({
         where: { id: userId },
-        data: user,
+        data: {
+          ...profileData,
+          ...(passwordHash && { passwordHash }),
+          ...(email && { email: email.trim().toLocaleLowerCase(), verifiedAt: null }),
+        },
       });
-
       return {
         ok: true,
       };
-    } catch {
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+        return {
+          ok: false,
+          error: "Email already exists.",
+        };
+      }
+
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
+        return {
+          ok: false,
+          error: "User not found.",
+        };
+      }
+
       return {
         ok: false,
         error: "Could not update profile.",
@@ -173,13 +173,17 @@ export class UsersService {
     }
   }
 
-  async verifyEmail(code: string): Promise<VerifyEmailOutput> {
+  async verifyEmail(token: string): Promise<VerifyEmailOutput> {
     try {
+      const tokenHash = this.hashVerificationToken(token);
       const verification = await this.prismaService.emailVerification.findUnique({
-        where: { tokenHash: code },
+        where: {
+          tokenHash,
+        },
         select: {
           id: true,
-          user: true,
+          userId: true,
+          expiresAt: true,
         },
       });
       if (!verification) {
@@ -188,14 +192,32 @@ export class UsersService {
           error: "Verification Not Found",
         };
       }
-      verification.user.verifiedAt = new Date();
-      await this.prismaService.user.update({
-        where: { id: verification.user.id },
-        data: verification.user,
-      });
-      await this.prismaService.emailVerification.delete({
-        where: { id: verification.id },
-      });
+
+      if (verification.expiresAt <= new Date()) {
+        await this.prismaService.emailVerification.delete({
+          where: { id: verification.id },
+        });
+        return {
+          ok: false,
+          error: "Verfication token has expired.",
+        };
+      }
+
+      await this.prismaService.$transaction([
+        this.prismaService.user.update({
+          where: {
+            id: verification.userId,
+          },
+          data: {
+            verifiedAt: new Date(),
+          },
+        }),
+        this.prismaService.emailVerification.delete({
+          where: {
+            id: verification.id,
+          },
+        }),
+      ]);
       return {
         ok: true,
       };
@@ -207,16 +229,11 @@ export class UsersService {
     }
   }
 
-  me(user: User): MeOutput {
-    return {
-      ok: true,
-      id: user.id,
-      email: user.email,
-      address: user.address,
-      role: user.role,
-      image: user.image,
-      name: user.name,
-      verifiedAt: user.verifiedAt,
-    };
+  private generateVerificationToken(): string {
+    return randomBytes(32).toString("hex");
+  }
+
+  private hashVerificationToken(token: string): string {
+    return createHash("sha256").update(token).digest("hex");
   }
 }

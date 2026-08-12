@@ -1,4 +1,4 @@
-import { ObjectType, Field, InputType } from "@nestjs/graphql";
+import { ObjectType, Field, InputType, HideField } from "@nestjs/graphql";
 import { CoreEntity } from "../../common/entities/core.entity";
 import { IsDate, IsEnum, IsString } from "class-validator";
 import { UserRole } from "../enums/role.enum";
@@ -10,8 +10,7 @@ export class User extends CoreEntity {
   @IsString()
   email!: string;
 
-  @Field(() => String)
-  @IsString()
+  @HideField()
   passwordHash!: string;
 
   @Field(() => String)
@@ -20,17 +19,17 @@ export class User extends CoreEntity {
 
   @Field(() => String, { nullable: true })
   @IsString()
-  address?: string;
+  address!: string | null;
 
   @Field(() => String, { nullable: true })
   @IsString()
-  image?: string;
+  image!: string | null;
 
   @Field(() => UserRole)
   @IsEnum(UserRole)
   role!: UserRole;
 
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   @IsDate()
-  verifiedAt?: Date;
+  verifiedAt!: Date | null;
 }

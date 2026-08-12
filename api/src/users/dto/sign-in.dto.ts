@@ -11,5 +11,5 @@ export class SignInInput extends PickType(User, ["email"]) {
 @ObjectType()
 export class SignInOutput extends CoreOutput {
   @Field(() => String, { nullable: true })
-  token?: string;
+  token!: string | null;
 }

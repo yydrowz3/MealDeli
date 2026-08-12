@@ -22,13 +22,17 @@ export class MailsService {
     return data;
   }
 
-  async sendVerificationEmail(email: string, code: string) {
+  async sendVerificationEmail(email: string, token: string) {
+    const frontendUrl = this.configService.get<string>("FRONTEND_URL") ?? "http://localhost:3000";
+    const verificationUrl = `${frontendUrl}/verify-email?token=${encodeURIComponent(token)}`;
     const subject = "Verify your email";
+
     const html = `
-        <h1>Verify your email</h1>
-        <p>Your verification code is:</p>
-        <strong>${code}</strong>
-    `;
+    <h1>Verify your email</h1>
+    <p>Click the link below to verify your email address:</p>
+    <a href="${verificationUrl}">Verify email</a>
+    <p>This link expires in one hour.</p>
+  `;
 
     return this.sendEmail(email, subject, html);
   }
