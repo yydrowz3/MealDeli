@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { UsersModule } from "./users/users.module";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
@@ -9,7 +9,7 @@ import { CommonModule } from "./common/common.module";
 import { join } from "node:path";
 import { PrismaModule } from "./prisma/prisma.module";
 import { AuthModule } from "./auth/auth.module";
-import { JwtModule } from "./jwt/jwt.module";
+import { JwtModule } from "@nestjs/jwt";
 import { MailsModule } from "./mails/mails.module";
 
 @Module({
@@ -49,8 +49,28 @@ import { MailsModule } from "./mails/mails.module";
     UsersModule,
     CommonModule,
     AuthModule,
-    JwtModule.forRoot({
-      privateKey: String(process.env.JWT_SECRET),
+    JwtModule.registerAsync({
+      global: true,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const issuer = configService.getOrThrow<string>("JWT_ISSUER");
+        const audience = configService.getOrThrow<string>("JWT_AUDIENCE");
+        return {
+          secret: configService.getOrThrow<string>("JWT_SECRET"),
+          signOptions: {
+            algorithm: "HS256",
+            expiresIn: "15m",
+            issuer,
+            audience,
+          },
+          verifyOptions: {
+            algorithms: ["HS256"],
+            issuer,
+            audience,
+          },
+        };
+      },
     }),
     MailsModule,
   ],

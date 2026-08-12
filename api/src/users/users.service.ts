@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { UserProfileOutput } from "./dto/user-profile.dto";
 import { User } from "./entities/user.entity";
-import { JwtService } from "../jwt/jwt.service";
+import { JwtService } from "@nestjs/jwt";
 import { SignUpInput, SignUpOutput } from "./dto/sign-up.dto";
 import { SignInInput, SignInOutput } from "./dto/sign-in.dto";
 import * as argon2 from "argon2";
@@ -86,7 +86,9 @@ export class UsersService {
           token: null,
         };
       }
-      const token = this.jwtService.sign(user.id);
+      const token = await this.jwtService.signAsync({
+        sub: user.id,
+      });
       return {
         ok: true,
         token: token,

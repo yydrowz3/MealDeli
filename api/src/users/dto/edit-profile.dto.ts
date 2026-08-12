@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Field, InputType, ObjectType } from "@nestjs/graphql";
 import { CoreOutput } from "../../common/dto/output.dto";
 import { IsEmail, IsOptional, IsString, IsUrl, MaxLength, MinLength } from "class-validator";
 
@@ -10,6 +10,7 @@ import { IsEmail, IsOptional, IsString, IsUrl, MaxLength, MinLength } from "clas
 //   password!: string;
 // }
 
+@InputType()
 export class EditProfileInput {
   @Field(() => String, { nullable: true })
   @IsEmail()

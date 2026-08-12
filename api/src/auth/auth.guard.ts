@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { Reflector } from "@nestjs/core";
 import { AllowedRole, ROLES_KEY } from "./decorator/roles.decorator";
 import { GqlExecutionContext } from "@nestjs/graphql";
-import { JwtService } from "../jwt/jwt.service";
+import { JwtService } from "@nestjs/jwt";
 import { UsersService } from "../users/users.service";
 
 @Injectable()
@@ -22,19 +22,27 @@ export class AuthGuard implements CanActivate {
     if (!token) {
       throw new UnauthorizedException("Authentication Required");
     }
-    const decoded = this.jwtService.verify(token.toString());
-    if (typeof decoded === "object" && decoded.hasOwnProperty("id")) {
-      const { user } = await this.usersService.findById(decoded["id"]);
-      if (!user) {
-        return false;
-      }
-      gqlContext["user"] = user;
-      if (roles.includes("Any")) {
-        return true;
-      }
-      return roles.includes(user.role);
-    } else {
-      return false;
+
+    let payload;
+    try {
+      payload = await this.jwtService.verifyAsync(token.toString());
+    } catch {
+      throw new UnauthorizedException("Invalid or expired token");
     }
+
+    if (typeof payload.sub !== "string" || !payload.sub) {
+      throw new UnauthorizedException("Invalid token payload");
+    }
+
+    const { user } = await this.usersService.findById(payload.sub);
+    if (!user) {
+      throw new UnauthorizedException("User not found");
+    }
+    gqlContext.user = user;
+
+    if (roles.includes("Any")) {
+      return true;
+    }
+    return roles.includes(user.role);
   }
 }
