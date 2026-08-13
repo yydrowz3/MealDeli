@@ -39,7 +39,7 @@ model User {
   createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  // authSessions AuthSession[]
+  authSessions      AuthSession[]
   emailVerification EmailVerification?
   restaurants       Restaurant[]
   customerOrders    Order[]            @relation("OrderCustomer")
@@ -49,21 +49,35 @@ model User {
   @@map("users")
 }
 
+model AuthSession {
+  id               String    @id @default(uuid(7)) @db.Uuid
+  userId           String    @map("user_id") @db.Uuid
+  refreshTokenHash String    @map("refresh_token_hash") @db.VarChar(255)
+  refreshExpiresAt DateTime  @map("refresh_expires_at") @db.Timestamptz(3)
+  revokedAt        DateTime? @map("revoked_at") @db.Timestamptz(3)
+  lastUsedAt       DateTime? @map("last_used_at") @db.Timestamptz(3)
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "auth_sessions_user_id_idx")
+  @@index([refreshExpiresAt], map: "auth_sessions_expires_at_idx")
+  @@map("auth_sessions")
+}
+
 // model AuthSession {
-//   id String @id @default(uuid(7)) @db.Uuid
-//   userId String @map("user_id") @db.Uuid
-//   refreshTokenHash String @map("refresh_token_hash") @db.VarChar(255)
-//   refreshExpiresAt DateTime @map("refresh_expires_at") @db.Timestamptz(3)
+//   id        String    @id @default(uuid(7)) @db.Uuid
+//   userId    String    @map("user_id") @db.Uuid
+//   expiresAt DateTime  @map("expires_at") @db.Timestamptz(3)
 //   revokedAt DateTime? @map("revoked_at") @db.Timestamptz(3)
-//   lastUsedAt DateTime? @map("last_used_at") @db.Timestamptz(3)
-//   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-//   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+//   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+//   updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
 
 //   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
 //   @@index([userId], map: "auth_sessions_user_id_idx")
-//   @@index([refreshExpiresAt], map: "auth_sessions_expires_at_idx")
-
+//   @@index([expiresAt], map: "auth_sessions_expires_at_idx")
 //   @@map("auth_sessions")
 // }
 

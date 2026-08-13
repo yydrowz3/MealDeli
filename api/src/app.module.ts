@@ -11,6 +11,7 @@ import { PrismaModule } from "./prisma/prisma.module";
 import { AuthModule } from "./auth/auth.module";
 import { JwtModule } from "@nestjs/jwt";
 import { MailsModule } from "./mails/mails.module";
+import { ACCESS_TOKEN_EXPIRES_IN } from "./auth/auth.constants";
 
 @Module({
   imports: [
@@ -33,16 +34,30 @@ import { MailsModule } from "./mails/mails.module";
           },
         },
       },
-      context: ({ req, extra }: { req: any; extra: any }) => {
-        if (extra && extra.token) {
-          return { token: extra.token };
-        }
-        if (req && req.headers.authorization) {
-          const [type, token] = req.headers.authorization.split(" ");
-          if (type === "Bearer" && token) {
-            return { token };
+      context: ({ req, res, extra }: { req: any; res: any; extra: any }) => {
+        let token: string | undefined;
+        if (extra?.token) {
+          token = extra.token;
+        } else if (req?.headers.authorization) {
+          const [type, value] = req.headers.authorization.split(" ");
+          if (type === "Bearer" && value) {
+            token = value;
           }
         }
+        return {
+          req,
+          res,
+          token,
+        };
+        // if (extra && extra.token) {
+        //   return { token: extra.token };
+        // }
+        // if (req && req.headers.authorization) {
+        //   const [type, token] = req.headers.authorization.split(" ");
+        //   if (type === "Bearer" && token) {
+        //     return { token };
+        //   }
+        // }
       },
     }),
     PrismaModule,
@@ -57,10 +72,10 @@ import { MailsModule } from "./mails/mails.module";
         const issuer = configService.getOrThrow<string>("JWT_ISSUER");
         const audience = configService.getOrThrow<string>("JWT_AUDIENCE");
         return {
-          secret: configService.getOrThrow<string>("JWT_SECRET"),
+          secret: configService.getOrThrow<string>("JWT_ACCESS_SECRET"),
           signOptions: {
             algorithm: "HS256",
-            expiresIn: "15m",
+            expiresIn: ACCESS_TOKEN_EXPIRES_IN,
             issuer,
             audience,
           },

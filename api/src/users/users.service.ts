@@ -11,10 +11,17 @@ import { VerifyEmailOutput } from "./dto/verify-email.dto";
 import { MailsService } from "../mails/mails.service";
 import { createHash, randomBytes } from "node:crypto";
 import { Prisma } from "../generated/prisma/client";
+import { SignOutOutput } from "./dto/sign-out.dto";
+import { ConfigService } from "@nestjs/config";
+import { REFRESH_TOKEN_EXPIRES_IN, REFRESH_TOKEN_TTL_MS } from "../auth/auth.constants";
+import { v7 as uuidv7 } from "uuid";
+import { RefreshAccessTokenInput, RefreshAccessTokenOutput } from "./dto/refresh-access-token.dto";
+import { TokenPayload } from "../auth/types/token-payload.type";
 
 @Injectable()
 export class UsersService {
   constructor(
+    private readonly configService: ConfigService,
     private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
     private readonly mailsService: MailsService,
@@ -76,6 +83,7 @@ export class UsersService {
           ok: false,
           error: "User not found",
           accessToken: null,
+          refreshToken: null,
         };
       }
       const passwordMatches = await argon2.verify(user.passwordHash, signInInput.password);
@@ -84,14 +92,43 @@ export class UsersService {
           ok: false,
           error: "Incorrect email or password.",
           accessToken: null,
+          refreshToken: null,
         };
       }
-      const token = await this.jwtService.signAsync({
-        sub: user.id,
+
+      const sessionId = uuidv7();
+      const refreshToken = await this.createRefreshToken(user.id, sessionId);
+      const refreshTokenHash = await argon2.hash(refreshToken);
+
+      await this.prismaService.authSession.create({
+        data: {
+          id: sessionId,
+          userId: user.id,
+          refreshTokenHash,
+          refreshExpiresAt: new Date(Date.now() + REFRESH_TOKEN_TTL_MS),
+        },
       });
+      const accessToken = await this.createAccessToken(user.id, sessionId);
+
+      // const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+      // const session = await this.prismaService.authSession.create({
+      //   data: {
+      //     userId: user.id,
+      //     expiresAt,
+      //   },
+      //   select: {
+      //     id: true,
+      //   },
+      // });
+      // const accessToken = await this.jwtService.signAsync({
+      //   sub: user.id,
+      //   sid: session.id,
+      // });
+
       return {
         ok: true,
-        accessToken: token,
+        accessToken,
+        refreshToken,
       };
     } catch {
       return {
@@ -237,5 +274,190 @@ export class UsersService {
 
   private hashVerificationToken(token: string): string {
     return createHash("sha256").update(token).digest("hex");
+  }
+
+  async findUserByActiveSession(sessionId: string): Promise<User | null> {
+    const session = await this.prismaService.authSession.findFirst({
+      where: {
+        id: sessionId,
+        revokedAt: null,
+        expiresAt: {
+          gt: new Date(),
+        },
+      },
+      select: {
+        user: true,
+      },
+    });
+    return session?.user ?? null;
+  }
+
+  async signOut(sessionId: string): Promise<SignOutOutput> {
+    try {
+      await this.prismaService.authSession.updateMany({
+        where: {
+          id: sessionId,
+          revokedAt: null,
+        },
+        data: {
+          revokedAt: new Date(),
+        },
+      });
+      return {
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: "Could not sign out.",
+      };
+    }
+  }
+
+  async refreshAccessToken(
+    refreshAccessTokenInput: RefreshAccessTokenInput,
+  ): Promise<RefreshAccessTokenOutput> {
+    try {
+      const payload = await this.jwtService.verifyAsync<TokenPayload>(
+        refreshAccessTokenInput.refreshToken,
+        {
+          secret: this.configService.getOrThrow<string>("JWT_REFRESH_SECRET"),
+          algorithms: ["HS256"],
+          issuer: this.configService.getOrThrow<string>("JWT_ISSUER"),
+          audience: this.configService.getOrThrow<string>("JWT_AUDIENCE"),
+        },
+      );
+
+      if (
+        payload.tokenType !== "refresh" ||
+        typeof payload.sub !== "string" ||
+        typeof payload.sid !== "string"
+      ) {
+        return {
+          ok: false,
+          error: "Invalid refresh token",
+          accessToken: null,
+          refreshToken: null,
+        };
+      }
+
+      const now = new Date();
+      const session = await this.prismaService.authSession.findUnique({
+        where: {
+          id: payload.sid,
+        },
+        select: {
+          id: true,
+          userId: true,
+          refreshTokenHash: true,
+          refreshExpiresAt: true,
+          revokedAt: true,
+        },
+      });
+
+      if (
+        !session ||
+        session.userId !== payload.sub ||
+        session.revokedAt ||
+        session.refreshExpiresAt <= now
+      ) {
+        return {
+          ok: false,
+          error: "Session Invalid or Refresh session has expired",
+          accessToken: null,
+          refreshToken: null,
+        };
+      }
+
+      const tokenMatches = await argon2.verify(
+        session.refreshTokenHash,
+        refreshAccessTokenInput.refreshToken,
+      );
+      // suspicious user action
+      if (!tokenMatches) {
+        await this.prismaService.authSession.updateMany({
+          where: {
+            id: session.id,
+            revokedAt: null,
+          },
+          data: {
+            revokedAt: now,
+          },
+        });
+        return {
+          ok: false,
+          error: "Refresh token has been revoked.",
+          accessToken: null,
+          refreshToken: null,
+        };
+      }
+
+      const nextRefreshToken = await this.createRefreshToken(session.userId, session.id);
+      const updateRecord = await this.prismaService.authSession.updateMany({
+        where: {
+          id: session.id,
+          userId: session.userId,
+          refreshTokenHash: session.refreshTokenHash,
+          revokedAt: null,
+          refreshExpiresAt: {
+            gt: now,
+          },
+        },
+        data: {
+          refreshTokenHash: nextRefreshToken,
+          refreshExpiresAt: new Date(Date.now() + REFRESH_TOKEN_TTL_MS),
+          lastUsedAt: now,
+        },
+      });
+
+      if (updateRecord.count !== 1) {
+        return {
+          ok: false,
+          error: "Refresh token was already used.",
+          accessToken: null,
+          refreshToken: null,
+        };
+      }
+
+      const accessToken = await this.createAccessToken(session.userId, session.id);
+      return {
+        ok: true,
+        accessToken,
+        refreshToken: nextRefreshToken,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: "Could not refresh access token.",
+        accessToken: null,
+        refreshToken: null,
+      };
+    }
+  }
+
+  private createAccessToken(userId: string, sessionId: string): Promise<string> {
+    return this.jwtService.signAsync({
+      sub: userId,
+      sid: sessionId,
+      tokenType: "access",
+    });
+  }
+
+  private createRefreshToken(userId: string, sessionId: string): Promise<string> {
+    return this.jwtService.signAsync(
+      {
+        sub: userId,
+        sid: sessionId,
+        tokenType: "refresh",
+        jti: uuidv7(),
+      },
+      {
+        secret: this.configService.getOrThrow<string>("JWT_REFRESH_SECRET"),
+        algorithm: "HS256",
+        expiresIn: REFRESH_TOKEN_EXPIRES_IN,
+        issuer: this.configService.getOrThrow<string>("JWT_ISSUER"),
+        audience: this.configService.getOrThrow<string>("JWT_AUDIENCE"),
+      },
+    );
   }
 }

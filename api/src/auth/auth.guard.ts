@@ -4,6 +4,7 @@ import { AllowedRole, ROLES_KEY } from "./decorator/roles.decorator";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { JwtService } from "@nestjs/jwt";
 import { UsersService } from "../users/users.service";
+import { TokenPayload } from "./types/token-payload.type";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -23,22 +24,30 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException("Authentication Required");
     }
 
-    let payload;
+    let payload: TokenPayload;
     try {
-      payload = await this.jwtService.verifyAsync(token.toString());
+      payload = await this.jwtService.verifyAsync<TokenPayload>(token.toString());
     } catch {
       throw new UnauthorizedException("Invalid or expired token");
     }
 
-    if (typeof payload.sub !== "string" || !payload.sub) {
+    if (
+      payload.tokenType !== "access" ||
+      typeof payload.sub !== "string" ||
+      !payload.sub ||
+      typeof payload.sid !== "string" ||
+      !payload.sid
+    ) {
       throw new UnauthorizedException("Invalid token payload");
     }
 
-    const { user } = await this.usersService.findById(payload.sub);
-    if (!user) {
-      throw new UnauthorizedException("User not found");
+    const user = await this.usersService.findUserByActiveSession(payload.sid);
+
+    if (!user || user.id !== payload.sub) {
+      throw new UnauthorizedException("Session has expired or was signed out");
     }
     gqlContext.user = user;
+    gqlContext.sessionId = payload.sid;
 
     if (roles.includes("Any")) {
       return true;
