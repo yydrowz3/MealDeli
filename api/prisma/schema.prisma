@@ -210,13 +210,14 @@ model OrderItem {
 }
 
 model Payment {
-  id           String     @id @default(uuid(7)) @db.Uuid
-  ownerId      String     @map("owner_id") @db.Uuid
-  restaurantId String     @map("restaurant_id") @db.Uuid
-  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt    DateTime   @updatedAt @map("updated_at") @db.Timestamptz(3)
-  owner        User       @relation(fields: [ownerId], references: [id], onDelete: Restrict)
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  id            String     @id @default(uuid(7)) @db.Uuid
+  transactionId String     @map("transaction_id") @db.VarChar(255)
+  ownerId       String     @map("owner_id") @db.Uuid
+  restaurantId  String     @map("restaurant_id") @db.Uuid
+  createdAt     DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime   @updatedAt @map("updated_at") @db.Timestamptz(3)
+  owner         User       @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  restaurant    Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
 
   @@index([ownerId, createdAt(sort: Desc), id(sort: Desc)], map: "payments_owner_page_idx")
   @@index([restaurantId, createdAt(sort: Desc), id(sort: Desc)], map: "payments_restaurant_idx")
