@@ -97,7 +97,7 @@ model EmailVerification {
 model Category {
   id          String       @id @default(uuid(7)) @db.Uuid
   name        String       @db.VarChar(255)
-  slug        String       @db.VarChar(255)
+  slug        String       @unique(map: "categories_slug_key") @db.VarChar(255)
   image       String?      @db.Text
   createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt   DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
