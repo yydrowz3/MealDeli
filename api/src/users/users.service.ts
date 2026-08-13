@@ -281,7 +281,7 @@ export class UsersService {
       where: {
         id: sessionId,
         revokedAt: null,
-        expiresAt: {
+        refreshExpiresAt: {
           gt: new Date(),
         },
       },
@@ -393,6 +393,7 @@ export class UsersService {
       }
 
       const nextRefreshToken = await this.createRefreshToken(session.userId, session.id);
+      const nextRefreshTokenHash = await argon2.hash(nextRefreshToken);
       const updateRecord = await this.prismaService.authSession.updateMany({
         where: {
           id: session.id,
@@ -404,7 +405,7 @@ export class UsersService {
           },
         },
         data: {
-          refreshTokenHash: nextRefreshToken,
+          refreshTokenHash: nextRefreshTokenHash,
           refreshExpiresAt: new Date(Date.now() + REFRESH_TOKEN_TTL_MS),
           lastUsedAt: now,
         },

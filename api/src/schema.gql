@@ -22,7 +22,9 @@ type EditProfileOutput {
 
 type Mutation {
   editProfile(input: EditProfileInput!): EditProfileOutput!
+  refreshAccessToken: RefreshAccessTokenOutput!
   signIn(input: SignInInput!): SignInOutput!
+  signOut: SignOutOutput!
   signUp(input: SignUpInput!): SignUpOutput!
   verifyEmail(input: VerifyEmailInput!): VerifyEmailOutput!
 }
@@ -32,15 +34,28 @@ type Query {
   userProfile(userId: String!): UserProfileOutput!
 }
 
+type RefreshAccessTokenOutput {
+  accessToken: String
+  error: String
+  ok: Boolean!
+  refreshToken: String
+}
+
 input SignInInput {
   email: String!
   password: String!
 }
 
 type SignInOutput {
+  accessToken: String
   error: String
   ok: Boolean!
-  token: String
+  refreshToken: String
+}
+
+type SignOutOutput {
+  error: String
+  ok: Boolean!
 }
 
 input SignUpInput {

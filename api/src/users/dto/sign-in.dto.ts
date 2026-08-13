@@ -13,6 +13,7 @@ export class SignInOutput extends CoreOutput {
   @Field(() => String, { nullable: true })
   accessToken!: string | null;
 
-  @Field(() => String, { nullable: true })
+  // This value is only used internally by the resolver to set the HttpOnly cookie.
+  // Do not expose it in the GraphQL schema.
   refreshToken?: string | null;
 }
