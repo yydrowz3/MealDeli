@@ -19,6 +19,6 @@ export class Category extends CoreEntity {
   @IsString()
   slug!: string;
 
-  @Field(() => [Restaurant])
-  restaurants!: Restaurant[];
+  @Field(() => [Restaurant], { nullable: true })
+  restaurants?: Restaurant[];
 }

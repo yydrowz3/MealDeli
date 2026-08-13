@@ -28,16 +28,16 @@ export class Restaurant extends CoreEntity {
   ownerId!: string;
 
   @Field(() => User)
-  owner!: User;
+  owner?: User;
 
   @Field(() => String)
   categoryId!: string;
 
   @Field(() => Category)
-  category!: Category;
+  category?: Category;
 
   @Field(() => [Dish])
-  dishes!: Dish[];
+  dishes?: Dish[];
 
   // orders
 

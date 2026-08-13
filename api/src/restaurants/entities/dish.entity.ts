@@ -14,7 +14,7 @@ export class Dish extends CoreEntity {
   priceMinor!: number;
 
   @Field(() => String, { nullable: true })
-  image!: string | null;
+  image?: string | null;
 
   @Field(() => String)
   description!: string;
