@@ -1,6 +1,6 @@
 import { Field, InputType, ObjectType } from "@nestjs/graphql";
 import { CoreEntity } from "../../common/entities/core.entity";
-import { IsOptional, IsString } from "class-validator";
+import { IsOptional, IsString, MinLength } from "class-validator";
 import { Restaurant } from "./restaurant.entity";
 
 @InputType("CategoryInputType", { isAbstract: true })
@@ -8,6 +8,7 @@ import { Restaurant } from "./restaurant.entity";
 export class Category extends CoreEntity {
   @Field(() => String)
   @IsString()
+  @MinLength(1)
   name!: string;
 
   @Field(() => String, { nullable: true })

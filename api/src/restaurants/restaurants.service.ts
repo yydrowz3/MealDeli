@@ -15,6 +15,9 @@ import { EditDishInput, EditDishOutput } from "./dto/edit-dish.dto";
 import { DeleteDishInput, DeleteDishOutput } from "./dto/delete-dish.dto";
 import { MyRestaurantsOutput } from "./dto/my-restaurants.dto";
 import { MyRestaurantInput, MyRestaurantOutput } from "./dto/my-restaurant.dto";
+import { CreateCategoryInput, CreateCategoryOutput } from "./dto/create-category.dto";
+import { UpdateCategoryInput, UpdateCategoryOutput } from "./dto/update-category.dto";
+import { DeleteCategoryInput, DeleteCategoryOutput } from "./dto/delete-category.dto";
 
 @Injectable()
 export class RestaurantsService {
@@ -47,8 +50,124 @@ export class RestaurantsService {
     }
   }
 
-  // TODO: Create Category
-  // TODO: Delete Category
+  async createCategory(createCategoryInput: CreateCategoryInput): Promise<CreateCategoryOutput> {
+    try {
+      const categoryName = createCategoryInput.name.trim().toLocaleLowerCase();
+      const categorySlug = categoryName.replace(/ /g, "-");
+      const category = await this.prismaService.category.findUnique({
+        where: {
+          slug: categorySlug,
+        },
+      });
+      if (category) {
+        return {
+          ok: false,
+          error: "Category already exists",
+        };
+      }
+      await this.prismaService.category.create({
+        data: {
+          name: createCategoryInput.name.trim(),
+          slug: categorySlug,
+          ...(createCategoryInput.image && { image: createCategoryInput.image }),
+        },
+      });
+      return {
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: "Could not create category",
+      };
+    }
+  }
+
+  async updateCategory(updateCategoryInput: UpdateCategoryInput): Promise<UpdateCategoryOutput> {
+    try {
+      const category = await this.prismaService.category.findUnique({
+        where: {
+          id: updateCategoryInput.id,
+        },
+      });
+      if (!category) {
+        return {
+          ok: false,
+          error: "Category not found",
+        };
+      }
+      if (updateCategoryInput.name && category.name != updateCategoryInput.name) {
+        const categoryName = updateCategoryInput.name.trim().toLocaleLowerCase();
+        const categorySlug = categoryName.replace(/ /g, "-");
+        const existingCategory = await this.prismaService.category.findUnique({
+          where: {
+            slug: categorySlug,
+          },
+        });
+        if (existingCategory) {
+          return {
+            ok: false,
+            error: "Category already exists",
+          };
+        }
+        await this.prismaService.category.update({
+          data: {
+            name: updateCategoryInput.name.trim(),
+            slug: categorySlug,
+            ...(updateCategoryInput.image && { image: updateCategoryInput.image }),
+          },
+          where: {
+            id: category.id,
+          },
+        });
+      } else {
+        await this.prismaService.category.update({
+          data: {
+            ...(updateCategoryInput.image && { image: updateCategoryInput.image }),
+          },
+          where: {
+            id: category.id,
+          },
+        });
+      }
+      return {
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: "Could not update category",
+      };
+    }
+  }
+  async deleteCategory(deleteCategoryInput: DeleteCategoryInput): Promise<DeleteCategoryOutput> {
+    try {
+      const category = await this.prismaService.category.findUnique({
+        where: {
+          id: deleteCategoryInput.id,
+        },
+      });
+      if (!category) {
+        return {
+          ok: false,
+          error: "Category not found",
+        };
+      }
+      await this.prismaService.category.delete({
+        where: {
+          id: deleteCategoryInput.id,
+        },
+      });
+      return {
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: "Could not delete category",
+      };
+    }
+  }
 
   async editRestaurant(
     owner: User,
@@ -90,7 +209,7 @@ export class RestaurantsService {
     }
   }
 
-  async DeleteRestaurantInput(
+  async deleteRestaurant(
     owner: User,
     deleteRestaurantInput: DeleteRestaurantInput,
   ): Promise<DeleteRestaurantOutput> {

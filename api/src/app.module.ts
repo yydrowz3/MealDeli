@@ -12,7 +12,7 @@ import { AuthModule } from "./auth/auth.module";
 import { JwtModule } from "@nestjs/jwt";
 import { MailsModule } from "./mails/mails.module";
 import { ACCESS_TOKEN_EXPIRES_IN } from "./auth/auth.constants";
-import { RestaurantsModule } from './restaurants/restaurants.module';
+import { RestaurantsModule } from "./restaurants/restaurants.module";
 
 @Module({
   imports: [
@@ -50,15 +50,6 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
           res,
           token,
         };
-        // if (extra && extra.token) {
-        //   return { token: extra.token };
-        // }
-        // if (req && req.headers.authorization) {
-        //   const [type, token] = req.headers.authorization.split(" ");
-        //   if (type === "Bearer" && token) {
-        //     return { token };
-        //   }
-        // }
       },
     }),
     PrismaModule,
