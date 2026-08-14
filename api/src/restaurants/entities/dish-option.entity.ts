@@ -1,34 +1,120 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
-import { IsInt, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 
 @ObjectType()
-@InputType('DishChoiceInput', { isAbstract: true })
 export class DishChoice {
   @Field(() => String)
-  @IsString()
+  id!: string;
+
+  @Field(() => String)
   name!: string;
 
-  @Field(() => Int, { nullable: true })
-  @IsOptional()
-  @IsInt()
-  extraMinor?: number;
+  @Field(() => Int)
+  extraMinor!: number;
 }
 
 @ObjectType()
-@InputType('DishOptionInput', { isAbstract: true })
 export class DishOption {
   @Field(() => String)
-  @IsString()
+  id!: string;
+
+  @Field(() => String)
   name!: string;
 
-  @Field(() => [DishChoice], { nullable: true })
-  @IsOptional()
-  @Type(() => DishChoice)
-  choices?: DishChoice[];
+  @Field(() => Int)
+  minSelections!: number;
 
-  @Field(() => Int, { nullable: true })
-  @IsOptional()
+  @Field(() => Int)
+  maxSelections!: number;
+
+  @Field(() => [DishChoice])
+  choices!: DishChoice[];
+}
+
+@InputType()
+export class CreateDishChoiceInput {
+  @Field(() => String)
+  @IsString()
+  @IsNotEmpty()
+  name!: string;
+
+  @Field(() => Int)
   @IsInt()
-  extraMinor?: number;
+  @Min(0)
+  extraMinor!: number;
+}
+
+@InputType()
+export class CreateDishOptionInput {
+  @Field(() => String)
+  @IsString()
+  @IsNotEmpty()
+  name!: string;
+
+  @Field(() => Int)
+  @IsInt()
+  @Min(0)
+  minSelections!: number;
+
+  @Field(() => Int)
+  @IsInt()
+  @Min(1)
+  maxSelections!: number;
+
+  @Field(() => [CreateDishChoiceInput])
+  @IsArray()
+  @ArrayMinSize(1)
+  @Type(() => CreateDishChoiceInput)
+  @ValidateNested({ each: true })
+  choices!: CreateDishChoiceInput[];
+}
+
+@InputType()
+export class EditDishChoiceInput extends CreateDishChoiceInput {
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  id?: string;
+}
+
+@InputType()
+export class EditDishOptionInput {
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  id?: string;
+
+  @Field(() => String)
+  @IsString()
+  @IsNotEmpty()
+  name!: string;
+
+  @Field(() => Int)
+  @IsInt()
+  @Min(0)
+  minSelections!: number;
+
+  @Field(() => Int)
+  @IsInt()
+  @Min(1)
+  maxSelections!: number;
+
+  @Field(() => [EditDishChoiceInput])
+  @IsArray()
+  @ArrayMinSize(1)
+  @Type(() => EditDishChoiceInput)
+  @ValidateNested({ each: true })
+  choices!: EditDishChoiceInput[];
 }

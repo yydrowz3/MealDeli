@@ -39,6 +39,8 @@ import {
   DeleteCategoryInput,
   DeleteCategoryOutput,
 } from './dto/delete-category.dto';
+import { randomUUID } from 'node:crypto';
+import { Prisma } from '../generated/prisma/client';
 
 @Injectable()
 export class RestaurantsService {
@@ -486,11 +488,34 @@ export class RestaurantsService {
         };
       }
       const { restaurantId, options, ...dishData } = createDishInput;
+      const dishOptions = options.map((option) => ({
+        id: randomUUID(),
+        name: option.name,
+        minSelections: option.minSelections,
+        maxSelections: option.maxSelections,
+        choices: option.choices.map((choice) => ({
+          id: randomUUID(),
+          name: choice.name,
+          extraMinor: choice.extraMinor,
+        })),
+      }));
+      if (
+        dishOptions.some(
+          (option) =>
+            option.minSelections > option.maxSelections ||
+            option.maxSelections > option.choices.length,
+        )
+      ) {
+        return {
+          ok: false,
+          error: 'Dish option selection limits are invalid.',
+        };
+      }
       await this.prismaService.dish.create({
         data: {
           ...dishData,
           restaurantId,
-          options: JSON.parse(JSON.stringify(options)),
+          options: dishOptions as Prisma.InputJsonValue,
         },
       });
       return {
@@ -534,13 +559,53 @@ export class RestaurantsService {
         };
       }
       const { dishId, options, ...dishData } = editDishInput;
+      const dishOptions = options?.map((option) => ({
+        id: option.id ?? randomUUID(),
+        name: option.name,
+        minSelections: option.minSelections,
+        maxSelections: option.maxSelections,
+        choices: option.choices.map((choice) => ({
+          id: choice.id ?? randomUUID(),
+          name: choice.name,
+          extraMinor: choice.extraMinor,
+        })),
+      }));
+      if (
+        dishOptions?.some(
+          (option) =>
+            option.minSelections > option.maxSelections ||
+            option.maxSelections > option.choices.length,
+        )
+      ) {
+        return {
+          ok: false,
+          error: 'Dish option selection limits are invalid.',
+        };
+      }
+      if (
+        dishOptions &&
+        (new Set(dishOptions.map((option) => option.id)).size !==
+          dishOptions.length ||
+          dishOptions.some(
+            (option) =>
+              new Set(option.choices.map((choice) => choice.id)).size !==
+              option.choices.length,
+          ))
+      ) {
+        return {
+          ok: false,
+          error: 'Dish option IDs must be unique.',
+        };
+      }
       await this.prismaService.dish.update({
         where: {
           id: dishId,
         },
         data: {
           ...dishData,
-          ...(options && { options: JSON.parse(JSON.stringify(options)) }),
+          ...(dishOptions && {
+            options: dishOptions as Prisma.InputJsonValue,
+          }),
         },
       });
       return {

@@ -132,26 +132,10 @@ model Restaurant {
   @@map("restaurants")
 }
 
-// Dish options
-// [ 
-//   {
-//     "name": "Size",
-//     "choices": [
-//       {
-//         "name": "Small",
-//         "extraMinor": 0
-//       },
-//       {
-//         "name": "Large",
-//         "extraMinor": 200
-//       }
-//     ]
-//   },
-//   {
-//     "name": "Extra Cheese",
-//     "extraMinor": 150
-//   }
-// ]
+// `options` stores the current option definitions for a dish as JSONB. Each
+// option and choice has a stable ID; all options use the same choices shape.
+// `selectedOptions` stores the validated option and price snapshot at order
+// creation time, so later menu edits do not affect existing orders.
 
 model Dish {
   id           String     @id @default(uuid(7)) @db.Uuid

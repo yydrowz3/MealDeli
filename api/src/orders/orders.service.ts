@@ -20,17 +20,6 @@ import { EditOrderInput, EditOrderOutput } from './dto/edit-order.dto';
 import { OrderUpdatesInput, OrderUpdatesOutput } from './dto/order-updates.dto';
 import { TakeOrderInput, TakeOrderOutput } from './dto/take-order.dto';
 
-type OrderOptionSnapshot = {
-  name: string;
-  extraMinor?: number;
-  choices?: OrderOptionChoiceSnapshot[];
-};
-
-type OrderOptionChoiceSnapshot = {
-  name: string;
-  extraMinor?: number;
-};
-
 @Injectable()
 export class OrdersService {
   constructor(
@@ -54,18 +43,15 @@ export class OrdersService {
           error: 'Restaurant not found.',
         };
       }
+      if (createOrderInput.items.length === 0) {
+        return {
+          ok: false,
+          error: 'Order must contain at least one item.',
+        };
+      }
 
       let orderFinalMinor = 0;
-      const orderItems: Array<{
-        position: number;
-        dishId: string;
-        dishName: string;
-        basePriceMinor: number;
-        selectedOptions: Prisma.InputJsonValue;
-        optionsExtraMinor: number;
-        quantity: number;
-        lineTotalMinor: number;
-      }> = [];
+      const orderItems: Prisma.OrderItemCreateWithoutOrderInput[] = [];
       for (const [position, item] of createOrderInput.items.entries()) {
         const dish = await this.prismaService.dish.findUnique({
           where: {
@@ -87,56 +73,88 @@ export class OrdersService {
         }
 
         let optionsExtraMinor = 0;
-        const selectedOptions: OrderOptionSnapshot[] = [];
+        const selectedOptions: Prisma.InputJsonValue[] = [];
         const dishOptions = Array.isArray(dish.options)
           ? (dish.options as unknown as DishOption[])
           : [];
-        for (const itemOption of item.options) {
-          const dishOption = dishOptions.find(
-            (option) => option.name === itemOption.name,
-          );
-          if (!dishOption) {
-            continue;
-          }
-
-          if (dishOption.extraMinor !== undefined) {
-            optionsExtraMinor += dishOption.extraMinor;
-            selectedOptions.push({
-              name: dishOption.name,
-              extraMinor: dishOption.extraMinor,
-            });
-            continue;
-          }
-
-          const selectedChoices: OrderOptionChoiceSnapshot[] = [];
-          for (const itemChoice of itemOption.choices ?? []) {
-            const dishChoice = dishOption.choices?.find(
-              (choice) => choice.name === itemChoice.name,
-            );
-            if (!dishChoice) {
-              continue;
-            }
-
-            if (dishChoice.extraMinor !== undefined) {
-              optionsExtraMinor += dishChoice.extraMinor;
-            }
-            selectedChoices.push({
-              name: dishChoice.name,
-              ...(dishChoice.extraMinor !== undefined && {
-                extraMinor: dishChoice.extraMinor,
-              }),
-            });
-          }
-
-          if (selectedChoices.length > 0) {
-            selectedOptions.push({
-              name: dishOption.name,
-              choices: selectedChoices,
-            });
-          }
+        const selectedOptionIds = new Set(
+          item.options.map((option) => option.optionId),
+        );
+        if (selectedOptionIds.size !== item.options.length) {
+          return {
+            ok: false,
+            error: 'Each dish option can only be selected once.',
+          };
         }
 
-        const lineTotalMinor = dish.priceMinor + optionsExtraMinor;
+        if (
+          dishOptions.some(
+            (option) =>
+              option.minSelections > 0 && !selectedOptionIds.has(option.id),
+          )
+        ) {
+          return {
+            ok: false,
+            error: 'A required dish option is missing.',
+          };
+        }
+
+        for (const itemOption of item.options) {
+          const dishOption = dishOptions.find(
+            (option) => option.id === itemOption.optionId,
+          );
+          if (!dishOption) {
+            return {
+              ok: false,
+              error: 'Dish option not found.',
+            };
+          }
+
+          const selectedChoiceIds = new Set(itemOption.choiceIds);
+          if (
+            selectedChoiceIds.size !== itemOption.choiceIds.length ||
+            itemOption.choiceIds.length === 0 ||
+            itemOption.choiceIds.length < dishOption.minSelections ||
+            itemOption.choiceIds.length > dishOption.maxSelections
+          ) {
+            return {
+              ok: false,
+              error: 'Invalid number of choices for dish option.',
+            };
+          }
+
+          const selectedChoices = itemOption.choiceIds.map((choiceId) => {
+            const dishChoice = dishOption.choices.find(
+              (choice) => choice.id === choiceId,
+            );
+            if (!dishChoice) {
+              return null;
+            }
+
+            optionsExtraMinor += dishChoice.extraMinor;
+            return {
+              choiceId: dishChoice.id,
+              name: dishChoice.name,
+              extraMinor: dishChoice.extraMinor,
+            };
+          });
+
+          if (selectedChoices.some((choice) => choice === null)) {
+            return {
+              ok: false,
+              error: 'Dish option choice not found.',
+            };
+          }
+
+          selectedOptions.push({
+            optionId: dishOption.id,
+            name: dishOption.name,
+            choices: selectedChoices,
+          });
+        }
+
+        const lineTotalMinor =
+          (dish.priceMinor + optionsExtraMinor) * item.quantity;
         orderFinalMinor += lineTotalMinor;
         orderItems.push({
           position,
@@ -145,7 +163,7 @@ export class OrdersService {
           basePriceMinor: dish.priceMinor,
           selectedOptions,
           optionsExtraMinor,
-          quantity: 1,
+          quantity: item.quantity,
           lineTotalMinor,
         });
       }

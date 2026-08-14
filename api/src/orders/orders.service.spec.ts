@@ -16,9 +16,10 @@ describe('OrdersService', () => {
     items: [
       {
         dishId: 'dish-id',
+        quantity: 2,
         options: [
-          { name: 'Extra cheese' },
-          { name: 'Size', choices: [{ name: 'Large' }] },
+          { optionId: 'extra-cheese', choiceIds: ['cheese'] },
+          { optionId: 'size', choiceIds: ['large'] },
         ],
       },
     ],
@@ -47,12 +48,21 @@ describe('OrdersService', () => {
       name: 'Pizza',
       priceMinor: 1_000,
       options: [
-        { name: 'Extra cheese', extraMinor: 150 },
         {
+          id: 'extra-cheese',
+          name: 'Extra cheese',
+          minSelections: 0,
+          maxSelections: 1,
+          choices: [{ id: 'cheese', name: 'Extra cheese', extraMinor: 150 }],
+        },
+        {
+          id: 'size',
           name: 'Size',
+          minSelections: 1,
+          maxSelections: 1,
           choices: [
-            { name: 'Large', extraMinor: 200 },
-            { name: 'Small', extraMinor: 0 },
+            { id: 'large', name: 'Large', extraMinor: 200 },
+            { id: 'small', name: 'Small', extraMinor: 0 },
           ],
         },
       ],
@@ -70,7 +80,7 @@ describe('OrdersService', () => {
       data: {
         customerId: 'customer-id',
         restaurantId: 'restaurant-id',
-        totalMinor: 1_350,
+        totalMinor: 2_700,
         items: {
           create: [
             {
@@ -79,12 +89,32 @@ describe('OrdersService', () => {
               dishName: 'Pizza',
               basePriceMinor: 1_000,
               selectedOptions: [
-                { name: 'Extra cheese', extraMinor: 150 },
-                { name: 'Size', choices: [{ name: 'Large', extraMinor: 200 }] },
+                {
+                  optionId: 'extra-cheese',
+                  name: 'Extra cheese',
+                  choices: [
+                    {
+                      choiceId: 'cheese',
+                      name: 'Extra cheese',
+                      extraMinor: 150,
+                    },
+                  ],
+                },
+                {
+                  optionId: 'size',
+                  name: 'Size',
+                  choices: [
+                    {
+                      choiceId: 'large',
+                      name: 'Large',
+                      extraMinor: 200,
+                    },
+                  ],
+                },
               ],
               optionsExtraMinor: 350,
-              quantity: 1,
-              lineTotalMinor: 1_350,
+              quantity: 2,
+              lineTotalMinor: 2_700,
             },
           ],
         },

@@ -1,33 +1,33 @@
-import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Dish } from '../../restaurants/entities/dish.entity';
 import { Order } from './order.entity';
 import { IsInt } from 'class-validator';
 
-@InputType('OrderItemOptionChoiceInputType', { isAbstract: true })
 @ObjectType()
 export class OrderItemOptionChoice {
   @Field(() => String)
+  choiceId!: string;
+
+  @Field(() => String)
   name!: string;
 
-  @Field(() => Int, { nullable: true })
-  extraMinor?: number;
+  @Field(() => Int)
+  extraMinor!: number;
 }
 
-@InputType('OrderItemOptionInputType', { isAbstract: true })
 @ObjectType()
 export class OrderItemOption {
+  @Field(() => String)
+  optionId!: string;
+
   @Field(() => String)
   name!: string;
 
   @Field(() => [OrderItemOptionChoice])
-  choices?: OrderItemOptionChoice[];
-
-  @Field(() => Int, { nullable: true })
-  extraMinor?: number;
+  choices!: OrderItemOptionChoice[];
 }
 
-@InputType('OrderItemInputType', { isAbstract: true })
 @ObjectType()
 export class OrderItem extends CoreEntity {
   @Field(() => String)
@@ -46,7 +46,7 @@ export class OrderItem extends CoreEntity {
   basePriceMinor!: number;
 
   @Field(() => [OrderItemOption])
-  selectedOptions!: [OrderItemOption];
+  selectedOptions!: OrderItemOption[];
 
   @Field(() => Int)
   optionsExtraMinor!: number;
