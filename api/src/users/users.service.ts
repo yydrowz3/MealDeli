@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserProfileOutput } from './dto/user-profile.dto';
 import { User } from './entities/user.entity';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, type JwtSignOptions } from '@nestjs/jwt';
 import { SignUpInput, SignUpOutput } from './dto/sign-up.dto';
 import { SignInInput, SignInOutput } from './dto/sign-in.dto';
 import * as argon2 from 'argon2';
@@ -13,10 +13,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import { Prisma } from '../generated/prisma/client';
 import { SignOutOutput } from './dto/sign-out.dto';
 import { ConfigService } from '@nestjs/config';
-import {
-  REFRESH_TOKEN_EXPIRES_IN,
-  REFRESH_TOKEN_TTL_MS,
-} from '../auth/auth.constants';
+import { getRefreshTokenTtlMs } from '../auth/auth.config';
 import { v7 as uuidv7 } from 'uuid';
 import {
   RefreshAccessTokenInput,
@@ -116,7 +113,9 @@ export class UsersService {
           id: sessionId,
           userId: user.id,
           refreshTokenHash,
-          refreshExpiresAt: new Date(Date.now() + REFRESH_TOKEN_TTL_MS),
+          refreshExpiresAt: new Date(
+            Date.now() + getRefreshTokenTtlMs(this.configService),
+          ),
         },
       });
       const accessToken = await this.createAccessToken(user.id, sessionId);
@@ -430,7 +429,9 @@ export class UsersService {
         },
         data: {
           refreshTokenHash: nextRefreshTokenHash,
-          refreshExpiresAt: new Date(Date.now() + REFRESH_TOKEN_TTL_MS),
+          refreshExpiresAt: new Date(
+            Date.now() + getRefreshTokenTtlMs(this.configService),
+          ),
           lastUsedAt: now,
         },
       });
@@ -488,7 +489,9 @@ export class UsersService {
       {
         secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
         algorithm: 'HS256',
-        expiresIn: REFRESH_TOKEN_EXPIRES_IN,
+        expiresIn: this.configService.getOrThrow<JwtSignOptions['expiresIn']>(
+          'JWT_REFRESH_EXPIRES_IN',
+        ),
         issuer: this.configService.getOrThrow<string>('JWT_ISSUER'),
         audience: this.configService.getOrThrow<string>('JWT_AUDIENCE'),
       },

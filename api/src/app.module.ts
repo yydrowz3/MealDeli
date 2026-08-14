@@ -9,9 +9,8 @@ import { CommonModule } from './common/common.module';
 import { join } from 'node:path';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, type JwtSignOptions } from '@nestjs/jwt';
 import { MailsModule } from './mails/mails.module';
-import { ACCESS_TOKEN_EXPIRES_IN } from './auth/auth.constants';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { PaymentsModule } from './payments/payments.module';
 import { UploadsModule } from './uploads/uploads.module';
@@ -70,7 +69,9 @@ import { OrdersModule } from './orders/orders.module';
           secret: configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
           signOptions: {
             algorithm: 'HS256',
-            expiresIn: ACCESS_TOKEN_EXPIRES_IN,
+            expiresIn: configService.getOrThrow<JwtSignOptions['expiresIn']>(
+              'JWT_ACCESS_EXPIRES_IN',
+            ),
             issuer,
             audience,
           },

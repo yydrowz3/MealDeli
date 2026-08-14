@@ -11,15 +11,19 @@ import { AuthUser } from '../auth/decorator/auth-user.decorator';
 import { AuthSessionId } from '../auth/decorator/auth-session-id.decorator';
 import { SignOutOutput } from './dto/sign-out.dto';
 import { Request, Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 import {
-  REFRESH_TOKEN_COOKIE,
-  REFRESH_TOKEN_TTL_MS,
-} from '../auth/auth.constants';
+  getRefreshTokenCookie,
+  getRefreshTokenTtlMs,
+} from '../auth/auth.config';
 import { RefreshAccessTokenOutput } from './dto/refresh-access-token.dto';
 
 @Resolver(() => User)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Mutation(() => SignUpOutput)
   async signUp(@Args('input') signUpInput: SignUpInput): Promise<SignUpOutput> {
@@ -89,7 +93,7 @@ export class UsersResolver {
   ): Promise<RefreshAccessTokenOutput> {
     const refreshToken = this.readCookie(
       context.req.headers.cookie,
-      REFRESH_TOKEN_COOKIE,
+      getRefreshTokenCookie(this.configService),
     );
     if (!refreshToken) {
       return {
@@ -118,17 +122,17 @@ export class UsersResolver {
   }
 
   private setRefreshCookie(response: Response, refreshToken: string): void {
-    response.cookie(REFRESH_TOKEN_COOKIE, refreshToken, {
+    response.cookie(getRefreshTokenCookie(this.configService), refreshToken, {
       httpOnly: true,
       secure: (process.env.NODE_ENV ?? 'dev') === 'production',
       sameSite: 'lax',
       path: '/graphql',
-      maxAge: REFRESH_TOKEN_TTL_MS,
+      maxAge: getRefreshTokenTtlMs(this.configService),
     });
   }
 
   private clearRefreshCookie(response: Response): void {
-    response.clearCookie(REFRESH_TOKEN_COOKIE, {
+    response.clearCookie(getRefreshTokenCookie(this.configService), {
       httpOnly: true,
       secure: (process.env.NODE_ENV ?? 'dev') === 'production',
       sameSite: 'lax',
