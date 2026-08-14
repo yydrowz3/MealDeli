@@ -1,10 +1,10 @@
-import { Field, InputType, ObjectType, PickType } from "@nestjs/graphql";
-import { Category } from "../entities/category.entity";
-import { IsOptional, IsString } from "class-validator";
-import { CoreOutput } from "../../common/dto/output.dto";
+import { Field, InputType, ObjectType, PickType } from '@nestjs/graphql';
+import { Category } from '../entities/category.entity';
+import { IsOptional, IsString } from 'class-validator';
+import { CoreOutput } from '../../common/dto/output.dto';
 
 @InputType()
-export class UpdateCategoryInput extends PickType(Category, ["id"]) {
+export class UpdateCategoryInput extends PickType(Category, ['id']) {
   @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()

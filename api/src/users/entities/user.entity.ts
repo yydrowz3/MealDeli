@@ -1,9 +1,9 @@
-import { ObjectType, Field, InputType, HideField } from "@nestjs/graphql";
-import { CoreEntity } from "../../common/entities/core.entity";
-import { IsDate, IsEnum, IsString } from "class-validator";
-import { UserRole } from "../enums/role.enum";
+import { ObjectType, Field, InputType, HideField } from '@nestjs/graphql';
+import { CoreEntity } from '../../common/entities/core.entity';
+import { IsDate, IsEnum, IsString } from 'class-validator';
+import { UserRole } from '../enums/role.enum';
 
-@InputType("UserInputType", { isAbstract: true })
+@InputType('UserInputType', { isAbstract: true })
 @ObjectType()
 export class User extends CoreEntity {
   @Field(() => String)

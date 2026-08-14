@@ -1,10 +1,10 @@
-import { Field, InputType, Int, ObjectType } from "@nestjs/graphql";
-import { CoreEntity } from "../../common/entities/core.entity";
-import { Dish } from "../../restaurants/entities/dish.entity";
-import { Order } from "./order.entity";
-import { IsInt } from "class-validator";
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { CoreEntity } from '../../common/entities/core.entity';
+import { Dish } from '../../restaurants/entities/dish.entity';
+import { Order } from './order.entity';
+import { IsInt } from 'class-validator';
 
-@InputType("OrderItemOptionChoiceInputType", { isAbstract: true })
+@InputType('OrderItemOptionChoiceInputType', { isAbstract: true })
 @ObjectType()
 export class OrderItemOptionChoice {
   @Field(() => String)
@@ -14,7 +14,7 @@ export class OrderItemOptionChoice {
   extraMinor?: number;
 }
 
-@InputType("OrderItemOptionInputType", { isAbstract: true })
+@InputType('OrderItemOptionInputType', { isAbstract: true })
 @ObjectType()
 export class OrderItemOption {
   @Field(() => String)
@@ -27,7 +27,7 @@ export class OrderItemOption {
   extraMinor?: number;
 }
 
-@InputType("OrderItemInputType", { isAbstract: true })
+@InputType('OrderItemInputType', { isAbstract: true })
 @ObjectType()
 export class OrderItem extends CoreEntity {
   @Field(() => String)

@@ -1,12 +1,12 @@
-import { ObjectType, Field, Int, InputType } from "@nestjs/graphql";
-import { CoreEntity } from "../../common/entities/core.entity";
-import { User } from "../../users/entities/user.entity";
-import { IsEnum } from "class-validator";
-import { Restaurant } from "../../restaurants/entities/restaurant.entity";
-import { OrderStatus } from "../enums/status.enum";
-import { OrderItem } from "./order-item.entity";
+import { ObjectType, Field, Int, InputType } from '@nestjs/graphql';
+import { CoreEntity } from '../../common/entities/core.entity';
+import { User } from '../../users/entities/user.entity';
+import { IsEnum } from 'class-validator';
+import { Restaurant } from '../../restaurants/entities/restaurant.entity';
+import { OrderStatus } from '../enums/status.enum';
+import { OrderItem } from './order-item.entity';
 
-@InputType("OrderInputType", { isAbstract: true })
+@InputType('OrderInputType', { isAbstract: true })
 @ObjectType()
 export class Order extends CoreEntity {
   @Field(() => String)

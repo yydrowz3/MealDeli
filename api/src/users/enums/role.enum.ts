@@ -1,5 +1,5 @@
-import { registerEnumType } from "@nestjs/graphql";
-import { UserRole } from "../../generated/prisma/enums";
+import { registerEnumType } from '@nestjs/graphql';
+import { UserRole } from '../../generated/prisma/enums';
 
 // export enum UserRole {
 //   Customer = "CUSTOMER",
@@ -7,6 +7,6 @@ import { UserRole } from "../../generated/prisma/enums";
 //   Courier = "Courier",
 // }
 
-registerEnumType(UserRole, { name: "UserRole" });
+registerEnumType(UserRole, { name: 'UserRole' });
 
 export { UserRole };

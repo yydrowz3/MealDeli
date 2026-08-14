@@ -1,6 +1,6 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post } from '@nestjs/common';
 
-@Controller("payments")
+@Controller('payments')
 export class PaymentController {
   @Post()
   processPaddlePayment(@Body() body: any) {

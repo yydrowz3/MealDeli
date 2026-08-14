@@ -1,12 +1,12 @@
-import { ObjectType, Field, InputType } from "@nestjs/graphql";
-import { CoreEntity } from "../../common/entities/core.entity";
-import { IsOptional, IsString } from "class-validator";
-import { User } from "../../users/entities/user.entity";
-import { Dish } from "./dish.entity";
-import { Category } from "./category.entity";
-import { Payment } from "../../payments/entities/payment.entity";
+import { ObjectType, Field, InputType } from '@nestjs/graphql';
+import { CoreEntity } from '../../common/entities/core.entity';
+import { IsOptional, IsString } from 'class-validator';
+import { User } from '../../users/entities/user.entity';
+import { Dish } from './dish.entity';
+import { Category } from './category.entity';
+import { Payment } from '../../payments/entities/payment.entity';
 
-@InputType("RestaurantInputType", { isAbstract: true })
+@InputType('RestaurantInputType', { isAbstract: true })
 @ObjectType()
 export class Restaurant extends CoreEntity {
   @Field(() => String)

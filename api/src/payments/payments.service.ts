@@ -1,9 +1,12 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
-import { CreatePaymentInput, CreatePaymentOutput } from "./dto/create-payment.dto";
-import { User } from "../users/entities/user.entity";
-import { ConfigService } from "@nestjs/config";
-import { GetPaymentsOutput } from "./dto/get-payments.dto";
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import {
+  CreatePaymentInput,
+  CreatePaymentOutput,
+} from './dto/create-payment.dto';
+import { User } from '../users/entities/user.entity';
+import { ConfigService } from '@nestjs/config';
+import { GetPaymentsOutput } from './dto/get-payments.dto';
 
 @Injectable()
 export class PaymentsService {
@@ -23,13 +26,13 @@ export class PaymentsService {
       if (!restaurant) {
         return {
           ok: false,
-          error: "Restaurant not found",
+          error: 'Restaurant not found',
         };
       }
       if (restaurant.ownerId !== owner.id) {
         return {
           ok: false,
-          error: "Permission denied from restaurant.",
+          error: 'Permission denied from restaurant.',
         };
       }
       await this.prismaService.payment.create({
@@ -40,7 +43,7 @@ export class PaymentsService {
         },
       });
       const date = new Date();
-      const daysToAdd = this.configService.get<number>("PROMOTION_DAYS") || 7;
+      const daysToAdd = this.configService.get<number>('PROMOTION_DAYS') || 7;
       date.setDate(date.getDate() + daysToAdd);
       restaurant.promotedUntil = date;
       await this.prismaService.restaurant.update({
@@ -53,7 +56,7 @@ export class PaymentsService {
     } catch {
       return {
         ok: false,
-        error: "Could not create payment",
+        error: 'Could not create payment',
       };
     }
   }
@@ -72,7 +75,7 @@ export class PaymentsService {
     } catch {
       return {
         ok: false,
-        error: "Could not get payments",
+        error: 'Could not get payments',
       };
     }
   }

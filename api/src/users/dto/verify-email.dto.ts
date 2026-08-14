@@ -1,6 +1,6 @@
-import { Field, InputType, ObjectType } from "@nestjs/graphql";
-import { CoreOutput } from "../../common/dto/output.dto";
-import { IsString } from "class-validator";
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { CoreOutput } from '../../common/dto/output.dto';
+import { IsString } from 'class-validator';
 
 // @InputType()
 // export class VerifyEmailInput extends PickType(Verification, ["tokenHash"]) {}

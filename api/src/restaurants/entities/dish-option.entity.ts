@@ -1,9 +1,9 @@
-import { Field, InputType, Int, ObjectType } from "@nestjs/graphql";
-import { IsInt, IsOptional, IsString } from "class-validator";
-import { Type } from "class-transformer";
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { IsInt, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
 
 @ObjectType()
-@InputType("DishChoiceInput", { isAbstract: true })
+@InputType('DishChoiceInput', { isAbstract: true })
 export class DishChoice {
   @Field(() => String)
   @IsString()
@@ -16,7 +16,7 @@ export class DishChoice {
 }
 
 @ObjectType()
-@InputType("DishOptionInput", { isAbstract: true })
+@InputType('DishOptionInput', { isAbstract: true })
 export class DishOption {
   @Field(() => String)
   @IsString()

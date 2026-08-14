@@ -1,24 +1,31 @@
-import { Resolver, Query, Mutation, Args, Int, Subscription } from "@nestjs/graphql";
-import { OrdersService } from "./orders.service";
-import { Order } from "./entities/order.entity";
-import { Inject } from "@nestjs/common";
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  Subscription,
+} from '@nestjs/graphql';
+import { OrdersService } from './orders.service';
+import { Order } from './entities/order.entity';
+import { Inject } from '@nestjs/common';
 import {
   NEW_COOKED_ORDER,
   NEW_ORDER_UPDATE,
   NEW_PENDING_ORDER,
   PUB_SUB,
-} from "../common/common.constants";
-import { PubSub } from "graphql-subscriptions";
-import { CreateOrderInput, CreateOrderOutput } from "./dto/create-order.dto";
-import { AuthUser } from "../auth/decorator/auth-user.decorator";
-import { User } from "../users/entities/user.entity";
-import { Roles } from "../auth/decorator/roles.decorator";
-import { UserRole } from "../users/enums/role.enum";
-import { GetOrdersInput, GetOrdersOutput } from "./dto/get-orders.dto";
-import { GetOrderInput, GetOrderOutput } from "./dto/get-order.dto";
-import { EditOrderInput, EditOrderOutput } from "./dto/edit-order.dto";
-import { OrderUpdatesInput } from "./dto/order-updates.dto";
-import { TakeOrderInput, TakeOrderOutput } from "./dto/take-order.dto";
+} from '../common/common.constants';
+import { PubSub } from 'graphql-subscriptions';
+import { CreateOrderInput, CreateOrderOutput } from './dto/create-order.dto';
+import { AuthUser } from '../auth/decorator/auth-user.decorator';
+import { User } from '../users/entities/user.entity';
+import { Roles } from '../auth/decorator/roles.decorator';
+import { UserRole } from '../users/enums/role.enum';
+import { GetOrdersInput, GetOrdersOutput } from './dto/get-orders.dto';
+import { GetOrderInput, GetOrderOutput } from './dto/get-order.dto';
+import { EditOrderInput, EditOrderOutput } from './dto/edit-order.dto';
+import { OrderUpdatesInput } from './dto/order-updates.dto';
+import { TakeOrderInput, TakeOrderOutput } from './dto/take-order.dto';
 
 @Resolver(() => Order)
 export class OrdersResolver {
@@ -31,25 +38,25 @@ export class OrdersResolver {
   @Roles(UserRole.CUSTOMER)
   createOrder(
     @AuthUser() customer: User,
-    @Args("input") createOrderInput: CreateOrderInput,
+    @Args('input') createOrderInput: CreateOrderInput,
   ): Promise<CreateOrderOutput> {
     return this.ordersService.createOrder(customer, createOrderInput);
   }
 
   @Query(() => GetOrdersOutput)
-  @Roles("Any")
+  @Roles('Any')
   async getOrders(
     @AuthUser() user: User,
-    @Args("input") getOrdersInput: GetOrdersInput,
+    @Args('input') getOrdersInput: GetOrdersInput,
   ): Promise<GetOrdersOutput> {
     return this.ordersService.getOrders(user, getOrdersInput);
   }
 
   @Query(() => GetOrderOutput)
-  @Roles("Any")
+  @Roles('Any')
   async getOrder(
     @AuthUser() user: User,
-    @Args("input") getOrderInput: GetOrderInput,
+    @Args('input') getOrderInput: GetOrderInput,
   ): Promise<GetOrderOutput> {
     return this.ordersService.getOrder(user, getOrderInput);
   }
@@ -58,7 +65,7 @@ export class OrdersResolver {
   @Roles(UserRole.COURIER, UserRole.OWNER)
   async editOrder(
     @AuthUser() user: User,
-    @Args("input") editOrderInput: EditOrderInput,
+    @Args('input') editOrderInput: EditOrderInput,
   ): Promise<EditOrderOutput> {
     return this.ordersService.editOrder(user, editOrderInput);
   }
@@ -96,8 +103,8 @@ export class OrdersResolver {
       return order.id === input.id;
     },
   })
-  @Roles("Any")
-  orderUpdates(@Args("input") orderUpdatesInput: OrderUpdatesInput) {
+  @Roles('Any')
+  orderUpdates(@Args('input') orderUpdatesInput: OrderUpdatesInput) {
     return this.pubSub.asyncIterableIterator(NEW_ORDER_UPDATE);
   }
 
@@ -105,7 +112,7 @@ export class OrdersResolver {
   @Roles(UserRole.COURIER)
   takeOrder(
     @AuthUser() courier: User,
-    @Args("input") takeOrderInput: TakeOrderInput,
+    @Args('input') takeOrderInput: TakeOrderInput,
   ): Promise<TakeOrderOutput> {
     return this.ordersService.takeOrder(courier, takeOrderInput);
   }

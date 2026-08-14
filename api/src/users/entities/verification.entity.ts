@@ -1,6 +1,6 @@
-import { Field, InputType, ObjectType } from "@nestjs/graphql";
-import { CoreEntity } from "../../common/entities/core.entity";
-import { IsDate, IsString } from "class-validator";
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { CoreEntity } from '../../common/entities/core.entity';
+import { IsDate, IsString } from 'class-validator';
 
 @InputType({ isAbstract: true })
 @ObjectType()

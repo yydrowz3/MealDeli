@@ -21,6 +21,20 @@ CREATE TABLE "users" (
 );
 
 -- CreateTable
+CREATE TABLE "auth_sessions" (
+    "id" UUID NOT NULL,
+    "user_id" UUID NOT NULL,
+    "refresh_token_hash" VARCHAR(255) NOT NULL,
+    "refresh_expires_at" TIMESTAMPTZ(3) NOT NULL,
+    "revoked_at" TIMESTAMPTZ(3),
+    "last_used_at" TIMESTAMPTZ(3),
+    "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ(3) NOT NULL,
+
+    CONSTRAINT "auth_sessions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "email_verifications" (
     "id" UUID NOT NULL,
     "user_id" UUID NOT NULL,
@@ -109,6 +123,7 @@ CREATE TABLE "order_items" (
 -- CreateTable
 CREATE TABLE "payments" (
     "id" UUID NOT NULL,
+    "transaction_id" VARCHAR(255) NOT NULL,
     "owner_id" UUID NOT NULL,
     "restaurant_id" UUID NOT NULL,
     "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -121,6 +136,12 @@ CREATE TABLE "payments" (
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
+CREATE INDEX "auth_sessions_user_id_idx" ON "auth_sessions"("user_id");
+
+-- CreateIndex
+CREATE INDEX "auth_sessions_expires_at_idx" ON "auth_sessions"("refresh_expires_at");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "email_verifications_user_id_key" ON "email_verifications"("user_id");
 
 -- CreateIndex
@@ -128,6 +149,9 @@ CREATE UNIQUE INDEX "email_verifications_token_hash_key" ON "email_verifications
 
 -- CreateIndex
 CREATE INDEX "email_verifications_expires_at_idx" ON "email_verifications"("expires_at");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "categories_slug_key" ON "categories"("slug");
 
 -- CreateIndex
 CREATE INDEX "restaurants_created_at_id_idx" ON "restaurants"("created_at" DESC, "id" DESC);
@@ -167,6 +191,9 @@ CREATE INDEX "payments_owner_page_idx" ON "payments"("owner_id", "created_at" DE
 
 -- CreateIndex
 CREATE INDEX "payments_restaurant_idx" ON "payments"("restaurant_id", "created_at" DESC, "id" DESC);
+
+-- AddForeignKey
+ALTER TABLE "auth_sessions" ADD CONSTRAINT "auth_sessions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "email_verifications" ADD CONSTRAINT "email_verifications_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

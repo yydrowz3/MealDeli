@@ -1,24 +1,24 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
-import { PubSub } from "graphql-subscriptions";
-import { User } from "../users/entities/user.entity";
-import { CreateOrderInput, CreateOrderOutput } from "./dto/create-order.dto";
-import { GetOrdersInput, GetOrdersOutput } from "./dto/get-orders.dto";
-import { Order } from "./entities/order.entity";
-import { DishOption } from "../restaurants/entities/dish-option.entity";
+import { Inject, Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { PubSub } from 'graphql-subscriptions';
+import { User } from '../users/entities/user.entity';
+import { CreateOrderInput, CreateOrderOutput } from './dto/create-order.dto';
+import { GetOrdersInput, GetOrdersOutput } from './dto/get-orders.dto';
+import { Order } from './entities/order.entity';
+import { DishOption } from '../restaurants/entities/dish-option.entity';
 import {
   NEW_COOKED_ORDER,
   NEW_ORDER_UPDATE,
   NEW_PENDING_ORDER,
   PUB_SUB,
-} from "../common/common.constants";
-import { Prisma } from "../generated/prisma/client";
-import { GetOrderInput, GetOrderOutput } from "./dto/get-order.dto";
-import { UserRole } from "../users/enums/role.enum";
-import { OrderStatus } from "./enums/status.enum";
-import { EditOrderInput, EditOrderOutput } from "./dto/edit-order.dto";
-import { OrderUpdatesInput, OrderUpdatesOutput } from "./dto/order-updates.dto";
-import { TakeOrderInput, TakeOrderOutput } from "./dto/take-order.dto";
+} from '../common/common.constants';
+import { Prisma } from '../generated/prisma/client';
+import { GetOrderInput, GetOrderOutput } from './dto/get-order.dto';
+import { UserRole } from '../users/enums/role.enum';
+import { OrderStatus } from './enums/status.enum';
+import { EditOrderInput, EditOrderOutput } from './dto/edit-order.dto';
+import { OrderUpdatesInput, OrderUpdatesOutput } from './dto/order-updates.dto';
+import { TakeOrderInput, TakeOrderOutput } from './dto/take-order.dto';
 
 type OrderOptionSnapshot = {
   name: string;
@@ -51,7 +51,7 @@ export class OrdersService {
       if (!restaurant) {
         return {
           ok: false,
-          error: "Restaurant not found.",
+          error: 'Restaurant not found.',
         };
       }
 
@@ -75,14 +75,14 @@ export class OrdersService {
         if (!dish) {
           return {
             ok: false,
-            error: "Dish not found.",
+            error: 'Dish not found.',
           };
         }
 
         if (dish.restaurantId !== restaurant.id) {
           return {
             ok: false,
-            error: "Dish does not belong to this restaurant.",
+            error: 'Dish does not belong to this restaurant.',
           };
         }
 
@@ -92,7 +92,9 @@ export class OrdersService {
           ? (dish.options as unknown as DishOption[])
           : [];
         for (const itemOption of item.options) {
-          const dishOption = dishOptions.find((option) => option.name === itemOption.name);
+          const dishOption = dishOptions.find(
+            (option) => option.name === itemOption.name,
+          );
           if (!dishOption) {
             continue;
           }
@@ -171,12 +173,15 @@ export class OrdersService {
     } catch {
       return {
         ok: false,
-        error: "Could not create order.",
+        error: 'Could not create order.',
       };
     }
   }
 
-  async getOrders(user: User, getOrdersInput: GetOrdersInput): Promise<GetOrdersOutput> {
+  async getOrders(
+    user: User,
+    getOrdersInput: GetOrdersInput,
+  ): Promise<GetOrdersOutput> {
     try {
       let orders: Order[];
       switch (user.role) {
@@ -207,14 +212,16 @@ export class OrdersService {
           });
           orders = restaurants.flatMap((restaurant) => restaurant.orders);
           if (getOrdersInput.status) {
-            orders = orders.filter((order) => order.status === getOrdersInput.status);
+            orders = orders.filter(
+              (order) => order.status === getOrdersInput.status,
+            );
           }
           break;
 
         default:
           return {
             ok: false,
-            error: "User role not supported.",
+            error: 'User role not supported.',
           };
       }
       return {
@@ -224,7 +231,7 @@ export class OrdersService {
     } catch {
       return {
         ok: false,
-        error: "Could not get orders.",
+        error: 'Could not get orders.',
       };
     }
   }
@@ -245,7 +252,10 @@ export class OrdersService {
     }
   }
 
-  async getOrder(user: User, getOrderInput: GetOrderInput): Promise<GetOrderOutput> {
+  async getOrder(
+    user: User,
+    getOrderInput: GetOrderInput,
+  ): Promise<GetOrderOutput> {
     try {
       const order = await this.prismaService.order.findUnique({
         where: {
@@ -255,14 +265,14 @@ export class OrdersService {
       if (!order) {
         return {
           ok: false,
-          error: "Order Not Found",
+          error: 'Order Not Found',
         };
       }
       const canSeeOrder = this.canSeeOrder(user, order);
       if (!canSeeOrder) {
         return {
           ok: false,
-          error: "Permission denied for this order",
+          error: 'Permission denied for this order',
         };
       }
       return {
@@ -272,7 +282,7 @@ export class OrdersService {
     } catch {
       return {
         ok: false,
-        error: "Could not get order.",
+        error: 'Could not get order.',
       };
     }
   }
@@ -303,7 +313,10 @@ export class OrdersService {
     return false;
   }
 
-  async editOrder(user: User, editOrderInput: EditOrderInput): Promise<EditOrderOutput> {
+  async editOrder(
+    user: User,
+    editOrderInput: EditOrderInput,
+  ): Promise<EditOrderOutput> {
     try {
       const order = await this.prismaService.order.findUnique({
         where: {
@@ -313,21 +326,21 @@ export class OrdersService {
       if (!order) {
         return {
           ok: false,
-          error: "Order not found.",
+          error: 'Order not found.',
         };
       }
       const canSeeOrder = this.canSeeOrder(user, order);
       if (!canSeeOrder) {
         return {
           ok: false,
-          error: "Permission denied for this order",
+          error: 'Permission denied for this order',
         };
       }
       const canEditOrder = this.canEditOrder(user, editOrderInput.status);
       if (!canEditOrder) {
         return {
           ok: false,
-          error: "Permission denied for this order status",
+          error: 'Permission denied for this order status',
         };
       }
       await this.prismaService.order.update({
@@ -356,7 +369,7 @@ export class OrdersService {
     } catch {
       return {
         ok: false,
-        error: "Could not edit order.",
+        error: 'Could not edit order.',
       };
     }
   }
@@ -373,14 +386,14 @@ export class OrdersService {
     if (!order) {
       return {
         ok: false,
-        error: "Order not found.",
+        error: 'Order not found.',
       };
     }
     const canSeeOrder = this.canSeeOrder(user, order);
     if (!canSeeOrder) {
       return {
         ok: false,
-        error: "Permission denied for this order",
+        error: 'Permission denied for this order',
       };
     }
     return {
@@ -388,7 +401,10 @@ export class OrdersService {
     };
   }
 
-  async takeOrder(courier: User, takeOrderInput: TakeOrderInput): Promise<TakeOrderOutput> {
+  async takeOrder(
+    courier: User,
+    takeOrderInput: TakeOrderInput,
+  ): Promise<TakeOrderOutput> {
     try {
       const order = await this.prismaService.order.findUnique({
         where: {
@@ -398,13 +414,13 @@ export class OrdersService {
       if (!order) {
         return {
           ok: false,
-          error: "Order not found.",
+          error: 'Order not found.',
         };
       }
       if (order.courierId) {
         return {
           ok: false,
-          error: "Order already taken.",
+          error: 'Order already taken.',
         };
       }
       await this.prismaService.order.update({
@@ -425,7 +441,7 @@ export class OrdersService {
     } catch {
       return {
         ok: false,
-        error: "Could not take order.",
+        error: 'Could not take order.',
       };
     }
   }

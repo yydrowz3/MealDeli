@@ -1,16 +1,20 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { Resend } from "resend";
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Resend } from 'resend';
 
 @Injectable()
 export class MailsService {
   private readonly resend: Resend;
   constructor(private readonly configService: ConfigService) {
-    this.resend = new Resend(this.configService.get<string>("RESEND_API_KEY") || "");
+    this.resend = new Resend(
+      this.configService.get<string>('RESEND_API_KEY') || '',
+    );
   }
   async sendEmail(to: string, subject: string, html: string) {
     const { data, error } = await this.resend.emails.send({
-      from: this.configService.get<string>("RESEND_EMAIL_FROM") || "Resend <onboarding@resend.dev>",
+      from:
+        this.configService.get<string>('RESEND_EMAIL_FROM') ||
+        'Resend <onboarding@resend.dev>',
       to,
       subject,
       html,
@@ -23,9 +27,10 @@ export class MailsService {
   }
 
   async sendVerificationEmail(email: string, token: string) {
-    const frontendUrl = this.configService.get<string>("FRONTEND_URL") ?? "http://localhost:3000";
+    const frontendUrl =
+      this.configService.get<string>('FRONTEND_URL') ?? 'http://localhost:3000';
     const verificationUrl = `${frontendUrl}/verify-email?token=${encodeURIComponent(token)}`;
-    const subject = "Verify your email";
+    const subject = 'Verify your email';
 
     const html = `
     <h1>Verify your email</h1>
