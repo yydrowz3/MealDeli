@@ -13,7 +13,8 @@ import { JwtModule } from "@nestjs/jwt";
 import { MailsModule } from "./mails/mails.module";
 import { ACCESS_TOKEN_EXPIRES_IN } from "./auth/auth.constants";
 import { RestaurantsModule } from "./restaurants/restaurants.module";
-import { PaymentsModule } from './payments/payments.module';
+import { PaymentsModule } from "./payments/payments.module";
+import { UploadsModule } from "./uploads/uploads.module";
 
 @Module({
   imports: [
@@ -83,6 +84,7 @@ import { PaymentsModule } from './payments/payments.module';
     MailsModule,
     RestaurantsModule,
     PaymentsModule,
+    UploadsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
