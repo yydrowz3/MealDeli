@@ -5,7 +5,7 @@ import { CreatePaymentInput, CreatePaymentOutput } from "./dto/create-payment.dt
 import { AuthUser } from "../auth/decorator/auth-user.decorator";
 import { User } from "../users/entities/user.entity";
 import { Roles } from "../auth/decorator/roles.decorator";
-import { UserRole } from "../generated/prisma/enums";
+import { UserRole } from "../users/enums/role.enum";
 import { GetPaymentsOutput } from "./dto/get-payments.dto";
 
 @Resolver(() => Payment)

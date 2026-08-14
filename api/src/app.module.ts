@@ -15,6 +15,7 @@ import { ACCESS_TOKEN_EXPIRES_IN } from "./auth/auth.constants";
 import { RestaurantsModule } from "./restaurants/restaurants.module";
 import { PaymentsModule } from "./payments/payments.module";
 import { UploadsModule } from "./uploads/uploads.module";
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -85,6 +86,7 @@ import { UploadsModule } from "./uploads/uploads.module";
     RestaurantsModule,
     PaymentsModule,
     UploadsModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

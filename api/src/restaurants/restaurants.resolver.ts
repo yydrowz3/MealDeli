@@ -5,7 +5,7 @@ import { CreateRestaurantInput, CreateRestaurantOutput } from "./dto/create-rest
 import { AuthUser } from "../auth/decorator/auth-user.decorator";
 import { User } from "../users/entities/user.entity";
 import { Roles } from "../auth/decorator/roles.decorator";
-import { UserRole } from "../generated/prisma/enums";
+import { UserRole } from "../users/enums/role.enum";
 import { MyRestaurantsOutput } from "./dto/my-restaurants.dto";
 import { MyRestaurantInput, MyRestaurantOutput } from "./dto/my-restaurant.dto";
 import { EditRestaurantInput, EditRestaurantOutput } from "./dto/edit-restaurant.dto";

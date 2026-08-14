@@ -59,6 +59,9 @@ importers:
       graphql:
         specifier: ^17.0.2
         version: 17.0.2
+      graphql-subscriptions:
+        specifier: ^3.0.0
+        version: 3.0.0(graphql@17.0.2)
       graphql-ws:
         specifier: ^6.2.1
         version: 6.2.1(graphql@17.0.2)(ws@8.20.1)
@@ -2847,6 +2850,11 @@ packages:
 
   graphmatch@1.1.1:
     resolution: {integrity: sha512-5ykVn/EXM1hF0XCaWh05VbYvEiOL2lY1kBxZtaYsyvjp7cmWOU1XsAdfQBwClraEofXDT197lFbXOEVMHpvQOg==}
+
+  graphql-subscriptions@3.0.0:
+    resolution: {integrity: sha512-kZCdevgmzDjGAOqH7GlDmQXYAkuHoKpMlJrqF40HMPhUhM5ZWSFSxCwD/nSi6AkaijmMfsFhoJRGJ27UseCvRA==}
+    peerDependencies:
+      graphql: ^15.7.2 || ^16.0.0
 
   graphql-tag@2.12.6:
     resolution: {integrity: sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg==}
@@ -7506,6 +7514,10 @@ snapshots:
   grammex@3.1.13: {}
 
   graphmatch@1.1.1: {}
+
+  graphql-subscriptions@3.0.0(graphql@17.0.2):
+    dependencies:
+      graphql: 17.0.2
 
   graphql-tag@2.12.6(graphql@17.0.2):
     dependencies:
