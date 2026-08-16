@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title" viewBox="0 0 64 64">
-<title id="title">MealDeli</title>
+<title id="title">MealDeli mono-dark mark</title>
 <defs>
-  <mask id="route-favicon">
+  <mask id="route-mark-mono-dark">
     <rect width="64" height="64" fill="white"/>
     <path d="M15.5 34.5c7.5 0 7.5 8 15 8s7.5-9 13.5-9" fill="none" stroke="black" stroke-width="5.2" stroke-linecap="round"/>
     <circle cx="45" cy="33.5" r="4.1" fill="black"/>
   </mask>
 </defs>
-<g fill="#2FA36B" mask="url(#route-favicon)">
+<g fill="#202723" mask="url(#route-mark-mono-dark)">
   <path d="M10 19.5A3.5 3.5 0 0 1 13.5 16h37A3.5 3.5 0 0 1 54 19.5V24H10v-4.5Z"/>
   <path d="M12 25h40c-.7 16.6-8.8 27-20 27S12.7 41.6 12 25Z"/>
 </g>
