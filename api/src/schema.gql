@@ -7,7 +7,7 @@ type Category {
   id: String!
   image: String
   name: String!
-  restaurants: [Restaurant!]
+  restaurantCount: Int
   slug: String!
   updatedAt: DateTime!
 }
@@ -32,6 +32,11 @@ type CreateOrderOutput {
   error: String
   ok: Boolean!
   orderId: String
+}
+
+input CreatePaymentInput {
+  restaurantId: String!
+  transactionId: String!
 }
 
 type CreatePaymentOutput {
@@ -73,8 +78,7 @@ type Dish {
   image: String
   name: String!
   options: [DishOption!]!
-  priceMinor: Float!
-  restaurant: Restaurant!
+  priceMinor: Int!
   restaurantId: String!
   updatedAt: DateTime!
 }
@@ -156,7 +160,7 @@ type GetPaymentsOutput {
 
 type Mutation {
   createOrder(input: CreateOrderInput!): CreateOrderOutput!
-  createPayment: CreatePaymentOutput!
+  createPayment(input: CreatePaymentInput!): CreatePaymentOutput!
   createRestaurant(input: CreateRestaurantInput!): CreateRestaurantOutput!
   deleteRestaurant(input: DeleteRestaurantInput!): DeleteRestaurantOutput!
   editOrder(input: EditOrderInput!): EditOrderOutput!
@@ -187,10 +191,8 @@ type MyRestaurantsOutput {
 }
 
 type Order {
-  courier: User
   courierId: String
   createdAt: DateTime!
-  customer: User
   customerId: String!
   id: String!
   items: [OrderItem!]
@@ -204,13 +206,13 @@ type Order {
 type OrderItem {
   basePriceMinor: Int!
   createdAt: DateTime!
-  dish: Dish
   dishId: String!
+  dishName: String!
   id: String!
   lineTotalMinor: Int!
   optionsExtraMinor: Int!
-  order: Order
   orderId: String!
+  position: Int!
   quantity: Int!
   selectedOptions: [OrderItemOption!]!
   updatedAt: DateTime!
@@ -243,11 +245,18 @@ input OrderUpdatesInput {
 type Payment {
   createdAt: DateTime!
   id: String!
-  owner: User
   ownerId: String!
-  restaurant: Restaurant
   restaurantId: String!
   transactionId: String!
+  updatedAt: DateTime!
+}
+
+type PublicUser {
+  createdAt: DateTime!
+  id: String!
+  image: String
+  name: String!
+  role: UserRole!
   updatedAt: DateTime!
 }
 
@@ -280,9 +289,7 @@ type Restaurant {
   id: String!
   image: String
   name: String!
-  owner: User
   ownerId: String!
-  payments: [Payment!]
   promotedUntil: DateTime
   updatedAt: DateTime!
 }
@@ -379,7 +386,7 @@ type User {
 type UserProfileOutput {
   error: String
   ok: Boolean!
-  user: User
+  user: PublicUser
 }
 
 enum UserRole {

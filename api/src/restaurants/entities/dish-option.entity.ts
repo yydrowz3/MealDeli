@@ -7,6 +7,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsUUID,
   Min,
   ValidateNested,
 } from 'class-validator';
@@ -85,6 +86,7 @@ export class EditDishChoiceInput extends CreateDishChoiceInput {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
+  @IsUUID()
   id?: string;
 }
 
@@ -94,6 +96,7 @@ export class EditDishOptionInput {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
+  @IsUUID()
   id?: string;
 
   @Field(() => String)

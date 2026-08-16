@@ -3,7 +3,8 @@ import {
   Query,
   Mutation,
   Args,
-  Int,
+  Parent,
+  ResolveField,
   Subscription,
 } from '@nestjs/graphql';
 import { OrdersService } from './orders.service';
@@ -26,6 +27,8 @@ import { GetOrderInput, GetOrderOutput } from './dto/get-order.dto';
 import { EditOrderInput, EditOrderOutput } from './dto/edit-order.dto';
 import { OrderUpdatesInput } from './dto/order-updates.dto';
 import { TakeOrderInput, TakeOrderOutput } from './dto/take-order.dto';
+import { OrderItem } from './entities/order-item.entity';
+import { Restaurant } from '../restaurants/entities/restaurant.entity';
 
 @Resolver(() => Order)
 export class OrdersResolver {
@@ -33,6 +36,16 @@ export class OrdersResolver {
     private readonly ordersService: OrdersService,
     @Inject(PUB_SUB) private readonly pubSub: PubSub,
   ) {}
+
+  @ResolveField(() => [OrderItem])
+  items(@Parent() order: Order): Promise<OrderItem[]> {
+    return this.ordersService.findItemsByOrderId(order.id);
+  }
+
+  @ResolveField(() => Restaurant)
+  restaurant(@Parent() order: Order): Promise<Restaurant> {
+    return this.ordersService.findRestaurantById(order.restaurantId);
+  }
 
   @Mutation(() => CreateOrderOutput)
   @Roles(UserRole.CUSTOMER)
@@ -71,10 +84,15 @@ export class OrdersResolver {
   }
 
   @Subscription(() => Order, {
-    filter: ({ pendingOrders: { ownerId } }, _, { user }) => {
-      return ownerId === user.id;
+    filter: (
+      { pendingOrders }: { pendingOrders: { ownerId: string; order: Order } },
+      _variables: unknown,
+      { user }: { user: User },
+    ) => {
+      return pendingOrders.ownerId === user.id;
     },
-    resolve: ({ pendingOrders: { order } }) => order,
+    resolve: ({ pendingOrders }: { pendingOrders: { order: Order } }) =>
+      pendingOrders.order,
   })
   @Roles(UserRole.OWNER)
   pendingOrders() {
@@ -105,6 +123,7 @@ export class OrdersResolver {
   })
   @Roles('Any')
   orderUpdates(@Args('input') orderUpdatesInput: OrderUpdatesInput) {
+    void orderUpdatesInput;
     return this.pubSub.asyncIterableIterator(NEW_ORDER_UPDATE);
   }
 

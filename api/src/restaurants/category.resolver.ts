@@ -24,6 +24,8 @@ import {
   DeleteCategoryInput,
   DeleteCategoryOutput,
 } from './dto/delete-category.dto';
+import { Roles } from '../auth/decorator/roles.decorator';
+import { UserRole } from '../users/enums/role.enum';
 
 @Resolver(() => Category)
 export class CategoryResolver {
@@ -54,6 +56,7 @@ export class CategoryResolver {
   }
 
   @Mutation(() => CreateCategoryOutput)
+  @Roles(UserRole.OWNER)
   createCategory(
     @Args('input') createCategoryInput: CreateCategoryInput,
   ): Promise<CreateCategoryOutput> {
@@ -61,6 +64,7 @@ export class CategoryResolver {
   }
 
   @Mutation(() => UpdateCategoryOutput)
+  @Roles(UserRole.OWNER)
   updateCategory(
     @Args('input') updateCategoryInput: UpdateCategoryInput,
   ): Promise<UpdateCategoryOutput> {
@@ -68,6 +72,7 @@ export class CategoryResolver {
   }
 
   @Mutation(() => DeleteCategoryOutput)
+  @Roles(UserRole.OWNER)
   deleteCategory(
     @Args('input') deleteCategoryInput: DeleteCategoryInput,
   ): Promise<DeleteCategoryOutput> {

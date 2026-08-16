@@ -1,8 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { CoreEntity } from '../../common/entities/core.entity';
-import { Dish } from '../../restaurants/entities/dish.entity';
-import { Order } from './order.entity';
-import { IsInt } from 'class-validator';
 
 @ObjectType()
 export class OrderItemOptionChoice {
@@ -33,14 +30,14 @@ export class OrderItem extends CoreEntity {
   @Field(() => String)
   orderId!: string;
 
-  @Field(() => Order)
-  order?: Order;
-
   @Field(() => String)
   dishId!: string;
 
-  @Field(() => Dish)
-  dish?: Dish;
+  @Field(() => String)
+  dishName!: string;
+
+  @Field(() => Int)
+  position!: number;
 
   @Field(() => Int)
   basePriceMinor!: number;
@@ -52,7 +49,6 @@ export class OrderItem extends CoreEntity {
   optionsExtraMinor!: number;
 
   @Field(() => Int)
-  @IsInt()
   quantity!: number;
 
   @Field(() => Int)

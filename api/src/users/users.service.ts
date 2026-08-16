@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserProfileOutput } from './dto/user-profile.dto';
 import { User } from './entities/user.entity';
+import { PublicUser } from './entities/public-user.entity';
 import { JwtService, type JwtSignOptions } from '@nestjs/jwt';
 import { SignUpInput, SignUpOutput } from './dto/sign-up.dto';
 import { SignInInput, SignInOutput } from './dto/sign-in.dto';
@@ -32,8 +33,9 @@ export class UsersService {
 
   async signUp({ email, name, password }: SignUpInput): Promise<SignUpOutput> {
     try {
+      const normalizedEmail = email.trim().toLocaleLowerCase();
       const exists = await this.prismaService.user.findUnique({
-        where: { email },
+        where: { email: normalizedEmail },
       });
       if (exists) {
         return {
@@ -43,7 +45,7 @@ export class UsersService {
       }
       const passwordHash = await argon2.hash(password);
       const user = await this.prismaService.user.create({
-        data: { email, passwordHash, name },
+        data: { email: normalizedEmail, passwordHash, name: name.trim() },
       });
 
       const token = this.generateVerificationToken();
@@ -165,7 +167,7 @@ export class UsersService {
       }
       return {
         ok: true,
-        user: user,
+        user: this.toPublicUser(user),
       };
     } catch {
       return {
@@ -174,6 +176,17 @@ export class UsersService {
         user: null,
       };
     }
+  }
+
+  private toPublicUser(user: User): PublicUser {
+    return {
+      id: user.id,
+      name: user.name,
+      image: user.image,
+      role: user.role,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
   }
 
   async findOneById(id: string): Promise<User | null> {

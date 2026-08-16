@@ -7,6 +7,7 @@ import {
 import { User } from '../users/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 import { GetPaymentsOutput } from './dto/get-payments.dto';
+import { Prisma } from '../generated/prisma/client';
 
 @Injectable()
 export class PaymentsService {
@@ -35,25 +36,35 @@ export class PaymentsService {
           error: 'Permission denied from restaurant.',
         };
       }
-      await this.prismaService.payment.create({
-        data: {
-          transactionId: createPaymentInput.transactionId,
-          ownerId: owner.id,
-          restaurantId: createPaymentInput.restaurantId,
-        },
-      });
       const date = new Date();
       const daysToAdd = this.configService.get<number>('PROMOTION_DAYS') || 7;
       date.setDate(date.getDate() + daysToAdd);
-      restaurant.promotedUntil = date;
-      await this.prismaService.restaurant.update({
-        where: { id: restaurant.id },
-        data: { promotedUntil: date },
+      await this.prismaService.$transaction(async (transaction) => {
+        await transaction.payment.create({
+          data: {
+            transactionId: createPaymentInput.transactionId,
+            ownerId: owner.id,
+            restaurantId: createPaymentInput.restaurantId,
+          },
+        });
+        await transaction.restaurant.update({
+          where: { id: restaurant.id },
+          data: { promotedUntil: date },
+        });
       });
       return {
         ok: true,
       };
-    } catch {
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        return {
+          ok: false,
+          error: 'This transaction has already been processed.',
+        };
+      }
       return {
         ok: false,
         error: 'Could not create payment',

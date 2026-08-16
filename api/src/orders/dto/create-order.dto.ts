@@ -6,6 +6,7 @@ import {
   IsNotEmpty,
   IsInt,
   IsString,
+  IsUUID,
   Min,
   ValidateNested,
 } from 'class-validator';
@@ -17,6 +18,7 @@ class CreateOrderItemOptionInput {
   @Field(() => String)
   @IsString()
   @IsNotEmpty()
+  @IsUUID()
   optionId!: string;
 
   @Field(() => [String])
@@ -25,6 +27,7 @@ class CreateOrderItemOptionInput {
   @ArrayUnique()
   @IsString({ each: true })
   @IsNotEmpty({ each: true })
+  @IsUUID('4', { each: true })
   choiceIds!: string[];
 }
 
@@ -33,6 +36,7 @@ class CreateOrderItemInput {
   @Field(() => String)
   @IsString()
   @IsNotEmpty()
+  @IsUUID()
   dishId!: string;
 
   @Field(() => Int)
@@ -53,6 +57,7 @@ export class CreateOrderInput {
   @Field(() => String)
   @IsString()
   @IsNotEmpty()
+  @IsUUID()
   restaurantId!: string;
 
   @Field(() => [CreateOrderItemInput])

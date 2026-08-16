@@ -1,7 +1,5 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { CoreEntity } from '../../common/entities/core.entity';
-import { IsInt } from 'class-validator';
-import { Restaurant } from './restaurant.entity';
 import { DishOption } from './dish-option.entity';
 
 @ObjectType()
@@ -9,8 +7,7 @@ export class Dish extends CoreEntity {
   @Field(() => String)
   name!: string;
 
-  @Field(() => Number)
-  @IsInt()
+  @Field(() => Int)
   priceMinor!: number;
 
   @Field(() => String, { nullable: true })
@@ -21,9 +18,6 @@ export class Dish extends CoreEntity {
 
   @Field(() => [DishOption])
   options!: DishOption[];
-
-  @Field(() => Restaurant)
-  restaurant!: Restaurant;
 
   @Field(() => String)
   restaurantId!: string;

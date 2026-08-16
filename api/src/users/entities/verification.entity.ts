@@ -1,19 +1,14 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { HideField, ObjectType } from '@nestjs/graphql';
 import { CoreEntity } from '../../common/entities/core.entity';
-import { IsDate, IsString } from 'class-validator';
 
-@InputType({ isAbstract: true })
 @ObjectType()
 export class Verification extends CoreEntity {
-  @Field(() => String)
-  @IsString()
+  @HideField()
   userId!: string;
 
-  @Field(() => String)
-  @IsString()
+  @HideField()
   tokenHash!: string;
 
-  @Field(() => Date)
-  @IsDate()
+  @HideField()
   expiresAt!: Date;
 }

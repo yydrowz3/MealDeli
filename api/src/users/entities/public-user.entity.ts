@@ -1,17 +1,15 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { CoreEntity } from '../../common/entities/core.entity';
+import { UserRole } from '../enums/role.enum';
 
 @ObjectType()
-export class Category extends CoreEntity {
+export class PublicUser extends CoreEntity {
   @Field(() => String)
   name!: string;
 
   @Field(() => String, { nullable: true })
   image!: string | null;
 
-  @Field(() => String)
-  slug!: string;
-
-  @Field(() => Int)
-  restaurantCount?: number;
+  @Field(() => UserRole)
+  role!: UserRole;
 }

@@ -5,7 +5,9 @@ import { User } from '../users/entities/user.entity';
 import { CreateOrderInput, CreateOrderOutput } from './dto/create-order.dto';
 import { GetOrdersInput, GetOrdersOutput } from './dto/get-orders.dto';
 import { Order } from './entities/order.entity';
+import { OrderItem } from './entities/order-item.entity';
 import { DishOption } from '../restaurants/entities/dish-option.entity';
+import { Restaurant } from '../restaurants/entities/restaurant.entity';
 import {
   NEW_COOKED_ORDER,
   NEW_ORDER_UPDATE,
@@ -26,6 +28,23 @@ export class OrdersService {
     private readonly prismaService: PrismaService,
     @Inject(PUB_SUB) private readonly pubSub: PubSub,
   ) {}
+
+  async findItemsByOrderId(orderId: string): Promise<OrderItem[]> {
+    return this.prismaService.orderItem.findMany({
+      where: { orderId },
+      orderBy: { position: 'asc' },
+    }) as unknown as Promise<OrderItem[]>;
+  }
+
+  async findRestaurantById(restaurantId: string): Promise<Restaurant> {
+    const restaurant = await this.prismaService.restaurant.findUnique({
+      where: { id: restaurantId },
+    });
+    if (!restaurant) {
+      throw new Error('Order restaurant no longer exists.');
+    }
+    return restaurant;
+  }
 
   async createOrder(
     customer: User,
@@ -219,7 +238,7 @@ export class OrdersService {
             },
           });
           break;
-        case UserRole.OWNER:
+        case UserRole.OWNER: {
           const restaurants = await this.prismaService.restaurant.findMany({
             where: {
               ownerId: user.id,
@@ -235,6 +254,7 @@ export class OrdersService {
             );
           }
           break;
+        }
 
         default:
           return {
@@ -254,7 +274,12 @@ export class OrdersService {
     }
   }
 
-  private canSeeOrder(user: User, order: Order): boolean {
+  private canSeeOrder(
+    user: User,
+    order: Pick<Order, 'customerId' | 'courierId'> & {
+      restaurant?: { ownerId: string };
+    },
+  ): boolean {
     switch (user.role) {
       case UserRole.CUSTOMER:
         return order.customerId === user.id;
@@ -279,6 +304,11 @@ export class OrdersService {
         where: {
           id: getOrderInput.id,
         },
+        include: {
+          restaurant: {
+            select: { ownerId: true },
+          },
+        },
       });
       if (!order) {
         return {
@@ -293,9 +323,19 @@ export class OrdersService {
           error: 'Permission denied for this order',
         };
       }
+      const orderOutput: Order = {
+        id: order.id,
+        createdAt: order.createdAt,
+        updatedAt: order.updatedAt,
+        customerId: order.customerId,
+        restaurantId: order.restaurantId,
+        courierId: order.courierId,
+        status: order.status,
+        totalMinor: order.totalMinor,
+      };
       return {
         ok: true,
-        order,
+        order: orderOutput,
       };
     } catch {
       return {
@@ -339,6 +379,11 @@ export class OrdersService {
       const order = await this.prismaService.order.findUnique({
         where: {
           id: editOrderInput.id,
+        },
+        include: {
+          restaurant: {
+            select: { ownerId: true },
+          },
         },
       });
       if (!order) {

@@ -203,6 +203,7 @@ model Payment {
   owner         User       @relation(fields: [ownerId], references: [id], onDelete: Restrict)
   restaurant    Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
 
+  @@unique([transactionId], map: "payments_transaction_id_key")
   @@index([ownerId, createdAt(sort: Desc), id(sort: Desc)], map: "payments_owner_page_idx")
   @@index([restaurantId, createdAt(sort: Desc), id(sort: Desc)], map: "payments_restaurant_idx")
   @@map("payments")

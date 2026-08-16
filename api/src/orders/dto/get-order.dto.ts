@@ -1,9 +1,14 @@
-import { Field, InputType, ObjectType, PickType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { IsUUID } from 'class-validator';
 import { Order } from '../entities/order.entity';
 import { CoreOutput } from '../../common/dto/output.dto';
 
 @InputType()
-export class GetOrderInput extends PickType(Order, ['id']) {}
+export class GetOrderInput {
+  @Field(() => String)
+  @IsUUID()
+  id!: string;
+}
 
 @ObjectType()
 export class GetOrderOutput extends CoreOutput {
