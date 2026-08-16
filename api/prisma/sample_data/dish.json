@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Guacamole Burger",
+    "price": 13,
+    "description": "Our most popular NO.1! It's full of guacamole sauce! French fries included!",
+    "options": null
+  },
+  {
+    "name": "Cheese Burger",
+    "price": 10,
+    "description": "Speaking of hamburgers, this is it! French fries included!",
+    "options": null
+  },
+  {
+    "name": "Egg Cheeseburger",
+    "price": 11,
+    "photo": null,
+    "description": "This is also the royal road of hamburgers! If you are in doubt, this is it! French fries included!",
+    "options": "[{\"choices\":[{\"extra\":1,\"name\":\"Jalapenos\"},{\"extra\":1,\"name\":\"Pickles\"},{\"extra\":2,\"name\":\"Avocado\"}],\"name\":\"Topping\"}]"
+  },
+  {
+    "name": "BLTE Sandwich",
+    "price": 10,
+    "photo": null,
+    "description": "The royal road of sandwiches! Bacon, lettuce, tomato, and eggs! French fries included!",
+    "options": null
+  },
+  {
+    "name": "Corned Beef Sandwich",
+    "price": 12,
+    "photo": null,
+    "description": "Plenty of corned beef! Once you eat it, you can't stop! French fries included!",
+    "options": null
+  },
+  {
+    "name": "Avocado Cheese Loco Moco",
+    "price": 12,
+    "photo": null,
+    "description": "Plenty of 100% beef hamburger steak and avocado! It's topped with plenty of homemade cheese sauce! It is a popular product of our store!",
+    "options": null
+  },
+  {
+    "name": "Loco Moco",
+    "price": 11,
+    "photo": null,
+    "description": "The hamburger steak is 100% beef! Plenty of vegetables!",
+    "options": null
+  },
+  {
+    "name": "Teriyaki Egg Burger",
+    "price": 11,
+    "photo": null,
+    "description": "The harmony of original teriyaki sauce and mayonnaise! French fries included!",
+    "options": "[{\"extra\":1,\"name\":\"Jalapenos\"},{\"extra\":1,\"name\":\"Pickles\"},{\"extra\":2,\"name\":\"Avocado\"}]"
+  }
+]

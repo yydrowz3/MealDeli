@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AllCategoriesOutput {
+  categories: [Category!]
+  error: String
+  ok: Boolean!
+}
+
 type Category {
   createdAt: DateTime!
   id: String!
@@ -10,6 +16,56 @@ type Category {
   restaurantCount: Int
   slug: String!
   updatedAt: DateTime!
+}
+
+input CategoryInput {
+  page: Int! = 1
+  slug: String!
+}
+
+type CategoryOutput {
+  category: Category
+  error: String
+  ok: Boolean!
+  restaurants: [Restaurant!]
+  totalPages: Int
+  totalResults: Int
+}
+
+input CreateCategoryInput {
+  image: String
+  name: String!
+}
+
+type CreateCategoryOutput {
+  error: String
+  ok: Boolean!
+}
+
+input CreateDishChoiceInput {
+  extraMinor: Int!
+  name: String!
+}
+
+input CreateDishInput {
+  description: String!
+  image: String
+  name: String!
+  options: [CreateDishOptionInput!]
+  priceMinor: Int!
+  restaurantId: String!
+}
+
+input CreateDishOptionInput {
+  choices: [CreateDishChoiceInput!]!
+  maxSelections: Int!
+  minSelections: Int!
+  name: String!
+}
+
+type CreateDishOutput {
+  error: String
+  ok: Boolean!
 }
 
 input CreateOrderInput {
@@ -62,6 +118,24 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input DeleteCategoryInput {
+  id: String!
+}
+
+type DeleteCategoryOutput {
+  error: String
+  ok: Boolean!
+}
+
+input DeleteDishInput {
+  dishId: String!
+}
+
+type DeleteDishOutput {
+  error: String
+  ok: Boolean!
+}
+
 input DeleteRestaurantInput {
   restaurantId: String!
 }
@@ -95,6 +169,34 @@ type DishOption {
   maxSelections: Int!
   minSelections: Int!
   name: String!
+}
+
+input EditDishChoiceInput {
+  extraMinor: Int!
+  id: String
+  name: String!
+}
+
+input EditDishInput {
+  description: String
+  dishId: String!
+  image: String
+  name: String
+  options: [EditDishOptionInput!]
+  priceMinor: Int
+}
+
+input EditDishOptionInput {
+  choices: [EditDishChoiceInput!]!
+  id: String
+  maxSelections: Int!
+  minSelections: Int!
+  name: String!
+}
+
+type EditDishOutput {
+  error: String
+  ok: Boolean!
 }
 
 input EditOrderInput {
@@ -159,10 +261,15 @@ type GetPaymentsOutput {
 }
 
 type Mutation {
+  createCategory(input: CreateCategoryInput!): CreateCategoryOutput!
+  createDish(input: CreateDishInput!): CreateDishOutput!
   createOrder(input: CreateOrderInput!): CreateOrderOutput!
   createPayment(input: CreatePaymentInput!): CreatePaymentOutput!
   createRestaurant(input: CreateRestaurantInput!): CreateRestaurantOutput!
+  deleteCategory(input: DeleteCategoryInput!): DeleteCategoryOutput!
+  deleteDish(input: DeleteDishInput!): DeleteDishOutput!
   deleteRestaurant(input: DeleteRestaurantInput!): DeleteRestaurantOutput!
+  editDish(input: EditDishInput!): EditDishOutput!
   editOrder(input: EditOrderInput!): EditOrderOutput!
   editProfile(input: EditProfileInput!): EditProfileOutput!
   editRestaurant(input: EditRestaurantInput!): EditRestaurantOutput!
@@ -171,6 +278,7 @@ type Mutation {
   signOut: SignOutOutput!
   signUp(input: SignUpInput!): SignUpOutput!
   takeOrder(input: TakeOrderInput!): TakeOrderOutput!
+  updateCategory(input: UpdateCategoryInput!): UpdateCategoryOutput!
   verifyEmail(input: VerifyEmailInput!): VerifyEmailOutput!
 }
 
@@ -261,6 +369,8 @@ type PublicUser {
 }
 
 type Query {
+  allCategory: AllCategoriesOutput!
+  category(input: CategoryInput!): CategoryOutput!
   getOrder(input: GetOrderInput!): GetOrderOutput!
   getOrders(input: GetOrdersInput!): GetOrdersOutput!
   getPayments: GetPaymentsOutput!
@@ -349,6 +459,7 @@ input SignUpInput {
   email: String!
   name: String!
   password: String!
+  role: UserRole
 }
 
 type SignUpOutput {
@@ -367,6 +478,17 @@ input TakeOrderInput {
 }
 
 type TakeOrderOutput {
+  error: String
+  ok: Boolean!
+}
+
+input UpdateCategoryInput {
+  id: String!
+  image: String
+  name: String
+}
+
+type UpdateCategoryOutput {
   error: String
   ok: Boolean!
 }

@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Korean",
+    "image": "https://cn-geo1.uber.com/static/mobile-content/eats/cuisine-filters/v1/Korean.png",
+    "slug": "korean"
+  },
+  {
+    "name": "Fast Food",
+    "image": "https://cn-geo1.uber.com/static/mobile-content/eats/cuisine-filters/v1/FastFood.png",
+    "slug": "fast-food"
+  },
+  {
+    "name": "Pizza",
+    "image": "https://cn-geo1.uber.com/static/mobile-content/eats/cuisine-filters/v1/Pizza.png",
+    "slug": "pizza"
+  },
+  {
+    "name": "Healthy",
+    "image": "https://cn-geo1.uber.com/static/mobile-content/eats/cuisine-filters/v1/Healthy.png",
+    "slug": "healthy"
+  },
+  {
+    "name": "Sushi",
+    "image": "https://cn-geo1.uber.com/static/mobile-content/eats/cuisine-filters/v1/Sushi.png",
+    "slug": "sushi"
+  },
+  {
+    "name": "Chinese",
+    "image": "https://cn-geo1.uber.com/static/mobile-content/eats/cuisine-filters/v1/Chinese.png",
+    "slug": "chinese"
+  },
+  {
+    "name": "Vietnamese",
+    "image": "https://cn-geo1.uber.com/static/mobile-content/eats/cuisine-filters/v1/Vietnamese.png",
+    "slug": "vietnamese"
+  },
+  {
+    "name": "Italian",
+    "image": "https://cn-geo1.uber.com/static/mobile-content/eats/cuisine-filters/v1/Italian.png",
+    "slug": "italian"
+  },
+  {
+    "name": "Thailand",
+    "image": "https://cn-geo1.uber.com/static/mobile-content/eats/cuisine-filters/v1/Thai.png",
+    "slug": "thailand"
+  },
+  {
+    "name": "American",
+    "image": "https://cn-geo1.uber.com/static/mobile-content/eats/cuisine-filters/v1/American.png",
+    "slug": "american"
+  }
+]

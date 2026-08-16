@@ -2,7 +2,6 @@ import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { CoreOutput } from '../../common/dto/output.dto';
 import { CreateDishOptionInput } from '../entities/dish-option.entity';
 import {
-  ArrayMinSize,
   IsArray,
   IsInt,
   IsNotEmpty,
@@ -44,12 +43,12 @@ export class CreateDishInput {
   @IsUUID()
   restaurantId!: string;
 
-  @Field(() => [CreateDishOptionInput])
+  @Field(() => [CreateDishOptionInput], { nullable: true })
+  @IsOptional()
   @IsArray()
-  @ArrayMinSize(0)
   @Type(() => CreateDishOptionInput)
   @ValidateNested({ each: true })
-  options!: CreateDishOptionInput[];
+  options?: CreateDishOptionInput[];
 }
 
 @ObjectType()

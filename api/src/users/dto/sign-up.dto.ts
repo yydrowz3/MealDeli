@@ -1,6 +1,14 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CoreOutput } from '../../common/dto/output.dto';
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
+import { UserRole } from '../enums/role.enum';
 
 @InputType()
 export class SignUpInput {
@@ -20,6 +28,11 @@ export class SignUpInput {
   @MinLength(8)
   @MaxLength(128)
   password!: string;
+
+  @Field(() => UserRole, { nullable: true })
+  @IsOptional()
+  @IsEnum(UserRole)
+  role?: UserRole;
 }
 
 @ObjectType()

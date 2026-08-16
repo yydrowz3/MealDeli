@@ -1,0 +1,97 @@
+mutation {
+  cheeseBurger: createDish(
+    input: {
+      restaurantId: "01a0097c-9060-729c-a86d-ae72bb775feb"
+      name: "Cheese Burger"
+      description: "Speaking of hamburgers, this is it! French fries included!"
+      priceMinor: 10
+    }
+  ) {
+    ok
+    error
+  }
+
+  eggCheeseburger: createDish(
+    input: {
+      restaurantId: "01a0097c-9060-729c-a86d-ae72bb775feb"
+      name: "Egg Cheeseburger"
+      description: "This is also the royal road of hamburgers! If you are in doubt, this is it! French fries included!"
+      priceMinor: 11
+    }
+  ) {
+    ok
+    error
+  }
+
+  blteSandwich: createDish(
+    input: {
+      restaurantId: "01a0097c-9060-729c-a86d-ae72bb775feb"
+      name: "BLTE Sandwich"
+      description: "The royal road of sandwiches! Bacon, lettuce, tomato, and eggs! French fries included!"
+      priceMinor: 10
+    }
+  ) {
+    ok
+    error
+  }
+
+  cornedBeefSandwich: createDish(
+    input: {
+      restaurantId: "01a0097c-9060-729c-a86d-ae72bb775feb"
+      name: "Corned Beef Sandwich"
+      description: "Plenty of corned beef! Once you eat it, you can't stop! French fries included!"
+      priceMinor: 12
+    }
+  ) {
+    ok
+    error
+  }
+
+  avocadoCheeseLocoMoco: createDish(
+    input: {
+      restaurantId: "01a0097c-9060-729c-a86d-ae72bb775feb"
+      name: "Avocado Cheese Loco Moco"
+      description: "Plenty of 100% beef hamburger steak and avocado! It's topped with plenty of homemade cheese sauce! It is a popular product of our store!"
+      priceMinor: 12
+    }
+  ) {
+    ok
+    error
+  }
+
+  locoMoco: createDish(
+    input: {
+      restaurantId: "01a0097c-9060-729c-a86d-ae72bb775feb"
+      name: "Loco Moco"
+      description: "The hamburger steak is 100% beef! Plenty of vegetables!"
+      priceMinor: 11
+    }
+  ) {
+    ok
+    error
+  }
+
+  teriyakiEggBurger: createDish(
+    input: {
+      restaurantId: "01a0097c-9060-729c-a86d-ae72bb775feb"
+      name: "Teriyaki Egg Burger"
+      description: "The harmony of original teriyaki sauce and mayonnaise! French fries included!"
+      priceMinor: 11
+      options: [
+        {
+          name: "Topping"
+          minSelections: 0
+          maxSelections: 3
+          choices: [
+            { name: "Jalapenos", extraMinor: 1 }
+            { name: "Pickles", extraMinor: 1 }
+            { name: "Avocado", extraMinor: 2 }
+          ]
+        }
+      ]
+    }
+  ) {
+    ok
+    error
+  }
+}

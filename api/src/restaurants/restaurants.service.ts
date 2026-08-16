@@ -311,7 +311,7 @@ export class RestaurantsService {
           restaurants: null,
         };
       }
-      const pageSize = this.configService.get<number>("CATEGORY_PAGE_SIZE", 15);
+      const pageSize = Number(this.configService.get<number>("CATEGORY_PAGE_SIZE", 15));
       const restaurants = await this.prismaService.restaurant.findMany({
         where: {
           categoryId: category.id,
@@ -345,7 +345,7 @@ export class RestaurantsService {
 
   async allRestaurants(restaurantsInput: RestaurantsInput): Promise<RestaurantsOutput> {
     try {
-      const pageSize = this.configService.get<number>("RESTAURANTS_PAGE_SIZE", 15);
+      const pageSize = Number(this.configService.get<number>("RESTAURANTS_PAGE_SIZE", 15));
       const [restaurants, totalResults] = await Promise.all([
         this.prismaService.restaurant.findMany({
           skip: (restaurantsInput.page - 1) * pageSize,
@@ -403,7 +403,7 @@ export class RestaurantsService {
     searchRestaurantInput: SearchRestaurantInput,
   ): Promise<SearchRestaurantOutput> {
     try {
-      const pageSize = this.configService.get<number>("RESTAURANTS_PAGE_SIZE", 15);
+      const pageSize = Number(this.configService.get<number>("RESTAURANTS_PAGE_SIZE", 15));
       const query = searchRestaurantInput.query.trim();
       const where = {
         name: {
@@ -459,7 +459,7 @@ export class RestaurantsService {
         };
       }
       const { restaurantId, options, ...dishData } = createDishInput;
-      const dishOptions = options.map((option) => ({
+      const dishOptions = (options ?? []).map((option) => ({
         id: randomUUID(),
         name: option.name,
         minSelections: option.minSelections,

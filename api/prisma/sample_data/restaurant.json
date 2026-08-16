@@ -1,0 +1,134 @@
+[
+  {
+    "name": "MOGO MOGO KITCHEN",
+    "address": "Mizuno Mansion, 103, 103, Aichi 463-0034",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/91555715bd909a32913c9472681b63ff/c9252e6c6cd289c588c3381bc77b1dfc.jpeg",
+    "slug": "korean"
+  },
+  {
+    "name": "BURGERS REPUBLIC",
+    "address": "5-10-7 Imaike, Chikusa-ku, Nagoya, APACX 464-0850",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/bc0180793c0fa4e415ca5d796fd23748/3ac2b39ad528f8c8c5dc77c59abb683d.jpeg",
+    "slug": "fast-food"
+  },
+  {
+    "name": "Café Bar Komanechi",
+    "address": "Higashi-ku Higashi-Sakura 1-8-13, Park Square Building B1, Nagoya, 461-0005",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/b177a95bfad7e845fb05f23a975bab2e/fb86662148be855d931b37d6c1e5fcbe.jpeg",
+    "slug": "pizza"
+  },
+  {
+    "name": "organicsyokudouEngi",
+    "address": "Nagoya Tempaku Ward, APACX 468",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/d737210f64da5ae64a230869641d2ff6/fb86662148be855d931b37d6c1e5fcbe.jpeg",
+    "slug": "healthy"
+  },
+  {
+    "name": "Sushi Urayama Sakaehanare",
+    "address": "Aichi Prefecture Nagoya-shi Naka-ku Sakae 3-9-20, Aichi, JP, 460-0008, Le Parc MK Bldg. 1F",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/5b3c3d1e67851efce1156704e17783c5/30be7d11a3ed6f6183354d1933fbb6c7.jpeg",
+    "slug": "sushi"
+  },
+  {
+    "name": "Shanghai Restaurant Kouran",
+    "address": "Aichi Nagoya-shi Meito-ku Kamisha 2-68, Olympia 75 Room 105, 465",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/7b6f63e58c6a9e741ebe6c7799e31e0b/fb86662148be855d931b37d6c1e5fcbe.jpeg",
+    "slug": "chinese"
+  },
+  {
+    "name": "Senviet Shinei",
+    "address": "1-1 19, Ginki Building 2F, 3F, 4F, Nagoya, Aichi 460-0007",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/4991a6b6a57053dc6cf02ea9eca2a857/3ac2b39ad528f8c8c5dc77c59abb683d.jpeg",
+    "slug": "vietnamese"
+  },
+  {
+    "name": "Italiana LIiberta",
+    "address": "1-1311 Ueda Honmachi, Tenpaku-ku, Nagoya-shi, Aichi, Duelhouse Ueda 1F, Aichi, 468-0007",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/bb0bfecc0f3ee3a8dd8575813b21fbcd/fb86662148be855d931b37d6c1e5fcbe.jpeg",
+    "slug": "italian"
+  },
+  {
+    "name": "Myanmar & Asian Cuisine Mandalay",
+    "address": "1-21-1 Maeyamacho, Showa-ku, Nagoya-shi, Aichi, 466-0821",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/7f8adaf19095e11c5951b2bfe4015a05/fb86662148be855d931b37d6c1e5fcbe.jpeg",
+    "slug": "thailand"
+  },
+  {
+    "name": "THE SPRINGFIELD",
+    "address": "2-22-30 Matsubara, Naka-ku Tokan Mansion Matsubara 1F, Nagoya, APAC 4600017",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/298425a8b04f478c0c2848dad4fac8f9/885ba8620d45ab36746a0e8c7b85ee66.jpeg",
+    "slug": "american"
+  },
+  {
+    "name": "Mos Burger Motoyama Yotsuya-dori store",
+    "address": "2-14-1 Yotsuya-dori, Chikusa-ku, Nagoya-shi, Aichi, 464-0819",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/3595798405f3d9220052933603f40a6f/30be7d11a3ed6f6183354d1933fbb6c7.jpeg",
+    "slug": "fast-food"
+  },
+  {
+    "name": "Tokuri's Kitchen",
+    "address": "1-14 4, Matsuoka Building, B1F, Nagoya, Aichi 460-0003",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/7c29a926cf77a218e060fb3a6863223e/df577d3a0807d3bb859f2fb53aefcd86.jpeg",
+    "slug": "fast-food"
+  },
+  {
+    "name": "Local Hamburger",
+    "address": "2-47-50 Shinei, Naka-ku, Nagoya, APAC 460-0007",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/ccb2900530a2d7ce8bac1042263534d3/c9252e6c6cd289c588c3381bc77b1dfc.jpeg",
+    "slug": "fast-food"
+  },
+  {
+    "name": "BigBunsBurger",
+    "address": "461-0004 Aichi Nagoya-shi Higashi-ku Aoi 2-7-5",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/c6b81d1549584d9c89bcfc2c3441f424/fb86662148be855d931b37d6c1e5fcbe.jpeg",
+    "slug": "fast-food"
+  },
+  {
+    "name": "Shooters Sports Bar & Grill",
+    "address": "2-9-26 Sakae, Naka-ku, POLA Nagoya Bldg. 2F, 460-0008",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/f8005928c83a12110935c3d5f704b1cd/fb86662148be855d931b37d6c1e5fcbe.jpeg",
+    "slug": "fast-food"
+  },
+  {
+    "name": "TBZ Kakuoyama Main Store",
+    "address": "Aichi Nagoya-shi Chikusa-ku Kakuoyama-dori 9-8-2, 464",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/3564fcdc3038da9b61344f479e7bb764/fb86662148be855d931b37d6c1e5fcbe.jpeg",
+    "slug": "fast-food"
+  },
+  {
+    "name": "Humburgerseikatsunosusume",
+    "address": "3-30 Suemori-dori, Chikusa-ku, Nagoya-shi, Aichi , Ma Shambre Fuji 2F, Nagoya, 464-0821",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/3819d49cb1c18f915540b73ee122df23/fb86662148be855d931b37d6c1e5fcbe.jpeg",
+    "slug": "fast-food"
+  },
+  {
+    "name": "French fries Shaka potatoes",
+    "address": "Aichi Prefecture Nagoya-shi Chikusa-ku Imaike 1-2-5, Nakamura Bldg. 1F, Aichi, 464",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/e954c7aa7426e7c1d9fb7fc247c02986/c9252e6c6cd289c588c3381bc77b1dfc.jpeg",
+    "slug": "fast-food"
+  },
+  {
+    "name": "ZETTERIA Central Park Store",
+    "address": "3-15-13 Nishiki, Naka-ku, Nagoya-shi, Aichi, B1, 460",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/b422f06b9fc830f3894364a08e0282ad/5283d81c664b43c5f57a3a186d273063.jpeg",
+    "slug": "fast-food"
+  },
+  {
+    "name": "SUBWAY DOME",
+    "address": "Aichi Prefecture Nagoya-shi, Higashi-ku, Yada Minami 4-102-3 AEON MALL Nagoya Dome front 1F",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/4f9369f9fb0678da00550c5370a3ee2f/5283d81c664b43c5f57a3a186d273063.jpeg",
+    "slug": "fast-food"
+  },
+  {
+    "name": "Karaage and bento are buri chicken",
+    "address": "59 Fujimigaoka, Meito-ku, Nagoya, Aichi, 465-0048",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/e2ffc6127f150f11293d159f7234992c/fb86662148be855d931b37d6c1e5fcbe.jpeg",
+    "slug": "fast-food"
+  },
+  {
+    "name": "SMASH HEAD",
+    "address": "ōsu, 2 Chome−21, 90 21, Nagoya-Shi, Aichi-ken 460",
+    "image": "https://tb-static.uber.com/prod/image-proc/processed_images/82c64d950ef930f5ed96686418f9eb47/c73ecc27d2a9eaa735b1ee95304ba588.jpeg",
+    "slug": "fast-food"
+  }
+]

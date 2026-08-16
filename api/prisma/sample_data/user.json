@@ -1,0 +1,17 @@
+[
+  {
+    "email": "customer@mealdeli.com",
+    "password": "passwordcustomer",
+    "role": "CUSTOMER"
+  },
+  {
+    "email": "owner@mealdeli.com",
+    "password": "passwordowner",
+    "role": "OWNER"
+  },
+  {
+    "email": "courier@mealdeli.com",
+    "password": "passwordcourier",
+    "role": "COURIER"
+  }
+]
