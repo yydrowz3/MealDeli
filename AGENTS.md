@@ -2,31 +2,31 @@
 
 ## Project Structure & Module Organization
 
-The application lives in `api/`; run project commands from that directory. NestJS source is under `api/src/`, organized by feature (`users/`, `auth/`, `jwt/`, `mails/`, `prisma/`, and `common/`). Keep each feature's module, resolver/controller, service, DTOs, entities, and enums together. Unit tests are co-located as `*.spec.ts`; end-to-end tests and their Jest configuration live in `api/test/`. The database schema and seed entry point are in `api/prisma/`. Treat `dist/`, `coverage/`, `node_modules/`, and `src/generated/prisma/` as generated output.
+MealDeli has two pnpm projects. `api/` is a NestJS GraphQL service; feature modules live in `api/src/<feature>/`, with resolvers/controllers, services, DTOs, and entities kept together. Prisma schema, migrations, seed code, and sample data are under `api/prisma/`. Unit tests are colocated as `*.spec.ts`; end-to-end tests live in `api/test/`. The React/Vite client uses `web/src/routes/`, `web/src/utils/`, `web/src/assets/`, and `web/public/`. Do not hand-edit generated Prisma clients, `routeTree.gen.ts`, `dist/`, or `coverage/`.
 
 ## Build, Test, and Development Commands
 
-From `api/`, use pnpm (the lockfile is committed):
+Run `pnpm install` in each subdirectory; there is no root package script.
 
-- `pnpm install` installs exact dependencies.
-- `pnpm start:dev` runs Nest in watch mode; `pnpm build` compiles to `dist/`.
-- `pnpm lint` runs ESLint and applies safe fixes; `pnpm format` formats source and tests.
-- `pnpm test` runs unit tests; `pnpm test:watch` supports focused development.
-- `pnpm test:e2e` runs the Supertest suite; `pnpm test:cov` writes coverage reports.
-- `pnpm exec prisma generate` refreshes the Prisma client after schema changes; use `pnpm exec prisma migrate dev --name <change>` for local migrations.
+- `cd api && pnpm start:dev` — run the API with watch mode; `pnpm build` compiles it.
+- `cd api && pnpm lint && pnpm format` — lint and format API TypeScript.
+- `cd api && pnpm test` — run Jest units; use `pnpm test:e2e` or `pnpm test:cov` for end-to-end tests or coverage.
+- `cd api && pnpm exec prisma generate` — refresh the client after schema edits; use `prisma migrate dev --name <change>` for migrations.
+- `cd web && pnpm dev` — start Vite; `pnpm build` type-checks and bundles, while `pnpm lint` runs Oxlint.
+- `cd web && pnpm codegen` — regenerate GraphQL operation types after schema or query changes.
 
 ## Coding Style & Naming Conventions
 
-Use TypeScript with two-space indentation, single quotes, and trailing commas; Prettier and ESLint are authoritative. Follow Nest conventions: PascalCase classes (`UsersService`), camelCase methods and variables, and kebab-case filenames with role suffixes such as `edit-profile.dto.ts` or `users.resolver.ts`. Keep DTO validation and GraphQL metadata near the DTO/entity definitions. Do not use unchecked nullable values where the strict TypeScript configuration can express the contract.
+Use strict TypeScript and two-space indentation. API files use Prettier (single quotes and trailing commas); web files use double quotes and Oxlint. Use PascalCase for classes/components, camelCase for functions/variables, and kebab-case role-suffixed files such as `edit-profile.dto.ts`. Keep GraphQL metadata and validation beside DTO/entity definitions.
 
 ## Testing Guidelines
 
-Jest and `@nestjs/testing` cover units; Supertest covers HTTP e2e behavior. Name unit files `<subject>.spec.ts` beside the implementation and e2e files `<feature>.e2e-spec.ts` in `test/`. Add success and failure-path tests for service, resolver, guard, and authentication changes. No numeric coverage threshold is configured; avoid reducing coverage and run unit plus e2e suites before opening a PR.
+Jest and `@nestjs/testing` cover API units; Supertest covers e2e behavior. Name tests `<subject>.spec.ts` and `<feature>.e2e-spec.ts`. Cover success and failure paths for service, resolver, authentication, and persistence changes. No web test runner or coverage threshold is configured; run API tests and both builds before review.
 
 ## Commit & Pull Request Guidelines
 
-History currently contains one emoji-prefixed initialization commit, so no mature convention exists. Prefer concise, imperative subjects, optionally scoped, for example `feat(users): add profile mutation` or `fix(auth): reject expired tokens`. Keep commits focused. PRs should explain behavior and schema/config changes, link an issue when available, list verification commands, and include GraphQL examples or screenshots when API behavior is user-visible.
+Recent commits use an emoji plus Conventional Commit type, for example `🐞 fix: fix connection params`. Keep subjects short, imperative, and focused (`🔧 feat: add order cancellation`). PRs should describe behavior, schema/migration and configuration changes, link relevant issues, list verification commands, and include screenshots for UI changes or GraphQL examples for API changes.
 
 ## Security & Configuration
 
-Copy `api/.env.example` locally and provide `DATABASE_URL`, `JWT_SECRET`, `RESEND_API_KEY`, and `RESEND_EMAIL_FROM`. Never commit `.env`, credentials, generated clients, or production data. Review Prisma migrations before committing and keep secrets out of tests and logs.
+Copy `api/.env.example` to `api/.env`; never commit secrets. Required integrations include PostgreSQL (`DATABASE_URL`), JWT credentials, Resend, and S3-compatible storage. Review generated migrations before committing, and keep credentials and production data out of fixtures, logs, and screenshots.
