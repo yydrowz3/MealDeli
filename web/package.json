@@ -1,13 +1,15 @@
 {
   "name": "meal-deli-web",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
+  "author": "github.com/yydrowz3",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "codegen": "graphql-codegen --config src/utils/codegen.ts"
   },
   "dependencies": {
     "@apollo/client": "^4.2.12",
@@ -19,11 +21,14 @@
     "graphql-ws": "^6.2.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "rxjs": "^7.8.2",
     "sonner": "^2.0.8",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
+    "@graphql-codegen/cli": "^7.2.0",
+    "@graphql-codegen/typescript-operations": "^6.1.6",
     "@rolldown/plugin-babel": "^0.2.3",
     "@tanstack/router-plugin": "^1.168.32",
     "@types/babel__core": "^7.20.5",

@@ -1,10 +1,10 @@
 {
-  "name": "meal-deli",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "name": "meal-deli-api",
+  "version": "0.1.0",
   "private": true,
+  "description": "",
   "license": "UNLICENSED",
+  "author": "github.com/yydrowz3",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -75,20 +75,20 @@
     "typescript-eslint": "^8.20.0"
   },
   "jest": {
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
     "moduleFileExtensions": [
       "js",
       "json",
       "ts"
     ],
     "rootDir": "src",
+    "testEnvironment": "node",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    }
   }
 }
