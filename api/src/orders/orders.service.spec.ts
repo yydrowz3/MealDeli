@@ -129,6 +129,47 @@ describe('OrdersService', () => {
     });
   });
 
+  it('creates an order when a dish has no selected options', async () => {
+    restaurantFindUnique.mockResolvedValue({
+      id: 'restaurant-id',
+      ownerId: 'owner-id',
+    });
+    dishFindUnique.mockResolvedValue({
+      id: 'dish-id',
+      restaurantId: 'restaurant-id',
+      name: 'Pizza',
+      priceMinor: 1_000,
+      options: [],
+    });
+    orderCreate.mockResolvedValue({ id: 'order-id', items: [] });
+
+    await expect(
+      service.createOrder(customer, {
+        restaurantId: 'restaurant-id',
+        items: [{ dishId: 'dish-id', quantity: 2 }],
+      }),
+    ).resolves.toEqual({
+      ok: true,
+      orderId: 'order-id',
+    });
+
+    expect(orderCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          totalMinor: 2_000,
+          items: {
+            create: [
+              expect.objectContaining({
+                selectedOptions: [],
+                optionsExtraMinor: 0,
+              }),
+            ],
+          },
+        }),
+      }),
+    );
+  });
+
   it('rejects a dish from another restaurant before creating an order', async () => {
     restaurantFindUnique.mockResolvedValue({
       id: 'restaurant-id',

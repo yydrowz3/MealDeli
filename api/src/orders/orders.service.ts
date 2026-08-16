@@ -96,10 +96,11 @@ export class OrdersService {
         const dishOptions = Array.isArray(dish.options)
           ? (dish.options as unknown as DishOption[])
           : [];
+        const itemOptions = item.options ?? [];
         const selectedOptionIds = new Set(
-          item.options.map((option) => option.optionId),
+          itemOptions.map((option) => option.optionId),
         );
-        if (selectedOptionIds.size !== item.options.length) {
+        if (selectedOptionIds.size !== itemOptions.length) {
           return {
             ok: false,
             error: 'Each dish option can only be selected once.',
@@ -118,7 +119,7 @@ export class OrdersService {
           };
         }
 
-        for (const itemOption of item.options) {
+        for (const itemOption of itemOptions) {
           const dishOption = dishOptions.find(
             (option) => option.id === itemOption.optionId,
           );

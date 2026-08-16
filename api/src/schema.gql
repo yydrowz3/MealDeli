@@ -75,7 +75,7 @@ input CreateOrderInput {
 
 input CreateOrderItemInput {
   dishId: String!
-  options: [CreateOrderItemOptionInput!]!
+  options: [CreateOrderItemOptionInput!]
   quantity: Int!
 }
 

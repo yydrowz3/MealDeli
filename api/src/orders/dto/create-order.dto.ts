@@ -5,6 +5,7 @@ import {
   IsArray,
   IsNotEmpty,
   IsInt,
+  IsOptional,
   IsString,
   IsUUID,
   Min,
@@ -44,12 +45,13 @@ class CreateOrderItemInput {
   @Min(1)
   quantity!: number;
 
-  @Field(() => [CreateOrderItemOptionInput])
+  @Field(() => [CreateOrderItemOptionInput], { nullable: true })
+  @IsOptional()
   @IsArray()
   @ArrayUnique((option: CreateOrderItemOptionInput) => option.optionId)
   @Type(() => CreateOrderItemOptionInput)
   @ValidateNested({ each: true })
-  options!: CreateOrderItemOptionInput[];
+  options?: CreateOrderItemOptionInput[];
 }
 
 @InputType()

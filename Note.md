@@ -1,0 +1,1 @@
+- Subscription 走的不是 HTTP Header，是 ConnectParams，前者区分大小写，后者不区分
