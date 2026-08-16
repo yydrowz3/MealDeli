@@ -1,26 +1,47 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
-import { User } from "../users/entities/user.entity";
-import { CreateRestaurantInput, CreateRestaurantOutput } from "./dto/create-restaurant.dto";
-import { EditRestaurantInput, EditRestaurantOutput } from "./dto/edit-restaurant.dto";
-import { DeleteRestaurantInput, DeleteRestaurantOutput } from "./dto/delete-restaurant.dto";
-import { AllCategoriesOutput } from "./dto/all-categories.dto";
-import { CategoryInput, CategoryOutput } from "./dto/category.dto";
-import { ConfigService } from "@nestjs/config";
-import { RestaurantInput, RestaurantOutput } from "./dto/restaurant.dto";
-import { RestaurantsInput, RestaurantsOutput } from "./dto/restaurants.dto";
-import { SearchRestaurantInput, SearchRestaurantOutput } from "./dto/search-restaurant.dto";
-import { CreateDishInput, CreateDishOutput } from "./dto/create-dish.dto";
-import { EditDishInput, EditDishOutput } from "./dto/edit-dish.dto";
-import { DeleteDishInput, DeleteDishOutput } from "./dto/delete-dish.dto";
-import { MyRestaurantsOutput } from "./dto/my-restaurants.dto";
-import { MyRestaurantInput, MyRestaurantOutput } from "./dto/my-restaurant.dto";
-import { CreateCategoryInput, CreateCategoryOutput } from "./dto/create-category.dto";
-import { UpdateCategoryInput, UpdateCategoryOutput } from "./dto/update-category.dto";
-import { DeleteCategoryInput, DeleteCategoryOutput } from "./dto/delete-category.dto";
-import { randomUUID } from "node:crypto";
-import { Category } from "./entities/category.entity";
-import { Dish } from "./entities/dish.entity";
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { User } from '../users/entities/user.entity';
+import {
+  CreateRestaurantInput,
+  CreateRestaurantOutput,
+} from './dto/create-restaurant.dto';
+import {
+  EditRestaurantInput,
+  EditRestaurantOutput,
+} from './dto/edit-restaurant.dto';
+import {
+  DeleteRestaurantInput,
+  DeleteRestaurantOutput,
+} from './dto/delete-restaurant.dto';
+import { AllCategoriesOutput } from './dto/all-categories.dto';
+import { CategoryInput, CategoryOutput } from './dto/category.dto';
+import { ConfigService } from '@nestjs/config';
+import { RestaurantInput, RestaurantOutput } from './dto/restaurant.dto';
+import { RestaurantsInput, RestaurantsOutput } from './dto/restaurants.dto';
+import {
+  SearchRestaurantInput,
+  SearchRestaurantOutput,
+} from './dto/search-restaurant.dto';
+import { CreateDishInput, CreateDishOutput } from './dto/create-dish.dto';
+import { EditDishInput, EditDishOutput } from './dto/edit-dish.dto';
+import { DeleteDishInput, DeleteDishOutput } from './dto/delete-dish.dto';
+import { MyRestaurantsOutput } from './dto/my-restaurants.dto';
+import { MyRestaurantInput, MyRestaurantOutput } from './dto/my-restaurant.dto';
+import {
+  CreateCategoryInput,
+  CreateCategoryOutput,
+} from './dto/create-category.dto';
+import {
+  UpdateCategoryInput,
+  UpdateCategoryOutput,
+} from './dto/update-category.dto';
+import {
+  DeleteCategoryInput,
+  DeleteCategoryOutput,
+} from './dto/delete-category.dto';
+import { randomUUID } from 'node:crypto';
+import { Category } from './entities/category.entity';
+import { Dish } from './entities/dish.entity';
 
 @Injectable()
 export class RestaurantsService {
@@ -47,7 +68,7 @@ export class RestaurantsService {
     } catch {
       return {
         ok: false,
-        error: "Could not create restaurant",
+        error: 'Could not create restaurant',
         restaurantId: null,
       };
     }
@@ -58,7 +79,7 @@ export class RestaurantsService {
       where: { id: categoryId },
     });
     if (!category) {
-      throw new Error("Restaurant category no longer exists.");
+      throw new Error('Restaurant category no longer exists.');
     }
     return category;
   }
@@ -66,14 +87,16 @@ export class RestaurantsService {
   async findDishesByRestaurantId(restaurantId: string): Promise<Dish[]> {
     return this.prismaService.dish.findMany({
       where: { restaurantId },
-      orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+      orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
     }) as unknown as Promise<Dish[]>;
   }
 
-  async createCategory(createCategoryInput: CreateCategoryInput): Promise<CreateCategoryOutput> {
+  async createCategory(
+    createCategoryInput: CreateCategoryInput,
+  ): Promise<CreateCategoryOutput> {
     try {
       const categoryName = createCategoryInput.name.trim().toLocaleLowerCase();
-      const categorySlug = categoryName.replace(/ /g, "-");
+      const categorySlug = categoryName.replace(/ /g, '-');
       const category = await this.prismaService.category.findUnique({
         where: {
           slug: categorySlug,
@@ -82,7 +105,7 @@ export class RestaurantsService {
       if (category) {
         return {
           ok: false,
-          error: "Category already exists",
+          error: 'Category already exists',
         };
       }
       await this.prismaService.category.create({
@@ -100,12 +123,14 @@ export class RestaurantsService {
     } catch {
       return {
         ok: false,
-        error: "Could not create category",
+        error: 'Could not create category',
       };
     }
   }
 
-  async updateCategory(updateCategoryInput: UpdateCategoryInput): Promise<UpdateCategoryOutput> {
+  async updateCategory(
+    updateCategoryInput: UpdateCategoryInput,
+  ): Promise<UpdateCategoryOutput> {
     try {
       const category = await this.prismaService.category.findUnique({
         where: {
@@ -115,12 +140,17 @@ export class RestaurantsService {
       if (!category) {
         return {
           ok: false,
-          error: "Category not found",
+          error: 'Category not found',
         };
       }
-      if (updateCategoryInput.name && category.name != updateCategoryInput.name) {
-        const categoryName = updateCategoryInput.name.trim().toLocaleLowerCase();
-        const categorySlug = categoryName.replace(/ /g, "-");
+      if (
+        updateCategoryInput.name &&
+        category.name != updateCategoryInput.name
+      ) {
+        const categoryName = updateCategoryInput.name
+          .trim()
+          .toLocaleLowerCase();
+        const categorySlug = categoryName.replace(/ /g, '-');
         const existingCategory = await this.prismaService.category.findUnique({
           where: {
             slug: categorySlug,
@@ -129,7 +159,7 @@ export class RestaurantsService {
         if (existingCategory) {
           return {
             ok: false,
-            error: "Category already exists",
+            error: 'Category already exists',
           };
         }
         await this.prismaService.category.update({
@@ -162,11 +192,13 @@ export class RestaurantsService {
     } catch {
       return {
         ok: false,
-        error: "Could not update category",
+        error: 'Could not update category',
       };
     }
   }
-  async deleteCategory(deleteCategoryInput: DeleteCategoryInput): Promise<DeleteCategoryOutput> {
+  async deleteCategory(
+    deleteCategoryInput: DeleteCategoryInput,
+  ): Promise<DeleteCategoryOutput> {
     try {
       const category = await this.prismaService.category.findUnique({
         where: {
@@ -176,7 +208,7 @@ export class RestaurantsService {
       if (!category) {
         return {
           ok: false,
-          error: "Category not found",
+          error: 'Category not found',
         };
       }
       await this.prismaService.category.delete({
@@ -190,7 +222,7 @@ export class RestaurantsService {
     } catch {
       return {
         ok: false,
-        error: "Could not delete category",
+        error: 'Could not delete category',
       };
     }
   }
@@ -206,7 +238,7 @@ export class RestaurantsService {
       if (!restaurant) {
         return {
           ok: false,
-          error: "Restaurant not found",
+          error: 'Restaurant not found',
         };
       }
       if (restaurant.ownerId !== owner.id) {
@@ -231,7 +263,7 @@ export class RestaurantsService {
     } catch {
       return {
         ok: false,
-        error: "Could not edit restaurant",
+        error: 'Could not edit restaurant',
       };
     }
   }
@@ -247,7 +279,7 @@ export class RestaurantsService {
       if (!restaurant) {
         return {
           ok: false,
-          error: "Restaurant not found",
+          error: 'Restaurant not found',
         };
       }
       if (restaurant.ownerId !== owner.id) {
@@ -267,7 +299,7 @@ export class RestaurantsService {
     } catch {
       return {
         ok: false,
-        error: "Could not delete restaurant.",
+        error: 'Could not delete restaurant.',
       };
     }
   }
@@ -282,7 +314,7 @@ export class RestaurantsService {
     } catch {
       return {
         ok: false,
-        error: "Could not load categories",
+        error: 'Could not load categories',
         categories: null,
       };
     }
@@ -296,7 +328,9 @@ export class RestaurantsService {
     });
   }
 
-  async findCategoryBySlug(categoryInput: CategoryInput): Promise<CategoryOutput> {
+  async findCategoryBySlug(
+    categoryInput: CategoryInput,
+  ): Promise<CategoryOutput> {
     try {
       const category = await this.prismaService.category.findUnique({
         where: {
@@ -306,21 +340,23 @@ export class RestaurantsService {
       if (!category) {
         return {
           ok: false,
-          error: "Category not found",
+          error: 'Category not found',
           category: null,
           restaurants: null,
         };
       }
-      const pageSize = Number(this.configService.get<number>("CATEGORY_PAGE_SIZE", 15));
+      const pageSize = Number(
+        this.configService.get<number>('CATEGORY_PAGE_SIZE', 15),
+      );
       const restaurants = await this.prismaService.restaurant.findMany({
         where: {
           categoryId: category.id,
         },
         // Future promotion dates sort ahead of expired dates and null values.
         orderBy: [
-          { promotedUntil: { sort: "desc", nulls: "last" } },
-          { createdAt: "desc" },
-          { id: "desc" },
+          { promotedUntil: { sort: 'desc', nulls: 'last' } },
+          { createdAt: 'desc' },
+          { id: 'desc' },
         ],
         take: pageSize,
         skip: (categoryInput.page - 1) * pageSize,
@@ -338,22 +374,26 @@ export class RestaurantsService {
         ok: false,
         restaurants: null,
         category: null,
-        error: "Could not load category",
+        error: 'Could not load category',
       };
     }
   }
 
-  async allRestaurants(restaurantsInput: RestaurantsInput): Promise<RestaurantsOutput> {
+  async allRestaurants(
+    restaurantsInput: RestaurantsInput,
+  ): Promise<RestaurantsOutput> {
     try {
-      const pageSize = Number(this.configService.get<number>("RESTAURANTS_PAGE_SIZE", 15));
+      const pageSize = Number(
+        this.configService.get<number>('RESTAURANTS_PAGE_SIZE', 15),
+      );
       const [restaurants, totalResults] = await Promise.all([
         this.prismaService.restaurant.findMany({
           skip: (restaurantsInput.page - 1) * pageSize,
           take: pageSize,
           orderBy: [
-            { promotedUntil: { sort: "desc", nulls: "last" } },
-            { createdAt: "desc" },
-            { id: "desc" },
+            { promotedUntil: { sort: 'desc', nulls: 'last' } },
+            { createdAt: 'desc' },
+            { id: 'desc' },
           ],
         }),
         this.prismaService.restaurant.count(),
@@ -367,12 +407,14 @@ export class RestaurantsService {
     } catch {
       return {
         ok: false,
-        error: "could not load restaurants",
+        error: 'could not load restaurants',
       };
     }
   }
 
-  async findRestaurantById(restaurantInput: RestaurantInput): Promise<RestaurantOutput> {
+  async findRestaurantById(
+    restaurantInput: RestaurantInput,
+  ): Promise<RestaurantOutput> {
     try {
       const restaurant = await this.prismaService.restaurant.findUnique({
         where: {
@@ -382,7 +424,7 @@ export class RestaurantsService {
       if (!restaurant) {
         return {
           ok: false,
-          error: "Restaurant not found.",
+          error: 'Restaurant not found.',
           restaurant: null,
         };
       }
@@ -393,7 +435,7 @@ export class RestaurantsService {
     } catch {
       return {
         ok: false,
-        error: "Could not find restaurant.",
+        error: 'Could not find restaurant.',
         restaurant: null,
       };
     }
@@ -403,12 +445,14 @@ export class RestaurantsService {
     searchRestaurantInput: SearchRestaurantInput,
   ): Promise<SearchRestaurantOutput> {
     try {
-      const pageSize = Number(this.configService.get<number>("RESTAURANTS_PAGE_SIZE", 15));
+      const pageSize = Number(
+        this.configService.get<number>('RESTAURANTS_PAGE_SIZE', 15),
+      );
       const query = searchRestaurantInput.query.trim();
       const where = {
         name: {
           contains: query,
-          mode: "insensitive" as const,
+          mode: 'insensitive' as const,
         },
       };
       const [restaurants, totalResults] = await Promise.all([
@@ -417,9 +461,9 @@ export class RestaurantsService {
           skip: (searchRestaurantInput.page - 1) * pageSize,
           take: pageSize,
           orderBy: [
-            { promotedUntil: { sort: "desc", nulls: "last" } },
-            { createdAt: "desc" },
-            { id: "desc" },
+            { promotedUntil: { sort: 'desc', nulls: 'last' } },
+            { createdAt: 'desc' },
+            { id: 'desc' },
           ],
         }),
         this.prismaService.restaurant.count({ where }),
@@ -433,13 +477,16 @@ export class RestaurantsService {
     } catch {
       return {
         ok: false,
-        error: "Could not search for restaurants.",
+        error: 'Could not search for restaurants.',
         restaurants: null,
       };
     }
   }
 
-  async createDish(owner: User, createDishInput: CreateDishInput): Promise<CreateDishOutput> {
+  async createDish(
+    owner: User,
+    createDishInput: CreateDishInput,
+  ): Promise<CreateDishOutput> {
     try {
       const restaurant = await this.prismaService.restaurant.findUnique({
         where: {
@@ -449,13 +496,13 @@ export class RestaurantsService {
       if (!restaurant) {
         return {
           ok: false,
-          error: "Restaurant not found.",
+          error: 'Restaurant not found.',
         };
       }
       if (restaurant.ownerId !== owner.id) {
         return {
           ok: false,
-          error: "Permission denied for this restaurant.",
+          error: 'Permission denied for this restaurant.',
         };
       }
       const { restaurantId, options, ...dishData } = createDishInput;
@@ -479,7 +526,7 @@ export class RestaurantsService {
       ) {
         return {
           ok: false,
-          error: "Dish option selection limits are invalid.",
+          error: 'Dish option selection limits are invalid.',
         };
       }
       await this.prismaService.dish.create({
@@ -495,12 +542,15 @@ export class RestaurantsService {
     } catch {
       return {
         ok: false,
-        error: "Could not create dish.",
+        error: 'Could not create dish.',
       };
     }
   }
 
-  async editDish(owner: User, editDishInput: EditDishInput): Promise<EditDishOutput> {
+  async editDish(
+    owner: User,
+    editDishInput: EditDishInput,
+  ): Promise<EditDishOutput> {
     try {
       const dish = await this.prismaService.dish.findUnique({
         where: {
@@ -517,13 +567,13 @@ export class RestaurantsService {
       if (!dish) {
         return {
           ok: false,
-          error: "Dish not found.",
+          error: 'Dish not found.',
         };
       }
       if (dish.restaurant.ownerId !== owner.id) {
         return {
           ok: false,
-          error: "Permission denied for this dish.",
+          error: 'Permission denied for this dish.',
         };
       }
       const { dishId, options, ...dishData } = editDishInput;
@@ -547,20 +597,22 @@ export class RestaurantsService {
       ) {
         return {
           ok: false,
-          error: "Dish option selection limits are invalid.",
+          error: 'Dish option selection limits are invalid.',
         };
       }
       if (
         dishOptions &&
-        (new Set(dishOptions.map((option) => option.id)).size !== dishOptions.length ||
+        (new Set(dishOptions.map((option) => option.id)).size !==
+          dishOptions.length ||
           dishOptions.some(
             (option) =>
-              new Set(option.choices.map((choice) => choice.id)).size !== option.choices.length,
+              new Set(option.choices.map((choice) => choice.id)).size !==
+              option.choices.length,
           ))
       ) {
         return {
           ok: false,
-          error: "Dish option IDs must be unique.",
+          error: 'Dish option IDs must be unique.',
         };
       }
       await this.prismaService.dish.update({
@@ -580,12 +632,15 @@ export class RestaurantsService {
     } catch {
       return {
         ok: false,
-        error: "Could not edit dish.",
+        error: 'Could not edit dish.',
       };
     }
   }
 
-  async deleteDish(owner: User, deleteDishInput: DeleteDishInput): Promise<DeleteDishOutput> {
+  async deleteDish(
+    owner: User,
+    deleteDishInput: DeleteDishInput,
+  ): Promise<DeleteDishOutput> {
     try {
       const dish = await this.prismaService.dish.findUnique({
         where: {
@@ -602,13 +657,13 @@ export class RestaurantsService {
       if (!dish) {
         return {
           ok: false,
-          error: "Dish not found.",
+          error: 'Dish not found.',
         };
       }
       if (dish.restaurant.ownerId !== owner.id) {
         return {
           ok: false,
-          error: "Permission denied for this dish.",
+          error: 'Permission denied for this dish.',
         };
       }
       await this.prismaService.dish.delete({
@@ -622,7 +677,7 @@ export class RestaurantsService {
     } catch {
       return {
         ok: false,
-        error: "Could not delete dish.",
+        error: 'Could not delete dish.',
       };
     }
   }
@@ -641,7 +696,7 @@ export class RestaurantsService {
     } catch {
       return {
         ok: false,
-        error: "Could not load restaurants.",
+        error: 'Could not load restaurants.',
         restaurants: null,
       };
     }
@@ -661,7 +716,7 @@ export class RestaurantsService {
       if (!restaurant) {
         return {
           ok: false,
-          error: "Restaurant not found.",
+          error: 'Restaurant not found.',
           restaurant: null,
         };
       }
@@ -672,7 +727,7 @@ export class RestaurantsService {
     } catch {
       return {
         ok: false,
-        error: "Could not load restaurant.",
+        error: 'Could not load restaurant.',
         restaurant: null,
       };
     }

@@ -1,23 +1,26 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
-import { UserProfileOutput } from "./dto/user-profile.dto";
-import { User } from "./entities/user.entity";
-import { PublicUser } from "./entities/public-user.entity";
-import { JwtService, type JwtSignOptions } from "@nestjs/jwt";
-import { SignUpInput, SignUpOutput } from "./dto/sign-up.dto";
-import { SignInInput, SignInOutput } from "./dto/sign-in.dto";
-import * as argon2 from "argon2";
-import { EditProfileInput, EditProfileOutput } from "./dto/edit-profile.dto";
-import { VerifyEmailOutput } from "./dto/verify-email.dto";
-import { MailsService } from "../mails/mails.service";
-import { createHash, randomBytes } from "node:crypto";
-import { Prisma } from "../generated/prisma/client";
-import { SignOutOutput } from "./dto/sign-out.dto";
-import { ConfigService } from "@nestjs/config";
-import { getRefreshTokenTtlMs } from "../auth/auth.config";
-import { v7 as uuidv7 } from "uuid";
-import { RefreshAccessTokenInput, RefreshAccessTokenOutput } from "./dto/refresh-access-token.dto";
-import { TokenPayload } from "../auth/types/token-payload.type";
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { UserProfileOutput } from './dto/user-profile.dto';
+import { User } from './entities/user.entity';
+import { PublicUser } from './entities/public-user.entity';
+import { JwtService, type JwtSignOptions } from '@nestjs/jwt';
+import { SignUpInput, SignUpOutput } from './dto/sign-up.dto';
+import { SignInInput, SignInOutput } from './dto/sign-in.dto';
+import * as argon2 from 'argon2';
+import { EditProfileInput, EditProfileOutput } from './dto/edit-profile.dto';
+import { VerifyEmailOutput } from './dto/verify-email.dto';
+import { MailsService } from '../mails/mails.service';
+import { createHash, randomBytes } from 'node:crypto';
+import { Prisma } from '../generated/prisma/client';
+import { SignOutOutput } from './dto/sign-out.dto';
+import { ConfigService } from '@nestjs/config';
+import { getRefreshTokenTtlMs } from '../auth/auth.config';
+import { v7 as uuidv7 } from 'uuid';
+import {
+  RefreshAccessTokenInput,
+  RefreshAccessTokenOutput,
+} from './dto/refresh-access-token.dto';
+import { TokenPayload } from '../auth/types/token-payload.type';
 
 @Injectable()
 export class UsersService {
@@ -28,7 +31,12 @@ export class UsersService {
     private readonly mailsService: MailsService,
   ) {}
 
-  async signUp({ email, name, password, role }: SignUpInput): Promise<SignUpOutput> {
+  async signUp({
+    email,
+    name,
+    password,
+    role,
+  }: SignUpInput): Promise<SignUpOutput> {
     try {
       const normalizedEmail = email.trim().toLocaleLowerCase();
       const exists = await this.prismaService.user.findUnique({
@@ -37,7 +45,7 @@ export class UsersService {
       if (exists) {
         return {
           ok: false,
-          error: "Email already exists.",
+          error: 'Email already exists.',
         };
       }
       const passwordHash = await argon2.hash(password);
@@ -74,7 +82,7 @@ export class UsersService {
     } catch {
       return {
         ok: false,
-        error: "Could not create account",
+        error: 'Could not create account',
       };
     }
   }
@@ -91,16 +99,19 @@ export class UsersService {
       if (!user) {
         return {
           ok: false,
-          error: "User not found",
+          error: 'User not found',
           accessToken: null,
           refreshToken: null,
         };
       }
-      const passwordMatches = await argon2.verify(user.passwordHash, signInInput.password);
+      const passwordMatches = await argon2.verify(
+        user.passwordHash,
+        signInInput.password,
+      );
       if (!passwordMatches) {
         return {
           ok: false,
-          error: "Incorrect email or password.",
+          error: 'Incorrect email or password.',
           accessToken: null,
           refreshToken: null,
         };
@@ -115,7 +126,9 @@ export class UsersService {
           id: sessionId,
           userId: user.id,
           refreshTokenHash,
-          refreshExpiresAt: new Date(Date.now() + getRefreshTokenTtlMs(this.configService)),
+          refreshExpiresAt: new Date(
+            Date.now() + getRefreshTokenTtlMs(this.configService),
+          ),
         },
       });
       const accessToken = await this.createAccessToken(user.id, sessionId);
@@ -143,7 +156,7 @@ export class UsersService {
     } catch {
       return {
         ok: false,
-        error: "Login Failed",
+        error: 'Login Failed',
         accessToken: null,
       };
     }
@@ -159,7 +172,7 @@ export class UsersService {
       if (!user) {
         return {
           ok: false,
-          error: "User Not Found",
+          error: 'User Not Found',
           user: null,
         };
       }
@@ -170,7 +183,7 @@ export class UsersService {
     } catch {
       return {
         ok: false,
-        error: "User Not Found",
+        error: 'User Not Found',
         user: null,
       };
     }
@@ -215,23 +228,29 @@ export class UsersService {
         ok: true,
       };
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
         return {
           ok: false,
-          error: "Email already exists.",
+          error: 'Email already exists.',
         };
       }
 
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
         return {
           ok: false,
-          error: "User not found.",
+          error: 'User not found.',
         };
       }
 
       return {
         ok: false,
-        error: "Could not update profile.",
+        error: 'Could not update profile.',
       };
     }
   }
@@ -239,20 +258,21 @@ export class UsersService {
   async verifyEmail(token: string): Promise<VerifyEmailOutput> {
     try {
       const tokenHash = this.hashVerificationToken(token);
-      const verification = await this.prismaService.emailVerification.findUnique({
-        where: {
-          tokenHash,
-        },
-        select: {
-          id: true,
-          userId: true,
-          expiresAt: true,
-        },
-      });
+      const verification =
+        await this.prismaService.emailVerification.findUnique({
+          where: {
+            tokenHash,
+          },
+          select: {
+            id: true,
+            userId: true,
+            expiresAt: true,
+          },
+        });
       if (!verification) {
         return {
           ok: false,
-          error: "Verification Not Found",
+          error: 'Verification Not Found',
         };
       }
 
@@ -262,7 +282,7 @@ export class UsersService {
         });
         return {
           ok: false,
-          error: "Verfication token has expired.",
+          error: 'Verfication token has expired.',
         };
       }
 
@@ -287,17 +307,17 @@ export class UsersService {
     } catch {
       return {
         ok: false,
-        error: "Could not verify email.",
+        error: 'Could not verify email.',
       };
     }
   }
 
   private generateVerificationToken(): string {
-    return randomBytes(32).toString("hex");
+    return randomBytes(32).toString('hex');
   }
 
   private hashVerificationToken(token: string): string {
-    return createHash("sha256").update(token).digest("hex");
+    return createHash('sha256').update(token).digest('hex');
   }
 
   async findUserByActiveSession(sessionId: string): Promise<User | null> {
@@ -333,7 +353,7 @@ export class UsersService {
     } catch {
       return {
         ok: false,
-        error: "Could not sign out.",
+        error: 'Could not sign out.',
       };
     }
   }
@@ -345,21 +365,21 @@ export class UsersService {
       const payload = await this.jwtService.verifyAsync<TokenPayload>(
         refreshAccessTokenInput.refreshToken,
         {
-          secret: this.configService.getOrThrow<string>("JWT_REFRESH_SECRET"),
-          algorithms: ["HS256"],
-          issuer: this.configService.getOrThrow<string>("JWT_ISSUER"),
-          audience: this.configService.getOrThrow<string>("JWT_AUDIENCE"),
+          secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
+          algorithms: ['HS256'],
+          issuer: this.configService.getOrThrow<string>('JWT_ISSUER'),
+          audience: this.configService.getOrThrow<string>('JWT_AUDIENCE'),
         },
       );
 
       if (
-        payload.tokenType !== "refresh" ||
-        typeof payload.sub !== "string" ||
-        typeof payload.sid !== "string"
+        payload.tokenType !== 'refresh' ||
+        typeof payload.sub !== 'string' ||
+        typeof payload.sid !== 'string'
       ) {
         return {
           ok: false,
-          error: "Invalid refresh token",
+          error: 'Invalid refresh token',
           accessToken: null,
           refreshToken: null,
         };
@@ -387,7 +407,7 @@ export class UsersService {
       ) {
         return {
           ok: false,
-          error: "Session Invalid or Refresh session has expired",
+          error: 'Session Invalid or Refresh session has expired',
           accessToken: null,
           refreshToken: null,
         };
@@ -410,13 +430,16 @@ export class UsersService {
         });
         return {
           ok: false,
-          error: "Refresh token has been revoked.",
+          error: 'Refresh token has been revoked.',
           accessToken: null,
           refreshToken: null,
         };
       }
 
-      const nextRefreshToken = await this.createRefreshToken(session.userId, session.id);
+      const nextRefreshToken = await this.createRefreshToken(
+        session.userId,
+        session.id,
+      );
       const nextRefreshTokenHash = await argon2.hash(nextRefreshToken);
       const updateRecord = await this.prismaService.authSession.updateMany({
         where: {
@@ -430,7 +453,9 @@ export class UsersService {
         },
         data: {
           refreshTokenHash: nextRefreshTokenHash,
-          refreshExpiresAt: new Date(Date.now() + getRefreshTokenTtlMs(this.configService)),
+          refreshExpiresAt: new Date(
+            Date.now() + getRefreshTokenTtlMs(this.configService),
+          ),
           lastUsedAt: now,
         },
       });
@@ -438,13 +463,16 @@ export class UsersService {
       if (updateRecord.count !== 1) {
         return {
           ok: false,
-          error: "Refresh token was already used.",
+          error: 'Refresh token was already used.',
           accessToken: null,
           refreshToken: null,
         };
       }
 
-      const accessToken = await this.createAccessToken(session.userId, session.id);
+      const accessToken = await this.createAccessToken(
+        session.userId,
+        session.id,
+      );
       return {
         ok: true,
         accessToken,
@@ -453,36 +481,43 @@ export class UsersService {
     } catch {
       return {
         ok: false,
-        error: "Could not refresh access token.",
+        error: 'Could not refresh access token.',
         accessToken: null,
         refreshToken: null,
       };
     }
   }
 
-  private createAccessToken(userId: string, sessionId: string): Promise<string> {
+  private createAccessToken(
+    userId: string,
+    sessionId: string,
+  ): Promise<string> {
     return this.jwtService.signAsync({
       sub: userId,
       sid: sessionId,
-      tokenType: "access",
+      tokenType: 'access',
     });
   }
 
-  private createRefreshToken(userId: string, sessionId: string): Promise<string> {
+  private createRefreshToken(
+    userId: string,
+    sessionId: string,
+  ): Promise<string> {
     return this.jwtService.signAsync(
       {
         sub: userId,
         sid: sessionId,
-        tokenType: "refresh",
+        tokenType: 'refresh',
         jti: uuidv7(),
       },
       {
-        secret: this.configService.getOrThrow<string>("JWT_REFRESH_SECRET"),
-        algorithm: "HS256",
-        expiresIn:
-          this.configService.getOrThrow<JwtSignOptions["expiresIn"]>("JWT_REFRESH_EXPIRES_IN"),
-        issuer: this.configService.getOrThrow<string>("JWT_ISSUER"),
-        audience: this.configService.getOrThrow<string>("JWT_AUDIENCE"),
+        secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
+        algorithm: 'HS256',
+        expiresIn: this.configService.getOrThrow<JwtSignOptions['expiresIn']>(
+          'JWT_REFRESH_EXPIRES_IN',
+        ),
+        issuer: this.configService.getOrThrow<string>('JWT_ISSUER'),
+        audience: this.configService.getOrThrow<string>('JWT_AUDIENCE'),
       },
     );
   }
