@@ -1,0 +1,6 @@
+mutation IdentityEditProfile($input: EditProfileInput!) {
+  editProfile(input: $input) {
+    ok
+    error
+  }
+}

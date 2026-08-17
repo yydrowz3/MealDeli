@@ -1,0 +1,57 @@
+.identity-page {
+  align-items: center;
+  background: var(--color-warm-white, #f7f6f2);
+  display: flex;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: 24px 16px;
+}
+
+.identity-card {
+  max-width: 440px;
+  width: 100%;
+}
+
+.identity-card h1 {
+  margin-block: 0 8px;
+}
+
+.identity-form {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.identity-form--compact {
+  margin-top: 16px;
+}
+
+.identity-form__error,
+.identity-field-error {
+  color: var(--color-danger, #c2413b);
+}
+
+.identity-checkbox {
+  align-items: start;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: auto 1fr;
+}
+
+.identity-field-error {
+  display: block;
+  font-size: 0.875rem;
+  margin-left: 28px;
+}
+
+@media (max-width: 639px) {
+  .identity-page {
+    align-items: start;
+    padding-top: 32px;
+  }
+
+  .identity-card {
+    border: 0;
+    box-shadow: none;
+  }
+}

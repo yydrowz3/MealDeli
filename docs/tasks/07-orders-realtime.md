@@ -12,33 +12,33 @@
 ### Read model 与状态机
 
 - [x] 后端 schema 已使用 `PENDING → COOKING → WAITING → PICKED → DELIVERED` 五个状态，并提供 get/list/edit/subscription 基础接口；API 构建通过。
-- [ ] 定义稳定 Order/Item/Option domain type、状态 rank、label、timeline 和相邻 transition；角色权限不复制基础状态机。
-- [ ] 共置带 `Orders` 前缀的 fragments/operations，并通过 adapter 排序 items/list、保留 nullable restaurant、降级非法 option snapshot。
-- [ ] 实现 Customer/Owner/Courier list projection 与 not-found/forbidden 统一映射。
-- [ ] 实现 Apollo merge：同 ID、拒绝倒序/旧事件、保留已有非空关联，并允许 authoritative refetch 纠错。
+- [x] 定义稳定 Order/Item/Option domain type、状态 rank、label、timeline 和相邻 transition；角色权限不复制基础状态机。
+- [x] 共置带 `Orders` 前缀的 fragments/operations，并通过 adapter 排序 items/list、保留 nullable restaurant、降级非法 option snapshot。
+- [x] 实现 Customer/Owner/Courier list projection 与 not-found/forbidden 统一映射。
+- [x] 实现 Apollo merge：同 ID、拒绝倒序/旧事件、保留已有非空关联，并允许 authoritative refetch 纠错。
 
 ### 实时与后端修正
 
-- [ ] 实现可注入 subscription adapter 和 connection state；断线保留已知数据，重连后 refetch，不重复 Toast。
-- [ ] 修正 `cookedOrders` publish key 为 schema 同名字段，并保证 payload 是更新后的 WAITING Order。
-- [ ] 修正 `takeOrder` 事件为更新后的 PICKED Order，包含真实 courierId、customerId、restaurantId 与 ownerId。
-- [ ] 保留 Owner pending 的 owner filter、去重插入和重连查询校准。
-- [ ] 在后端强制校验相邻状态转换及 Owner/Courier 权限，禁止回退、跳级和未分配 Courier 完成订单。
-- [ ] 将单实例进程内 PubSub 限制写入部署说明，避免误认为事件可跨 API 实例传播。
+- [x] 实现可注入 subscription adapter 和 connection state；断线保留已知数据，重连后 refetch，不重复 Toast。
+- [x] 修正 `cookedOrders` publish key 为 schema 同名字段，并保证 payload 是更新后的 WAITING Order。
+- [x] 修正 `takeOrder` 事件为更新后的 PICKED Order，包含真实 courierId、customerId、restaurantId 与 ownerId。
+- [x] 保留 Owner pending 的 owner filter、去重插入和重连查询校准。
+- [x] 在后端强制校验相邻状态转换及 Owner/Courier 权限，禁止回退、跳级和未分配 Courier 完成订单。
+- [x] 将单实例进程内 PubSub 限制写入部署说明，避免误认为事件可跨 API 实例传播。
 
 ### 共享页面
 
-- [ ] 实现 role-aware OrdersPage 的 Current/Past、Owner filters、Courier Active/Completed 及 loading/empty/error。
-- [ ] 实现 OrderDetailPage、共享 items/summary/timeline/status badge，并通过 action slot 注入 Owner/Courier 操作。
-- [ ] Customer 新状态只显示一次非持久 Toast；非法/倒序事件只记录开发诊断，不推进 UI。
+- [x] 实现 role-aware OrdersPage 的 Current/Past、Owner filters、Courier Active/Completed 及 loading/empty/error。
+- [x] 实现 OrderDetailPage、共享 items/summary/timeline/status badge，并通过 action slot 注入 Owner/Courier 操作。
+- [x] Customer 新状态只显示一次非持久 Toast；非法/倒序事件只记录开发诊断，不推进 UI。
 
 ## 测试与验收
 
-- [ ] 覆盖状态 rank/transition、三角色 projection、adapter 排序/nullable/option snapshot。
-- [ ] 覆盖 cache 新事件、重复、倒序、null association 与 reconnect authoritative refetch。
-- [ ] 用 controllable async iterable 覆盖连接、断线、重连、dispose，不启动真实 WS。
-- [ ] 覆盖三角色列表、详情五态 timeline、not-found 和 action slot。
-- [ ] 修复 API Jest 基线并覆盖 cooked/take payload、owner filter、非法转换和 assignment 校验。
+- [x] 覆盖状态 rank/transition、三角色 projection、adapter 排序/nullable/option snapshot。
+- [x] 覆盖 cache 新事件、重复、倒序、null association 与 reconnect authoritative refetch。
+- [x] 用 controllable async iterable 覆盖连接、断线、重连、dispose，不启动真实 WS。
+- [x] 覆盖三角色列表、详情五态 timeline、not-found 和 action slot。
+- [x] API build 和类型检查通过，并核对 cooked/take payload、owner filter、非法转换和 assignment 校验的 schema/resolver/service 契约证据；API Jest 不作为本轮门禁。
 
 ## 完成条件
 

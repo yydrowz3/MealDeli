@@ -274,6 +274,7 @@ type Mutation {
   editProfile(input: EditProfileInput!): EditProfileOutput!
   editRestaurant(input: EditRestaurantInput!): EditRestaurantOutput!
   refreshAccessToken: RefreshAccessTokenOutput!
+  resendVerification(input: ResendVerificationInput!): ResendVerificationOutput!
   signIn(input: SignInInput!): SignInOutput!
   signOut: SignOutOutput!
   signUp(input: SignUpInput!): SignUpOutput!
@@ -370,6 +371,7 @@ type PublicUser {
 
 type Query {
   allCategory: AllCategoriesOutput!
+  availableOrders: GetOrdersOutput!
   category(input: CategoryInput!): CategoryOutput!
   getOrder(input: GetOrderInput!): GetOrderOutput!
   getOrders(input: GetOrdersInput!): GetOrdersOutput!
@@ -388,6 +390,15 @@ type RefreshAccessTokenOutput {
   error: String
   ok: Boolean!
   refreshToken: String
+}
+
+input ResendVerificationInput {
+  email: String!
+}
+
+type ResendVerificationOutput {
+  error: String
+  ok: Boolean!
 }
 
 type Restaurant {

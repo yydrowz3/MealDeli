@@ -17,6 +17,10 @@ import {
   getRefreshTokenTtlMs,
 } from '../auth/auth.config';
 import { RefreshAccessTokenOutput } from './dto/refresh-access-token.dto';
+import {
+  ResendVerificationInput,
+  ResendVerificationOutput,
+} from './dto/resend-verification.dto';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -74,6 +78,13 @@ export class UsersResolver {
     @Args('input') verifyEmailInput: VerifyEmailInput,
   ): Promise<VerifyEmailOutput> {
     return this.usersService.verifyEmail(verifyEmailInput.token);
+  }
+
+  @Mutation(() => ResendVerificationOutput)
+  async resendVerification(
+    @Args('input') input: ResendVerificationInput,
+  ): Promise<ResendVerificationOutput> {
+    return this.usersService.resendVerification(input.email);
   }
 
   @Roles('Any')

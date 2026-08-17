@@ -4,6 +4,7 @@ import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
+import { PWA_RUNTIME_CACHING, PWA_UPDATE_BEHAVIOR } from "./src/app/pwa/policy.ts";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -16,8 +17,18 @@ export default defineConfig({
     babel({ presets: [reactCompilerPreset()] }),
     tailwindcss(),
     VitePWA({
-      registerType: "autoUpdate",
-      includeAssets: ["favicon.svg", "pwa/apple-touch-icon.png"],
+      registerType: PWA_UPDATE_BEHAVIOR.registerType,
+      injectRegister: null,
+      includeAssets: [
+        "favicon.svg",
+        "pwa/apple-touch-icon.png",
+        "brand/*.svg",
+        "brand/*.png",
+      ],
+      workbox: {
+        navigateFallback: "/index.html",
+        runtimeCaching: [...PWA_RUNTIME_CACHING],
+      },
       manifest: {
         name: "MealDeli",
         short_name: "MealDeli",

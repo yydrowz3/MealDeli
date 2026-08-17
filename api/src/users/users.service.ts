@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserProfileOutput } from './dto/user-profile.dto';
 import { User } from './entities/user.entity';
@@ -21,9 +21,12 @@ import {
   RefreshAccessTokenOutput,
 } from './dto/refresh-access-token.dto';
 import { TokenPayload } from '../auth/types/token-payload.type';
+import { ResendVerificationOutput } from './dto/resend-verification.dto';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     private readonly configService: ConfigService,
     private readonly prismaService: PrismaService,
@@ -308,6 +311,77 @@ export class UsersService {
       return {
         ok: false,
         error: 'Could not verify email.',
+      };
+    }
+  }
+
+  async resendVerification(email: string): Promise<ResendVerificationOutput> {
+    const normalizedEmail = email.trim().toLocaleLowerCase();
+
+    try {
+      const user = await this.prismaService.user.findUnique({
+        where: { email: normalizedEmail },
+        select: {
+          id: true,
+          email: true,
+          verifiedAt: true,
+          emailVerification: {
+            select: { updatedAt: true },
+          },
+        },
+      });
+
+      // Unknown and already-verified accounts deliberately share the same
+      // response as a successful send to prevent account enumeration.
+      if (!user || user.verifiedAt) {
+        return { ok: true };
+      }
+
+      const now = new Date();
+      if (
+        user.emailVerification &&
+        now.getTime() - user.emailVerification.updatedAt.getTime() < 60_000
+      ) {
+        return { ok: true };
+      }
+
+      const token = this.generateVerificationToken();
+      const tokenHash = this.hashVerificationToken(token);
+      await this.prismaService.emailVerification.upsert({
+        where: { userId: user.id },
+        update: {
+          tokenHash,
+          expiresAt: new Date(now.getTime() + 60 * 60 * 1000),
+        },
+        create: {
+          userId: user.id,
+          tokenHash,
+          expiresAt: new Date(now.getTime() + 60 * 60 * 1000),
+        },
+      });
+
+      try {
+        await this.mailsService.sendVerificationEmail(user.email, token);
+      } catch (error) {
+        this.logger.error(
+          'Could not resend verification email.',
+          error instanceof Error ? error.stack : undefined,
+        );
+        return {
+          ok: false,
+          error: 'Could not resend verification email.',
+        };
+      }
+
+      return { ok: true };
+    } catch (error) {
+      this.logger.error(
+        'Could not resend verification email.',
+        error instanceof Error ? error.stack : undefined,
+      );
+      return {
+        ok: false,
+        error: 'Could not resend verification email.',
       };
     }
   }

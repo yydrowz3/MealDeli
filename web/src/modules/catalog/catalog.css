@@ -1,0 +1,311 @@
+.catalog-page {
+  color: var(--color-charcoal);
+  display: grid;
+  font-family: var(--font-sans);
+  gap: var(--space-8);
+  margin: 0 auto;
+  max-width: var(--content-max-width);
+  padding: var(--space-6);
+}
+
+.catalog-page h1,
+.catalog-page h2,
+.catalog-page h3,
+.catalog-page p {
+  margin-block: 0;
+}
+.catalog-page h1 {
+  font-size: var(--font-size-page);
+}
+.catalog-page h2 {
+  font-size: var(--font-size-section);
+  margin-bottom: var(--space-4);
+}
+.catalog-page h3 {
+  font-size: 1.05rem;
+}
+.catalog-page__header {
+  align-items: end;
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: minmax(12rem, 1fr) minmax(18rem, 2fr);
+}
+.catalog-eyebrow {
+  color: var(--color-jade-text);
+  font-size: var(--font-size-small);
+  font-weight: 700;
+}
+
+.catalog-search {
+  align-items: end;
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: minmax(12rem, 1fr) auto auto;
+}
+.catalog-address {
+  align-items: center;
+  background: var(--color-jade-soft);
+  border-radius: var(--radius-card);
+  display: flex;
+  gap: var(--space-4);
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-6);
+}
+.catalog-address p {
+  color: var(--color-muted);
+}
+
+.catalog-categories {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  padding: var(--space-1);
+}
+.catalog-category {
+  align-items: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-charcoal);
+  cursor: pointer;
+  display: grid;
+  flex: 0 0 8.5rem;
+  gap: var(--space-2);
+  min-height: 8rem;
+  padding: var(--space-2);
+  text-align: left;
+}
+.catalog-category[aria-pressed="true"] {
+  border-color: var(--color-jade);
+  box-shadow: 0 0 0 2px var(--color-jade-soft);
+}
+.catalog-category:focus-visible,
+.catalog-dish-button:focus-visible {
+  outline: 3px solid var(--color-info);
+  outline-offset: 2px;
+}
+.catalog-category .catalog-image {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-control);
+  width: 100%;
+}
+.catalog-category__all {
+  align-items: center;
+  background: var(--color-jade-soft);
+  border-radius: var(--radius-control);
+  color: var(--color-jade-text);
+  display: flex;
+  font-size: 1.35rem;
+  font-weight: 750;
+  justify-content: center;
+  min-height: 4.75rem;
+}
+.catalog-category small {
+  color: var(--color-muted);
+}
+
+.catalog-image {
+  display: block;
+  object-fit: cover;
+}
+.catalog-image--placeholder {
+  align-items: center;
+  background: linear-gradient(135deg, var(--color-jade-soft), var(--color-neutral-soft));
+  color: var(--color-jade-text);
+  display: flex;
+  font-weight: 800;
+  justify-content: center;
+}
+
+.catalog-results-heading {
+  align-items: baseline;
+  display: flex;
+  gap: var(--space-3);
+  justify-content: space-between;
+}
+.catalog-results-heading span {
+  color: var(--color-muted);
+  font-size: var(--font-size-small);
+}
+.catalog-inline-error {
+  align-items: center;
+  background: var(--color-danger-soft);
+  border-radius: var(--radius-control);
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+  padding: var(--space-3);
+}
+.catalog-restaurant-grid,
+.catalog-dish-grid {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.catalog-restaurant-grid + .catalog-restaurant-grid,
+.catalog-restaurant-grid + .catalog-pagination {
+  margin-top: var(--space-4);
+}
+.catalog-restaurant-card,
+.catalog-dish-card {
+  display: grid;
+  gap: var(--space-3);
+  overflow: hidden;
+  padding: 0;
+}
+.catalog-restaurant-card > .catalog-image {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+}
+.catalog-card__body {
+  display: grid;
+  gap: var(--space-2);
+  padding: 0 var(--space-4) var(--space-4);
+}
+.catalog-card__title-row {
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+  justify-content: space-between;
+}
+.catalog-card__category {
+  color: var(--color-jade-text);
+  font-size: var(--font-size-small);
+  font-weight: 650;
+}
+.catalog-card__address {
+  color: var(--color-muted);
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.catalog-pagination {
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+  justify-content: center;
+  margin-top: var(--space-6);
+}
+.catalog-pagination__numbers {
+  display: flex;
+  gap: var(--space-1);
+}
+.catalog-pagination__mobile-current {
+  display: none;
+}
+
+.catalog-menu-hero {
+  aspect-ratio: 3 / 1;
+  border-radius: var(--radius-card);
+  min-height: 12rem;
+  width: 100%;
+}
+.catalog-menu-header p,
+.catalog-menu-header address {
+  color: var(--color-muted);
+  font-style: normal;
+}
+.catalog-menu-layout {
+  align-items: start;
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: minmax(0, 1fr) minmax(15rem, 22rem);
+}
+.catalog-dish-button {
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+.catalog-dish-card {
+  height: 100%;
+}
+.catalog-dish-card > .catalog-image {
+  aspect-ratio: 16 / 8;
+  width: 100%;
+}
+.catalog-dish-card__description {
+  color: var(--color-muted);
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+.catalog-dish-card__price {
+  font-weight: 750;
+}
+.catalog-cart-sidebar {
+  position: sticky;
+  top: var(--space-4);
+}
+.catalog-cart-mobile {
+  display: none;
+}
+
+.catalog-skeleton-search {
+  height: var(--control-height-md);
+}
+.catalog-skeleton-categories {
+  display: flex;
+  gap: var(--space-3);
+  overflow: hidden;
+}
+.catalog-skeleton-category {
+  flex: 0 0 8.5rem;
+  height: 8rem;
+}
+.catalog-skeleton-card {
+  height: 20rem;
+}
+.catalog-skeleton-title {
+  height: 3rem;
+  width: 45%;
+}
+.catalog-skeleton-dish {
+  height: 18rem;
+}
+
+@media (max-width: 63.99rem) {
+  .catalog-restaurant-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .catalog-menu-layout {
+    grid-template-columns: 1fr;
+  }
+  .catalog-cart-sidebar {
+    display: none;
+  }
+  .catalog-cart-mobile {
+    bottom: 0;
+    display: block;
+    position: sticky;
+    z-index: 10;
+  }
+}
+
+@media (max-width: 39.99rem) {
+  .catalog-page {
+    padding: var(--space-4);
+  }
+  .catalog-page__header,
+  .catalog-search {
+    grid-template-columns: 1fr;
+  }
+  .catalog-restaurant-grid,
+  .catalog-dish-grid {
+    grid-template-columns: 1fr;
+  }
+  .catalog-pagination__numbers {
+    display: none;
+  }
+  .catalog-pagination__mobile-current {
+    display: inline;
+  }
+  .catalog-menu-hero {
+    aspect-ratio: 16 / 9;
+  }
+}

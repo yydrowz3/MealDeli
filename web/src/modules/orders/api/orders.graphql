@@ -1,0 +1,90 @@
+fragment OrdersRestaurant on Restaurant {
+  id
+  name
+  address
+  image
+}
+
+fragment OrdersItem on OrderItem {
+  id
+  position
+  dishId
+  dishName
+  quantity
+  lineTotalMinor
+  selectedOptions {
+    optionId
+    name
+    choices {
+      choiceId
+      name
+      extraMinor
+    }
+  }
+}
+
+fragment OrdersSummary on Order {
+  id
+  customerId
+  courierId
+  restaurantId
+  restaurant {
+    ...OrdersRestaurant
+  }
+  status
+  totalMinor
+  createdAt
+  updatedAt
+  items {
+    ...OrdersItem
+  }
+}
+
+fragment OrdersDetail on Order {
+  ...OrdersSummary
+}
+
+query OrdersGetOrders($input: GetOrdersInput!) {
+  getOrders(input: $input) {
+    ok
+    error
+    orders {
+      ...OrdersSummary
+    }
+  }
+}
+
+query OrdersGetOrder($input: GetOrderInput!) {
+  getOrder(input: $input) {
+    ok
+    error
+    order {
+      ...OrdersDetail
+    }
+  }
+}
+
+mutation OrdersEditOrder($input: EditOrderInput!) {
+  editOrder(input: $input) {
+    ok
+    error
+  }
+}
+
+subscription OrdersOrderUpdates($input: OrderUpdatesInput!) {
+  orderUpdates(input: $input) {
+    ...OrdersDetail
+  }
+}
+
+subscription OrdersPendingOrders {
+  pendingOrders {
+    ...OrdersDetail
+  }
+}
+
+subscription OrdersCookedOrders {
+  cookedOrders {
+    ...OrdersDetail
+  }
+}

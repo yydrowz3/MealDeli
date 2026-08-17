@@ -1,0 +1,59 @@
+fragment IdentitySessionUser on User {
+  id
+  email
+  name
+  role
+  verifiedAt
+  address
+  image
+}
+
+mutation IdentitySignIn($input: SignInInput!) {
+  signIn(input: $input) {
+    ok
+    error
+    accessToken
+  }
+}
+
+mutation IdentitySignUp($input: SignUpInput!) {
+  signUp(input: $input) {
+    ok
+    error
+  }
+}
+
+mutation IdentitySignOut {
+  signOut {
+    ok
+    error
+  }
+}
+
+mutation IdentityRefreshAccessToken {
+  refreshAccessToken {
+    ok
+    error
+    accessToken
+  }
+}
+
+query IdentityMe {
+  me {
+    ...IdentitySessionUser
+  }
+}
+
+mutation IdentityVerifyEmail($input: VerifyEmailInput!) {
+  verifyEmail(input: $input) {
+    ok
+    error
+  }
+}
+
+mutation IdentityResendVerification($input: ResendVerificationInput!) {
+  resendVerification(input: $input) {
+    ok
+    error
+  }
+}

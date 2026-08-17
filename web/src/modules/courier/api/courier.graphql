@@ -1,0 +1,51 @@
+fragment CourierOrder on Order {
+  id
+  customerId
+  courierId
+  restaurantId
+  status
+  totalMinor
+  createdAt
+  updatedAt
+  restaurant {
+    id
+    name
+    address
+    image
+  }
+  items {
+    id
+    position
+    dishId
+    dishName
+    quantity
+    lineTotalMinor
+    selectedOptions {
+      optionId
+      name
+      choices {
+        choiceId
+        name
+        extraMinor
+      }
+    }
+  }
+}
+
+query CourierAvailableOrders {
+  availableOrders {
+    ok
+    error
+    orders {
+      ...CourierOrder
+    }
+  }
+}
+
+mutation CourierTakeOrder($input: TakeOrderInput!) {
+  takeOrder(input: $input) {
+    ok
+    error
+  }
+}
+

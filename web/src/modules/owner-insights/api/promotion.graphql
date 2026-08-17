@@ -1,0 +1,45 @@
+fragment OwnerInsightsPromotionRestaurant on Restaurant {
+  id
+  name
+  promotedUntil
+}
+
+query OwnerInsightsPromotionRestaurant($input: MyRestaurantInput!) {
+  myRestaurant(input: $input) {
+    ok
+    error
+    restaurant {
+      ...OwnerInsightsPromotionRestaurant
+    }
+  }
+}
+
+query OwnerInsightsPromotionHistory {
+  getPayments {
+    ok
+    error
+    payments {
+      id
+      transactionId
+      ownerId
+      restaurantId
+      createdAt
+      updatedAt
+    }
+  }
+  myRestaurants {
+    ok
+    error
+    restaurants {
+      id
+      name
+    }
+  }
+}
+
+mutation OwnerInsightsCreatePromotion($input: CreatePaymentInput!) {
+  createPayment(input: $input) {
+    ok
+    error
+  }
+}

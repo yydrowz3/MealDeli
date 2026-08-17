@@ -1,0 +1,7 @@
+mutation CheckoutCreateOrder($input: CreateOrderInput!) {
+  createOrder(input: $input) {
+    ok
+    error
+    orderId
+  }
+}

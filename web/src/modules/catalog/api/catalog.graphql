@@ -1,0 +1,108 @@
+fragment CatalogCategorySummary on Category {
+  id
+  name
+  slug
+  image
+  restaurantCount
+}
+
+fragment CatalogRestaurantCard on Restaurant {
+  id
+  name
+  address
+  image
+  promotedUntil
+  categoryId
+  category {
+    id
+    name
+    slug
+  }
+}
+
+fragment CatalogDishOption on DishOption {
+  id
+  name
+  minSelections
+  maxSelections
+  choices {
+    id
+    name
+    extraMinor
+  }
+}
+
+fragment CatalogDish on Dish {
+  id
+  restaurantId
+  name
+  description
+  priceMinor
+  image
+  options {
+    ...CatalogDishOption
+  }
+}
+
+fragment CatalogRestaurantDetail on Restaurant {
+  ...CatalogRestaurantCard
+  dishes {
+    ...CatalogDish
+  }
+}
+
+query CatalogAllCategories {
+  allCategory {
+    ok
+    error
+    categories {
+      ...CatalogCategorySummary
+    }
+  }
+}
+
+query CatalogRestaurants($input: RestaurantsInput!) {
+  restaurants(input: $input) {
+    ok
+    error
+    totalPages
+    totalResults
+    restaurants {
+      ...CatalogRestaurantCard
+    }
+  }
+}
+
+query CatalogCategory($input: CategoryInput!) {
+  category(input: $input) {
+    ok
+    error
+    totalPages
+    totalResults
+    restaurants {
+      ...CatalogRestaurantCard
+    }
+  }
+}
+
+query CatalogSearchRestaurants($input: SearchRestaurantInput!) {
+  searchRestaurant(input: $input) {
+    ok
+    error
+    totalPages
+    totalResults
+    restaurants {
+      ...CatalogRestaurantCard
+    }
+  }
+}
+
+query CatalogRestaurant($input: RestaurantInput!) {
+  restaurant(input: $input) {
+    ok
+    error
+    restaurant {
+      ...CatalogRestaurantDetail
+    }
+  }
+}

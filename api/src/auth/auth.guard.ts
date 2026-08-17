@@ -1,22 +1,21 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AllowedRole, ROLES_KEY } from './decorator/roles.decorator';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../users/users.service';
-import { TokenPayload } from './types/token-payload.type';
+import { AccessTokenVerifier } from './access-token-verifier';
+import type { User } from '../users/entities/user.entity';
+
+type GraphqlAuthContext = {
+  token?: unknown;
+  user?: User;
+  sessionId?: string;
+};
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    private readonly jwtService: JwtService,
-    private readonly usersService: UsersService,
+    private readonly accessTokenVerifier: AccessTokenVerifier,
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const roles = this.reflector.get<AllowedRole>(
@@ -26,38 +25,13 @@ export class AuthGuard implements CanActivate {
     if (!roles) {
       return true;
     }
-    const gqlContext = GqlExecutionContext.create(context).getContext();
-    const token = gqlContext.token;
-    if (!token) {
-      throw new UnauthorizedException('Authentication Required');
-    }
-
-    let payload: TokenPayload;
-    try {
-      payload = await this.jwtService.verifyAsync<TokenPayload>(
-        token.toString(),
-      );
-    } catch {
-      throw new UnauthorizedException('Invalid or expired token');
-    }
-
-    if (
-      payload.tokenType !== 'access' ||
-      typeof payload.sub !== 'string' ||
-      !payload.sub ||
-      typeof payload.sid !== 'string' ||
-      !payload.sid
-    ) {
-      throw new UnauthorizedException('Invalid token payload');
-    }
-
-    const user = await this.usersService.findUserByActiveSession(payload.sid);
-
-    if (!user || user.id !== payload.sub) {
-      throw new UnauthorizedException('Session has expired or was signed out');
-    }
+    const gqlContext =
+      GqlExecutionContext.create(context).getContext<GraphqlAuthContext>();
+    const token =
+      typeof gqlContext.token === 'string' ? gqlContext.token : undefined;
+    const { user, sessionId } = await this.accessTokenVerifier.verify(token);
     gqlContext.user = user;
-    gqlContext.sessionId = payload.sid;
+    gqlContext.sessionId = sessionId;
 
     if (roles.includes('Any')) {
       return true;

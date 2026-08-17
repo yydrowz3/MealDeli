@@ -1,0 +1,216 @@
+.courier-dashboard,
+.courier-delivery-page,
+.courier-completed {
+  width: min(1180px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0 6rem;
+}
+
+.courier-dashboard__header,
+.courier-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.courier-eyebrow {
+  color: var(--ui-color-jade-700, #087f5b);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.courier-active-card,
+.courier-order-card {
+  display: grid;
+  gap: 1rem;
+}
+
+.courier-active-card {
+  margin: 1.5rem 0 2.5rem;
+  border-color: var(--ui-color-jade-500, #12b886);
+}
+
+.courier-available-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1rem;
+}
+
+.courier-order-card__facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.courier-order-card__facts div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.courier-order-card__facts dt,
+.courier-help {
+  color: var(--ui-color-text-muted, #5d6762);
+  font-size: 0.875rem;
+}
+
+.courier-order-card__facts dd {
+  margin: 0;
+  font-weight: 650;
+}
+
+.courier-invariant,
+.courier-map-warning {
+  border: 1px solid #d97706;
+  border-radius: 0.75rem;
+  background: #fffbeb;
+  color: #92400e;
+  padding: 0.8rem 1rem;
+}
+
+.courier-recent-list,
+.courier-item-list,
+.courier-map-labels {
+  list-style: none;
+  padding: 0;
+}
+
+.courier-recent-list li,
+.courier-item-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--ui-color-border, #d9dfdc);
+  padding: 0.85rem 0;
+}
+
+.courier-delivery-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(300px, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.courier-delivery-details {
+  display: grid;
+  gap: 0.9rem;
+  border: 1px solid var(--ui-color-border, #d9dfdc);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  background: var(--ui-color-surface, #fff);
+}
+
+.courier-delivery-details h1,
+.courier-delivery-details h2,
+.courier-delivery-details p {
+  margin: 0;
+}
+
+.courier-order-total {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+}
+
+.courier-leaflet-map,
+.courier-map-fallback {
+  position: relative;
+  min-height: 460px;
+  overflow: hidden;
+  border-radius: 0.9rem;
+}
+
+.courier-leaflet-map .leaflet-container {
+  min-height: 460px;
+  width: 100%;
+}
+
+.courier-map-labels {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.courier-leaflet-marker,
+.courier-map-marker {
+  display: grid;
+  place-items: center;
+  width: 2rem !important;
+  height: 2rem !important;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 30%);
+  color: #fff;
+  font-weight: 800;
+}
+
+.courier-leaflet-marker--pickup,
+.courier-map-marker--pickup { background: #087f5b; }
+.courier-leaflet-marker--destination,
+.courier-map-marker--destination { background: #334155; }
+.courier-leaflet-marker--courier,
+.courier-map-marker--courier { background: #c2410c; }
+
+.courier-map-fallback {
+  background-color: #f2f5f3;
+  background-image:
+    linear-gradient(#dce3df 1px, transparent 1px),
+    linear-gradient(90deg, #dce3df 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.courier-map-fallback svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.courier-map-fallback path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+
+.courier-route-remaining { stroke: #aeb9b4; }
+.courier-route-complete { stroke: #087f5b; }
+
+.courier-map-marker {
+  position: absolute;
+  translate: -50% -50%;
+}
+
+.courier-map-marker--pickup { left: 8%; top: 80%; }
+.courier-map-marker--destination { left: 92%; top: 18%; }
+
+@media (max-width: 767px) {
+  .courier-dashboard,
+  .courier-delivery-page,
+  .courier-completed {
+    width: min(100% - 1rem, 680px);
+    padding-top: 1rem;
+  }
+
+  .courier-delivery-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .courier-leaflet-map,
+  .courier-map-fallback,
+  .courier-leaflet-map .leaflet-container {
+    min-height: 48vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .courier-map-marker--courier,
+  .courier-leaflet-marker--courier {
+    transition: none;
+  }
+}
+

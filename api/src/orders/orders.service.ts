@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { PubSub } from 'graphql-subscriptions';
 import { User } from '../users/entities/user.entity';
@@ -21,9 +21,12 @@ import { OrderStatus } from './enums/status.enum';
 import { EditOrderInput, EditOrderOutput } from './dto/edit-order.dto';
 import { OrderUpdatesInput, OrderUpdatesOutput } from './dto/order-updates.dto';
 import { TakeOrderInput, TakeOrderOutput } from './dto/take-order.dto';
+import { canRoleTransitionOrder } from './status-machine';
 
 @Injectable()
 export class OrdersService {
+  private readonly logger = new Logger(OrdersService.name);
+
   constructor(
     private readonly prismaService: PrismaService,
     @Inject(PUB_SUB) private readonly pubSub: PubSub,
@@ -36,13 +39,10 @@ export class OrdersService {
     }) as unknown as Promise<OrderItem[]>;
   }
 
-  async findRestaurantById(restaurantId: string): Promise<Restaurant> {
+  async findRestaurantById(restaurantId: string): Promise<Restaurant | null> {
     const restaurant = await this.prismaService.restaurant.findUnique({
       where: { id: restaurantId },
     });
-    if (!restaurant) {
-      throw new Error('Order restaurant no longer exists.');
-    }
     return restaurant;
   }
 
@@ -275,6 +275,27 @@ export class OrdersService {
     }
   }
 
+  async getAvailableOrders(): Promise<GetOrdersOutput> {
+    try {
+      const orders = await this.prismaService.order.findMany({
+        where: {
+          status: OrderStatus.WAITING,
+          courierId: null,
+        },
+        orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+      });
+      return {
+        ok: true,
+        orders,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: 'Could not get available orders.',
+      };
+    }
+  }
+
   private canSeeOrder(
     user: User,
     order: Pick<Order, 'customerId' | 'courierId'> & {
@@ -372,6 +393,17 @@ export class OrdersService {
     return false;
   }
 
+  canEditOrderTransition(
+    user: User,
+    currentStatus: OrderStatus,
+    targetStatus: OrderStatus,
+  ): boolean {
+    return (
+      this.canEditOrder(user, targetStatus) &&
+      canRoleTransitionOrder(user.role, currentStatus, targetStatus)
+    );
+  }
+
   async editOrder(
     user: User,
     editOrderInput: EditOrderInput,
@@ -400,32 +432,47 @@ export class OrdersService {
           error: 'Permission denied for this order',
         };
       }
-      const canEditOrder = this.canEditOrder(user, editOrderInput.status);
+      const canEditOrder = this.canEditOrderTransition(
+        user,
+        order.status,
+        editOrderInput.status,
+      );
       if (!canEditOrder) {
         return {
           ok: false,
-          error: 'Permission denied for this order status',
+          error: 'Invalid order status transition.',
         };
       }
-      await this.prismaService.order.update({
+      if (user.role === UserRole.COURIER && order.courierId !== user.id) {
+        return {
+          ok: false,
+          error: 'This order is not assigned to this courier.',
+        };
+      }
+      const updatedOrder = await this.prismaService.order.update({
         where: {
           id: editOrderInput.id,
         },
         data: {
           status: editOrderInput.status,
         },
+        include: {
+          items: true,
+          restaurant: {
+            select: { ownerId: true },
+          },
+        },
       });
 
-      const newOrder = { ...order, status: editOrderInput.status };
       if (UserRole.OWNER == user.role) {
         if (OrderStatus.WAITING === editOrderInput.status) {
           await this.pubSub.publish(NEW_COOKED_ORDER, {
-            cookedOrder: newOrder,
+            cookedOrders: updatedOrder,
           });
         }
       }
       await this.pubSub.publish(NEW_ORDER_UPDATE, {
-        orderUpdates: newOrder,
+        orderUpdates: updatedOrder,
       });
       return {
         ok: true,
@@ -445,6 +492,11 @@ export class OrdersService {
     const order = await this.prismaService.order.findUnique({
       where: {
         id: orderUpdatesInput.id,
+      },
+      include: {
+        restaurant: {
+          select: { ownerId: true },
+        },
       },
     });
     if (!order) {
@@ -469,44 +521,114 @@ export class OrdersService {
     courier: User,
     takeOrderInput: TakeOrderInput,
   ): Promise<TakeOrderOutput> {
-    try {
-      const order = await this.prismaService.order.findUnique({
-        where: {
-          id: takeOrderInput.id,
-        },
-      });
-      if (!order) {
+    let updatedOrder: Order | null = null;
+
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        updatedOrder = (await this.prismaService.$transaction(
+          async (transaction) => {
+            const activeOrder = await transaction.order.findFirst({
+              where: {
+                courierId: courier.id,
+                status: { not: OrderStatus.DELIVERED },
+              },
+              select: { id: true },
+            });
+            if (activeOrder) {
+              throw new TakeOrderConflict('already-active');
+            }
+
+            const claimed = await transaction.order.updateMany({
+              where: {
+                id: takeOrderInput.id,
+                status: OrderStatus.WAITING,
+                courierId: null,
+              },
+              data: {
+                courierId: courier.id,
+                status: OrderStatus.PICKED,
+              },
+            });
+            if (claimed.count !== 1) {
+              throw new TakeOrderConflict('no-longer-available');
+            }
+
+            return transaction.order.findUniqueOrThrow({
+              where: { id: takeOrderInput.id },
+              include: {
+                items: true,
+                restaurant: {
+                  select: { ownerId: true },
+                },
+              },
+            });
+          },
+          { isolationLevel: 'Serializable' },
+        )) as unknown as Order;
+        break;
+      } catch (error) {
+        if (error instanceof TakeOrderConflict) {
+          return {
+            ok: false,
+            error:
+              error.kind === 'already-active'
+                ? 'You already have an active delivery.'
+                : 'Order is no longer available.',
+          };
+        }
+        if (isSerializableConflict(error)) {
+          if (attempt === 0) {
+            continue;
+          }
+          return {
+            ok: false,
+            error: 'Order is no longer available.',
+          };
+        }
         return {
           ok: false,
-          error: 'Order not found.',
+          error: 'Could not take order.',
         };
       }
-      if (order.courierId) {
-        return {
-          ok: false,
-          error: 'Order already taken.',
-        };
-      }
-      await this.prismaService.order.update({
-        where: {
-          id: takeOrderInput.id,
-        },
-        data: {
-          courierId: courier.id,
-          status: OrderStatus.PICKED,
-        },
-      });
-      await this.pubSub.publish(NEW_ORDER_UPDATE, {
-        orderUpdates: { ...order, courier },
-      });
-      return {
-        ok: true,
-      };
-    } catch {
+    }
+
+    if (!updatedOrder) {
       return {
         ok: false,
-        error: 'Could not take order.',
+        error: 'Order is no longer available.',
       };
     }
+
+    try {
+      await this.pubSub.publish(NEW_ORDER_UPDATE, {
+        orderUpdates: updatedOrder,
+      });
+    } catch (error) {
+      this.logger.error(
+        `Order ${updatedOrder.id} was claimed but its update could not be published.`,
+        error instanceof Error ? error.stack : undefined,
+      );
+    }
+
+    return {
+      ok: true,
+    };
   }
+}
+
+type TakeOrderConflictKind = 'already-active' | 'no-longer-available';
+
+class TakeOrderConflict extends Error {
+  constructor(readonly kind: TakeOrderConflictKind) {
+    super(kind);
+  }
+}
+
+function isSerializableConflict(error: unknown): boolean {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    (error as { code?: unknown }).code === 'P2034'
+  );
 }

@@ -1,0 +1,192 @@
+.owner-page {
+  display: grid;
+  gap: var(--space-6);
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: var(--space-6);
+}
+.owner-page--narrow {
+  max-width: 50rem;
+}
+.owner-page__header,
+.owner-section-heading,
+.owner-option-builder__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.owner-page__header h1,
+.owner-overview-hero h1 {
+  margin: 0;
+}
+.owner-page__eyebrow {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin: 0;
+  text-transform: uppercase;
+}
+.owner-restaurant-grid {
+  display: grid;
+  gap: var(--space-5);
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+}
+.owner-restaurant-card {
+  overflow: hidden;
+  padding: 0;
+}
+.owner-restaurant-card > img,
+.owner-restaurant-card > .owner-image-placeholder {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  object-fit: cover;
+}
+.owner-restaurant-card__body {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+}
+.owner-image-placeholder {
+  background: linear-gradient(135deg, var(--color-surface-muted), var(--color-border));
+  min-height: 6rem;
+}
+.owner-card-actions,
+.owner-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.owner-form,
+.owner-dish-form {
+  display: grid;
+  gap: var(--space-5);
+}
+.owner-overview-hero {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: minmax(12rem, 22rem) 1fr;
+  align-items: center;
+}
+.owner-overview-hero img,
+.owner-overview-hero .owner-image-placeholder {
+  border-radius: var(--radius-lg);
+  height: 14rem;
+  width: 100%;
+  object-fit: cover;
+}
+.owner-summary-grid {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(3, 1fr);
+}
+.owner-summary-grid strong {
+  font-size: var(--font-size-2xl);
+}
+.owner-recent-orders,
+.owner-menu-list {
+  display: grid;
+  gap: var(--space-3);
+}
+.owner-recent-orders > *,
+.owner-dish-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.owner-dish-card > img,
+.owner-dish-card > .owner-image-placeholder {
+  border-radius: var(--radius-md);
+  height: 7rem;
+  width: 9rem;
+  object-fit: cover;
+  flex: none;
+}
+.owner-option-builder {
+  display: grid;
+  gap: var(--space-4);
+}
+.owner-option-builder__option,
+.owner-option-builder__choices {
+  display: grid;
+  gap: var(--space-4);
+}
+.owner-option-builder__limits,
+.owner-option-builder__choice {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.owner-option-builder__choice {
+  align-items: end;
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-3);
+}
+.owner-option-builder__warning {
+  color: var(--color-warning-text);
+}
+.owner-danger-zone {
+  border-color: var(--color-danger);
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+}
+.owner-order-toasts {
+  bottom: var(--space-6);
+  display: grid;
+  gap: var(--space-3);
+  max-width: 26rem;
+  position: fixed;
+  right: var(--space-6);
+  z-index: 60;
+}
+.owner-order-toast {
+  align-items: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: 1fr auto;
+  padding: var(--space-4);
+}
+.owner-order-toast p {
+  margin: var(--space-1) 0 0;
+}
+@media (max-width: 47.99rem) {
+  .owner-page {
+    padding: var(--space-4);
+  }
+  .owner-page__header,
+  .owner-overview-hero,
+  .owner-dish-card,
+  .owner-recent-orders > * {
+    align-items: stretch;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .owner-page__header > .ui-button {
+    width: 100%;
+  }
+  .owner-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .owner-dish-card > img,
+  .owner-dish-card > .owner-image-placeholder {
+    height: 10rem;
+    width: 100%;
+  }
+  .owner-option-builder__limits,
+  .owner-option-builder__choice {
+    grid-template-columns: 1fr;
+  }
+  .owner-order-toasts {
+    bottom: var(--space-4);
+    left: var(--space-4);
+    max-width: none;
+    right: var(--space-4);
+  }
+}

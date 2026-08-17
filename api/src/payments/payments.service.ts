@@ -8,13 +8,23 @@ import { User } from '../users/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 import { GetPaymentsOutput } from './dto/get-payments.dto';
 import { Prisma } from '../generated/prisma/client';
+import {
+  assertPromotionDaysContract,
+  PROMOTION_DAYS,
+} from './promotion-duration';
 
 @Injectable()
 export class PaymentsService {
+  private readonly promotionDays: typeof PROMOTION_DAYS;
+
   constructor(
     private readonly prismaService: PrismaService,
     private readonly configService: ConfigService,
-  ) {}
+  ) {
+    this.promotionDays = assertPromotionDaysContract(
+      this.configService.get<string | number>('PROMOTION_DAYS'),
+    );
+  }
 
   async createPayment(
     owner: User,
@@ -37,8 +47,7 @@ export class PaymentsService {
         };
       }
       const date = new Date();
-      const daysToAdd = this.configService.get<number>('PROMOTION_DAYS') || 7;
-      date.setDate(date.getDate() + daysToAdd);
+      date.setDate(date.getDate() + this.promotionDays);
       await this.prismaService.$transaction(async (transaction) => {
         await transaction.payment.create({
           data: {

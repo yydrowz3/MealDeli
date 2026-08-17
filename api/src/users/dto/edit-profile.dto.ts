@@ -22,6 +22,7 @@ export class EditProfileInput {
   @Field(() => String, { nullable: true })
   @IsOptional()
   @IsEmail()
+  @MaxLength(255)
   email?: string;
 
   @Field(() => String, { nullable: true })

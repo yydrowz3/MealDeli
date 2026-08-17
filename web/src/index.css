@@ -1,2 +1,274 @@
 @import "tailwindcss";
 @plugin "daisyui";
+@import "./shared/ui/tokens.css";
+@import "./shared/ui/styles.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-warm-white);
+  color: var(--color-charcoal);
+  font: var(--font-size-body) / var(--line-height-body) var(--font-sans);
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.app-header {
+  align-items: center;
+  background: color-mix(in srgb, var(--color-warm-white) 94%, transparent);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  gap: var(--space-6);
+  justify-content: space-between;
+  min-height: 4.5rem;
+  padding: var(--space-3) max(var(--space-4), calc((100vw - var(--content-max-width)) / 2));
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.app-brand {
+  align-items: center;
+  display: inline-flex;
+  font-size: 1.25rem;
+  font-weight: 750;
+  gap: var(--space-2);
+  text-decoration: none;
+}
+
+.app-header__actions,
+.app-desktop-nav,
+.landing-footer nav {
+  align-items: center;
+  display: flex;
+  gap: var(--space-6);
+}
+
+.app-header__actions a,
+.app-desktop-nav a,
+.landing-footer a {
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.app-link-button {
+  align-items: center;
+  background: var(--color-jade);
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  color: var(--color-charcoal);
+  display: inline-flex;
+  font-weight: 700;
+  gap: var(--space-2);
+  justify-content: center;
+  min-height: var(--control-height-lg);
+  padding: 0 var(--space-6);
+  text-decoration: none;
+}
+
+.app-link-button:hover {
+  background: var(--color-jade-dark);
+  color: var(--color-surface);
+}
+
+.app-main {
+  margin: 0 auto;
+  max-width: var(--content-max-width);
+  padding: var(--space-8) var(--space-4) 6rem;
+}
+
+.app-bottom-nav {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  bottom: 0;
+  display: none;
+  justify-content: space-around;
+  left: 0;
+  padding: var(--space-2) max(var(--space-3), env(safe-area-inset-bottom));
+  position: fixed;
+  right: 0;
+  z-index: 25;
+}
+
+.app-bottom-nav a,
+.app-owner-sidebar nav a {
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+  min-height: 2.75rem;
+  padding: var(--space-2);
+  text-decoration: none;
+}
+
+.app-owner-shell {
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+}
+
+.app-owner-sidebar {
+  background: var(--color-charcoal);
+  color: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  min-height: 100vh;
+  padding: var(--space-6);
+  position: sticky;
+  top: 0;
+}
+
+.app-owner-sidebar .app-brand { color: var(--color-surface); }
+.app-owner-sidebar nav { display: grid; gap: var(--space-2); }
+.app-owner-account { display: grid; gap: var(--space-2); margin-top: auto; }
+
+.app-active-delivery {
+  background: var(--color-jade-soft);
+  display: block;
+  font-weight: 700;
+  padding: var(--space-3) var(--space-4);
+  text-align: center;
+}
+
+.app-state,
+.app-session-skeleton {
+  display: grid;
+  gap: var(--space-4);
+  margin: 15vh auto;
+  max-width: 40rem;
+  padding: var(--space-6);
+}
+
+.app-state h1 { font-size: var(--font-size-page); margin: 0; }
+.app-state p { color: var(--color-muted); margin: 0; }
+.app-session-skeleton .ui-skeleton:first-child { min-height: 3rem; width: 55%; }
+.app-session-skeleton .ui-skeleton:nth-child(2) { min-height: 7rem; }
+.app-session-skeleton .ui-skeleton:nth-child(3) { min-height: 12rem; }
+.app-text-link { background: none; border: 0; color: var(--color-jade-dark); cursor: pointer; justify-self: start; text-decoration: underline; }
+
+.landing-hero,
+.landing-section,
+.landing-footer {
+  margin: 0 auto;
+  max-width: var(--content-max-width);
+  padding: clamp(3rem, 8vw, 7rem) var(--space-4);
+}
+
+.landing-hero {
+  align-items: center;
+  display: grid;
+  gap: clamp(2rem, 5vw, 5rem);
+  grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
+  min-height: min(48rem, calc(100vh - 4.5rem));
+}
+
+.landing-hero__copy h1 {
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+  margin: var(--space-3) 0 var(--space-6);
+  max-width: 12ch;
+}
+
+.landing-hero__copy > p:not(.landing-eyebrow) {
+  color: var(--color-muted);
+  font-size: 1.125rem;
+  max-width: 34rem;
+}
+
+.landing-primary-cta { margin-top: var(--space-6); }
+.landing-hero__image { aspect-ratio: 4 / 5; border-radius: 2rem; object-fit: cover; width: 100%; }
+.landing-eyebrow { color: var(--color-jade-text); font-size: 0.8125rem; font-weight: 800; letter-spacing: 0.12em; margin: 0; text-transform: uppercase; }
+.landing-section__heading { max-width: 40rem; }
+.landing-section__heading h2 { font-size: var(--font-size-page); margin: var(--space-2) 0 var(--space-8); }
+
+.landing-role-grid {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.landing-role-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  display: grid;
+  gap: var(--space-3);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  text-decoration: none;
+}
+
+.landing-role-card h3,
+.landing-role-card p { margin: 0; }
+.landing-role-card p { color: var(--color-muted); min-height: 3rem; }
+.landing-role-card__cta { align-items: center; color: var(--color-jade-text); display: inline-flex; font-weight: 700; gap: var(--space-2); margin-top: var(--space-3); }
+.landing-how ol { display: grid; gap: var(--space-4); grid-template-columns: repeat(3, 1fr); list-style: none; margin: 0; padding: 0; }
+.landing-how li { align-items: center; border-top: 1px solid var(--color-border); display: flex; gap: var(--space-3); padding-top: var(--space-4); }
+.landing-how li span { align-items: center; background: var(--color-jade-soft); border-radius: 50%; display: inline-flex; height: 2rem; justify-content: center; width: 2rem; }
+.landing-footer { align-items: end; border-top: 1px solid var(--color-border); display: grid; gap: var(--space-6); grid-template-columns: 1fr auto; padding-bottom: var(--space-8); padding-top: var(--space-8); }
+.landing-footer p { color: var(--color-muted); margin: var(--space-1) 0 0; }
+.landing-footer small { color: var(--color-muted); }
+
+.app-update-prompt {
+  align-items: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  bottom: var(--space-4);
+  box-shadow: 0 var(--space-2) var(--space-8) var(--color-shadow);
+  display: flex;
+  gap: var(--space-3);
+  left: 50%;
+  max-width: calc(100vw - 2rem);
+  padding: var(--space-4);
+  position: fixed;
+  transform: translateX(-50%);
+  z-index: 60;
+}
+
+.app-update-prompt p { color: var(--color-muted); margin: 0; }
+
+@media (max-width: 63.999rem) {
+  .app-owner-shell { display: block; }
+  .app-owner-sidebar { display: none; }
+  .app-bottom-nav { display: flex; }
+  .landing-role-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 39.999rem) {
+  .app-header { min-height: 4rem; }
+  .app-header__actions .app-link-button { display: none; }
+  .app-desktop-nav { display: none; }
+  .landing-hero { grid-template-columns: 1fr; padding-top: var(--space-12); }
+  .landing-hero__image { aspect-ratio: 16 / 10; }
+  .landing-role-grid,
+  .landing-how ol { grid-template-columns: 1fr; }
+  .landing-role-card p { min-height: auto; }
+  .landing-footer { align-items: start; grid-template-columns: 1fr; }
+  .landing-footer nav { align-items: start; flex-direction: column; gap: var(--space-3); }
+  .app-update-prompt { align-items: stretch; bottom: var(--space-3); flex-direction: column; width: calc(100vw - 2rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

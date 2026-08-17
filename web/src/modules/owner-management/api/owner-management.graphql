@@ -1,0 +1,107 @@
+fragment OwnerManagementDishOption on DishOption {
+  id
+  name
+  minSelections
+  maxSelections
+  choices {
+    id
+    name
+    extraMinor
+  }
+}
+
+fragment OwnerManagementDish on Dish {
+  id
+  restaurantId
+  name
+  description
+  priceMinor
+  image
+  createdAt
+  updatedAt
+  options {
+    ...OwnerManagementDishOption
+  }
+}
+
+fragment OwnerManagementRestaurant on Restaurant {
+  id
+  name
+  address
+  image
+  promotedUntil
+  categoryId
+  createdAt
+  updatedAt
+  category {
+    id
+    name
+    slug
+  }
+  dishes {
+    ...OwnerManagementDish
+  }
+}
+
+query OwnerManagementMyRestaurants {
+  myRestaurants {
+    ok
+    error
+    restaurants {
+      ...OwnerManagementRestaurant
+    }
+  }
+}
+
+query OwnerManagementMyRestaurant($input: MyRestaurantInput!) {
+  myRestaurant(input: $input) {
+    ok
+    error
+    restaurant {
+      ...OwnerManagementRestaurant
+    }
+  }
+}
+
+mutation OwnerManagementCreateRestaurant($input: CreateRestaurantInput!) {
+  createRestaurant(input: $input) {
+    ok
+    error
+    restaurantId
+  }
+}
+
+mutation OwnerManagementEditRestaurant($input: EditRestaurantInput!) {
+  editRestaurant(input: $input) {
+    ok
+    error
+  }
+}
+
+mutation OwnerManagementDeleteRestaurant($input: DeleteRestaurantInput!) {
+  deleteRestaurant(input: $input) {
+    ok
+    error
+  }
+}
+
+mutation OwnerManagementCreateDish($input: CreateDishInput!) {
+  createDish(input: $input) {
+    ok
+    error
+  }
+}
+
+mutation OwnerManagementEditDish($input: EditDishInput!) {
+  editDish(input: $input) {
+    ok
+    error
+  }
+}
+
+mutation OwnerManagementDeleteDish($input: DeleteDishInput!) {
+  deleteDish(input: $input) {
+    ok
+    error
+  }
+}

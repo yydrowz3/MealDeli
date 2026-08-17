@@ -42,8 +42,8 @@ export class OrdersResolver {
     return this.ordersService.findItemsByOrderId(order.id);
   }
 
-  @ResolveField(() => Restaurant)
-  restaurant(@Parent() order: Order): Promise<Restaurant> {
+  @ResolveField(() => Restaurant, { nullable: true })
+  restaurant(@Parent() order: Order): Promise<Restaurant | null> {
     return this.ordersService.findRestaurantById(order.restaurantId);
   }
 
@@ -63,6 +63,12 @@ export class OrdersResolver {
     @Args('input') getOrdersInput: GetOrdersInput,
   ): Promise<GetOrdersOutput> {
     return this.ordersService.getOrders(user, getOrdersInput);
+  }
+
+  @Query(() => GetOrdersOutput)
+  @Roles(UserRole.COURIER)
+  availableOrders(): Promise<GetOrdersOutput> {
+    return this.ordersService.getAvailableOrders();
   }
 
   @Query(() => GetOrderOutput)

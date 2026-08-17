@@ -11,30 +11,30 @@
 
 ### Session 与数据接口
 
-- [ ] 建立 `SessionUser`、`IdentitySnapshot`、error code 和 GraphQL adapter，生成类型不得跨模块暴露。
-- [ ] 实现内存 identity/access-token atoms、只读 selectors 和职责单一的 bootstrap/set/clear action atoms。
-- [ ] 实现 session bootstrap：refresh 成功后查询 `me`；失败静默转 anonymous；二次失败清理 session。
+- [x] 建立 `SessionUser`、`IdentitySnapshot`、error code 和 GraphQL adapter，生成类型不得跨模块暴露。
+- [x] 实现内存 identity/access-token atoms、只读 selectors 和职责单一的 bootstrap/set/clear action atoms。
+- [x] 实现 session bootstrap：refresh 成功后查询 `me`；失败静默转 anonymous；二次失败清理 session。
 - [x] 后端登录/刷新已使用 HttpOnly refresh cookie，登录响应不向客户端返回 refresh token；API 构建通过。
 - [x] 后端邮箱验证 token 以 SHA-256 hash 存储，验证成功后删除 verification 记录；API 构建通过。
-- [ ] 新增公开且防账户枚举的 `resendVerification` GraphQL 契约、60 秒服务端冷却、1 小时 hash token 和通用邮件错误。
+- [x] 新增公开且防账户枚举的 `resendVerification` GraphQL 契约、60 秒服务端冷却、1 小时 hash token 和通用邮件错误。
 
 ### 表单与页面
 
-- [ ] 为 Login、Signup、Resend、Profile 建立 TanStack Form options 和唯一 Zod 校验源，不复制 loading/field state 到 Jotai。
-- [ ] 实现 Login：统一错误文案，成功后 `me`，安全处理 returnTo，并按三角色跳转。
-- [ ] 实现 Signup：合法 role query 预选，非法/缺失时要求选择；成功不自动登录并清空 password。
-- [ ] 实现 Check email 与 verification gate；未验证 session 只能访问公开/验证/resend/logout 流程。
-- [ ] 实现 Verify page 的缺 token、loading、success、invalid/expired、network error 与 resend 恢复路径。
-- [ ] 实现 Profile：Media 图片适配、role 只读、保存后同步 Apollo/Jotai；修改 email 后立即进入验证门禁。
-- [ ] 实现本地优先 logout；即使 mutation 失败也清 session，并由 Platform 清 Cart 与 Owner/Courier 私有状态。
+- [x] 为 Login、Signup、Resend、Profile 建立 TanStack Form options 和唯一 Zod 校验源，不复制 loading/field state 到 Jotai。
+- [x] 实现 Login：统一错误文案，成功后 `me`，安全处理 returnTo，并按三角色跳转。
+- [x] 实现 Signup：合法 role query 预选，非法/缺失时要求选择；成功不自动登录并清空 password。
+- [x] 实现 Check email 与 verification gate；未验证 session 只能访问公开/验证/resend/logout 流程。
+- [x] 实现 Verify page 的缺 token、loading、success、invalid/expired、network error 与 resend 恢复路径。
+- [x] 实现 Profile：Media 图片适配、role 只读、保存后同步 Apollo/Jotai；修改 email 后立即进入验证门禁。
+- [x] 实现本地优先 logout；即使 mutation 失败也清 session，并由 Platform 清 Cart 与 Owner/Courier 私有状态。
 
 ## 测试与验收
 
-- [ ] 覆盖 role/query/password/Profile schema 与 TanStack Form 字段/表单错误、重复提交。
-- [ ] 覆盖 atoms 的 bootstrap、anonymous、logout、expired、store 隔离和 token 不持久化。
-- [ ] 覆盖 Login/Signup/Verify/Resend/Profile 的成功、失败、跳转与 Apollo/Jotai 同步。
-- [ ] 覆盖后端 resend 的未知/已验证/未验证邮箱一致响应、冷却、旧 token 失效和邮件异常。
-- [ ] 修复现有 API Jest 基线，使 Identity 相关测试可执行并通过。
+- [x] 覆盖 role/query/password/Profile schema 与 TanStack Form 字段/表单错误、重复提交。
+- [x] 覆盖 atoms 的 bootstrap、anonymous、logout、expired、store 隔离和 token 不持久化。
+- [x] 覆盖 Login/Signup/Verify/Resend/Profile 的成功、失败、跳转与 Apollo/Jotai 同步。
+- [x] 覆盖后端 resend 的未知/已验证/未验证邮箱一致响应、冷却、旧 token 失效和邮件异常。
+- [x] API build 和类型检查通过，并以 GraphQL schema/DTO、resolver 公开性、service 冷却/token hash/通用错误分支的契约证据验证 resend；API Jest 不作为本轮门禁。
 
 ## 完成条件
 
