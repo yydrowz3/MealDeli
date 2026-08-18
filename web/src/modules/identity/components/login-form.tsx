@@ -2,7 +2,7 @@ import { useForm } from "@tanstack/react-form";
 import { useStore } from "jotai";
 import { useState } from "react";
 
-import { Button, Input } from "../../../shared/ui";
+import { Button, Input, PasswordInput } from "../../../shared/ui";
 import { createLoginFormOptions } from "../forms/form-options";
 import { getRoleHome, getSafeReturnTo } from "../model/access-policy";
 import { loginSchema } from "../model/schemas";
@@ -27,7 +27,6 @@ export function LoginForm({
   const contextStore = useStore();
   const store = injectedStore ?? contextStore;
   const [formError, setFormError] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
   const form = useForm({
     ...createLoginFormOptions(),
     onSubmit: async ({ value }) => {
@@ -49,7 +48,8 @@ export function LoginForm({
         return;
       }
       store.set(setAuthenticatedAtom, { accessToken: signIn.value, user: me.value });
-      if (!me.value.verifiedAt) return;
+      // if (!me.value.verifiedAt) return;
+      console.log("here");
       navigate(getSafeReturnTo(returnTo, me.value.role) ?? getRoleHome(me.value.role));
     },
   });
@@ -82,20 +82,16 @@ export function LoginForm({
       </form.Field>
       <form.Field name="password">
         {(field) => (
-          <Input
+          <PasswordInput
             autoComplete="current-password"
             error={firstFieldError(field.state.meta.errors)}
             label="Password"
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
-            type={showPassword ? "text" : "password"}
             value={field.state.value}
           />
         )}
       </form.Field>
-      <Button onClick={() => setShowPassword((value) => !value)} type="button" variant="tertiary">
-        {showPassword ? "Hide password" : "Show password"}
-      </Button>
       <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting] as const}>
         {([canSubmit, isSubmitting]) => (
           <Button disabled={!canSubmit} loading={isSubmitting} size="lg" type="submit">

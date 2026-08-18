@@ -1,4 +1,5 @@
-import { useId } from "react";
+import { Eye, EyeSlash } from "@phosphor-icons/react";
+import { useId, useState } from "react";
 import type {
   InputHTMLAttributes,
   ReactNode,
@@ -59,6 +60,58 @@ export function Input({ label, description, error, id, className, ...props }: In
           className={["ui-control", className].filter(Boolean).join(" ")}
           id={controlId}
         />
+      )}
+    </FieldShell>
+  );
+}
+
+export type PasswordInputProps = Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "aria-describedby" | "type"
+> & {
+  label: string;
+  description?: string;
+  error?: string;
+};
+
+export function PasswordInput({
+  label,
+  description,
+  error,
+  id,
+  className,
+  ...props
+}: PasswordInputProps) {
+  const generatedId = useId();
+  const controlId = id ?? generatedId;
+  const [showPassword, setShowPassword] = useState(false);
+
+  return (
+    <FieldShell controlId={controlId} description={description} error={error} label={label}>
+      {(describedBy) => (
+        <div className="ui-password-control">
+          <input
+            {...props}
+            aria-describedby={describedBy}
+            aria-invalid={error ? true : undefined}
+            className={["ui-control", className].filter(Boolean).join(" ")}
+            id={controlId}
+            type={showPassword ? "text" : "password"}
+          />
+          <button
+            aria-controls={controlId}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            className="ui-password-toggle"
+            onClick={() => setShowPassword((value) => !value)}
+            type="button"
+          >
+            {showPassword ? (
+              <EyeSlash aria-hidden="true" size={20} />
+            ) : (
+              <Eye aria-hidden="true" size={20} />
+            )}
+          </button>
+        </div>
       )}
     </FieldShell>
   );

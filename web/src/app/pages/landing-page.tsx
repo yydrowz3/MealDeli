@@ -1,5 +1,5 @@
 import { ArrowRightIcon, BicycleIcon, CookingPotIcon, StorefrontIcon } from "@phosphor-icons/react";
-import heroImage from "../../assets/hero.png";
+import heroImage from "../../assets/hero.webp";
 
 const roles = [
   {
@@ -27,8 +27,8 @@ export function LandingPage() {
     <main>
       <section className="landing-hero">
         <div className="landing-hero__copy">
-          <p className="landing-eyebrow">Simple delivery for everyone</p>
-          <h1>Good food, delivered simply.</h1>
+          <p className="landing-eyebrow">Meal delivery for everyone</p>
+          <h1>Good meals, delivered simply.</h1>
           <p>Order from local restaurants, run your kitchen, or deliver with us.</p>
           <a className="app-link-button landing-primary-cta" href="#choose-role">
             Get started <ArrowRightIcon aria-hidden="true" />
@@ -84,7 +84,7 @@ export function LandingPage() {
       <footer className="landing-footer">
         <div>
           <strong>MealDeli</strong>
-          <p>Simple delivery for everyone.</p>
+          <p>Meal delivery for everyone.</p>
         </div>
         <nav aria-label="Footer navigation">
           <a href="/login">Log in</a>

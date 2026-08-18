@@ -124,6 +124,30 @@
 .ui-control[aria-invalid="true"] { border-color: var(--color-danger); }
 textarea.ui-control { min-height: calc(var(--control-height-md) * 2); resize: vertical; }
 
+.ui-password-control { position: relative; }
+.ui-password-control > .ui-control { padding-right: calc(var(--space-3) + 2.75rem); }
+.ui-password-toggle {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-control);
+  color: var(--color-muted);
+  cursor: pointer;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  padding: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 2.75rem;
+}
+.ui-password-toggle:hover { color: var(--color-charcoal); }
+.ui-password-toggle:focus-visible {
+  outline: 3px solid var(--color-info);
+  outline-offset: -3px;
+}
+
 .ui-form-summary {
   background: var(--color-danger-soft);
   border: 1px solid var(--color-danger);

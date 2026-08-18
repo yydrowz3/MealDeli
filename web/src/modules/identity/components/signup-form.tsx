@@ -1,7 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
 
-import { Button, Input, Select } from "../../../shared/ui";
+import { Button, Input, PasswordInput, Select } from "../../../shared/ui";
 import { createSignupFormOptions } from "../forms/form-options";
 import { signupSchema } from "../model/schemas";
 import type { IdentityRepository, UserRole } from "../model/types";
@@ -15,13 +15,12 @@ export type SignupFormProps = {
 
 export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
   const [formError, setFormError] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
   const form = useForm({
     ...createSignupFormOptions(role),
     onSubmit: async ({ value }) => {
       setFormError(null);
-      const parsed = signupSchema.parse(value);
-      const result = await repository.signUp(parsed);
+      const { demoAcknowledged: _demoAcknowledged, ...signUpInput } = signupSchema.parse(value);
+      const result = await repository.signUp(signUpInput);
       if (!result.ok) {
         setFormError(
           identityErrorMessage(result.code, "We couldn’t create your account. Try again."),
@@ -30,7 +29,7 @@ export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
         return;
       }
       form.setFieldValue("password", "");
-      onSuccess(parsed.email);
+      onSuccess(signUpInput.email);
     },
   });
 
@@ -92,21 +91,17 @@ export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
       </form.Field>
       <form.Field name="password">
         {(field) => (
-          <Input
+          <PasswordInput
             autoComplete="new-password"
             description="At least 8 characters"
             error={firstFieldError(field.state.meta.errors)}
             label="Password"
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
-            type={showPassword ? "text" : "password"}
             value={field.state.value}
           />
         )}
       </form.Field>
-      <Button onClick={() => setShowPassword((value) => !value)} type="button" variant="tertiary">
-        {showPassword ? "Hide password" : "Show password"}
-      </Button>
       <form.Field name="demoAcknowledged">
         {(field) => {
           const error = firstFieldError(field.state.meta.errors);

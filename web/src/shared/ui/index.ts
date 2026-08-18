@@ -3,9 +3,16 @@ import "./styles.css";
 
 export { Button } from "./primitives/button";
 export type { ButtonProps } from "./primitives/button";
-export { Input, Textarea, Select, FormErrorSummary } from "./primitives/form-control";
+export {
+  Input,
+  PasswordInput,
+  Textarea,
+  Select,
+  FormErrorSummary,
+} from "./primitives/form-control";
 export type {
   InputProps,
+  PasswordInputProps,
   TextareaProps,
   SelectProps,
   FormError,

@@ -8,8 +8,6 @@ export function createAuthLink(getAccessToken: () => string | null) {
 
     if (accessToken) {
       headers.authorization = `Bearer ${accessToken}`;
-    } else {
-      delete headers.authorization;
     }
 
     operation.setContext({ ...context, headers });

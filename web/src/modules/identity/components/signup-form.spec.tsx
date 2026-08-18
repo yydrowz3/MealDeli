@@ -38,6 +38,12 @@ describe("SignupForm", () => {
 
     await waitFor(() => expect(onSuccess).toHaveBeenCalledWith("alex@example.test"));
     expect(repository.signUp).toHaveBeenCalledTimes(1);
+    expect(repository.signUp).toHaveBeenCalledWith({
+      email: "alex@example.test",
+      name: "Alex",
+      password: "12345678",
+      role: "OWNER",
+    });
   });
 
   it("prevents a second submit while the first request is pending", async () => {
