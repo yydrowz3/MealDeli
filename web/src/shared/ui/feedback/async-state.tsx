@@ -5,7 +5,7 @@ import { Button } from "../primitives/button";
 export type AsyncStateProps = {
   title: string;
   description?: string;
-  action?: { label: string; onClick: () => void };
+  action?: { label: string; onClick: () => void; icon?: ReactNode };
   icon?: ReactNode;
 };
 
@@ -21,6 +21,7 @@ export function AsyncStateView({ title, description, action, icon, kind }: Async
       {description ? <p>{description}</p> : null}
       {action ? (
         <Button onClick={action.onClick} variant={kind === "error" ? "secondary" : "primary"}>
+          {action.icon}
           {action.label}
         </Button>
       ) : null}

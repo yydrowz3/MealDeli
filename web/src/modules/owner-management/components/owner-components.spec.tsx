@@ -1,9 +1,15 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "jotai";
 import { describe, expect, it, vi } from "vitest";
 
 import { buildCategory } from "../../catalog";
+import {
+  ControllableAsyncIterable,
+  createFakeOrderSubscriptions,
+  flushOrdersRealtime,
+} from "../../orders/testing/fake-subscriptions";
+import type { OrderRealtimeEvent } from "../../orders";
 import type { OwnerRestaurantRepository } from "../model/types";
 import { createOwnerSelectionTestStore } from "../model/selection-atoms";
 import { OwnerRestaurantsPage } from "../pages/restaurants-page";
@@ -13,6 +19,7 @@ import { RestaurantSettingsForm } from "./restaurant-settings-form";
 import { DishForm } from "./dish-form";
 import { OwnerOrdersAction } from "./owner-orders-action";
 import { RestaurantSelector } from "./restaurant-selector";
+import { NewOrderNotifier } from "./new-order-notifier";
 
 function createRepository(
   overrides: Partial<OwnerRestaurantRepository> = {},
@@ -167,6 +174,56 @@ describe("OwnerOrdersAction", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "We couldn’t update this order. Try again.",
     );
+  });
+});
+
+describe("NewOrderNotifier", () => {
+  it("keeps the pending stream alive while the owner order list is updated", async () => {
+    const stream = new ControllableAsyncIterable<OrderRealtimeEvent>();
+    const subscriptions = createFakeOrderSubscriptions({ pending: [stream] });
+    const repository = { list: vi.fn(async () => []) };
+    const replaceOrders = vi.fn();
+    const onPendingCount = vi.fn();
+    const onViewOrder = vi.fn();
+    const firstOrder = buildOwnerOrder({ id: "11111111-1111-4111-8111-111111111111" });
+    const secondOrder = buildOwnerOrder({ id: "22222222-2222-4222-8222-222222222222" });
+
+    const view = render(
+      <NewOrderNotifier
+        onPendingCount={onPendingCount}
+        onViewOrder={onViewOrder}
+        orders={[]}
+        replaceOrders={replaceOrders}
+        repository={repository}
+        subscriptions={subscriptions}
+      />,
+    );
+
+    await act(async () => flushOrdersRealtime());
+    await act(async () => {
+      stream.push(firstOrder);
+      await flushOrdersRealtime();
+    });
+    expect(screen.getByText("New order from Noodle House")).toBeInTheDocument();
+
+    view.rerender(
+      <NewOrderNotifier
+        onPendingCount={onPendingCount}
+        onViewOrder={onViewOrder}
+        orders={[firstOrder]}
+        replaceOrders={replaceOrders}
+        repository={repository}
+        subscriptions={subscriptions}
+      />,
+    );
+    await act(async () => {
+      stream.push(secondOrder);
+      await flushOrdersRealtime();
+    });
+
+    expect(screen.getAllByText("New order from Noodle House")).toHaveLength(2);
+    expect(stream.returnCount).toBe(0);
+    view.unmount();
   });
 });
 

@@ -211,6 +211,12 @@
   min-height: 12rem;
   width: 100%;
 }
+.catalog-back-button > span {
+  align-items: center;
+  display: inline-flex;
+  flex-direction: row;
+  gap: var(--space-2);
+}
 .catalog-menu-header p,
 .catalog-menu-header address {
   color: var(--color-muted);

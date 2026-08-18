@@ -174,6 +174,7 @@ vi.mock("../modules/owner-management", async () => {
   return {
     selectedOwnerRestaurantIdAtom: "selected",
     setSelectedOwnerRestaurantAtom: "set-selected",
+    NewOrderNotifier: () => React.createElement("div", null, "new order notifier"),
     OwnerOrdersAction: page("owner action"),
     OwnerRestaurantsPage: page("owner restaurants"),
     OwnerCreateRestaurantPage: page("new restaurant"),

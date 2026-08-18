@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { RequireAccess, getMealDeliRuntime } from "../app";
 import { CourierDashboardPage } from "../modules/courier";
@@ -8,6 +8,7 @@ import { sessionUserAtom } from "../modules/identity";
 import type { Order } from "../modules/orders";
 import { OwnerDashboardPage } from "../modules/owner-insights";
 import {
+  NewOrderNotifier,
   OwnerOrdersAction,
   selectedOwnerRestaurantIdAtom,
   setSelectedOwnerRestaurantAtom,
@@ -46,6 +47,13 @@ function OwnerDashboardRouteContent() {
     orders: readonly Order[];
   }> | null>(null);
   const [error, setError] = useState(false);
+  const replaceOrders = useCallback((orders: readonly Order[]) => {
+    setData((current) => (current ? { ...current, orders } : current));
+  }, []);
+  const onPendingCount = useCallback((_count: number) => undefined, []);
+  const onViewOrder = useCallback((orderId: string) => {
+    window.location.assign(`/orders/${orderId}`);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -63,30 +71,40 @@ function OwnerDashboardRouteContent() {
   if (error) return <ErrorState title="We couldn’t load your dashboard." />;
   if (!data) return <Skeleton aria-label="Loading owner dashboard" style={{ height: "32rem" }} />;
   return (
-    <OwnerDashboardPage
-      onCreateRestaurant={() => window.location.assign("/restaurants/new")}
-      onRestaurantChange={(restaurantId) => setSelectedRestaurant(restaurantId)}
-      onViewAllOrders={() => window.location.assign("/orders")}
-      onViewOrder={(order) => window.location.assign(`/orders/${order.id}`)}
-      orders={data.orders}
-      renderOrderAction={(order) => (
-        <OwnerOrdersAction
-          onOrder={(next) =>
-            setData((current) =>
-              current
-                ? {
-                    ...current,
-                    orders: [next, ...current.orders.filter((item) => item.id !== next.id)],
-                  }
-                : current,
-            )
-          }
-          order={order}
-          repository={runtime.orderRepository}
-        />
-      )}
-      restaurants={data.restaurants}
-      selectedRestaurantId={selectedRestaurantId}
-    />
+    <>
+      <NewOrderNotifier
+        onPendingCount={onPendingCount}
+        onViewOrder={onViewOrder}
+        orders={data.orders}
+        replaceOrders={replaceOrders}
+        repository={runtime.orderRepository}
+        subscriptions={runtime.orderSubscriptions}
+      />
+      <OwnerDashboardPage
+        onCreateRestaurant={() => window.location.assign("/restaurants/new")}
+        onRestaurantChange={(restaurantId) => setSelectedRestaurant(restaurantId)}
+        onViewAllOrders={() => window.location.assign("/orders")}
+        onViewOrder={(order) => onViewOrder(order.id)}
+        orders={data.orders}
+        renderOrderAction={(order) => (
+          <OwnerOrdersAction
+            onOrder={(next) =>
+              setData((current) =>
+                current
+                  ? {
+                      ...current,
+                      orders: [next, ...current.orders.filter((item) => item.id !== next.id)],
+                    }
+                  : current,
+              )
+            }
+            order={order}
+            repository={runtime.orderRepository}
+          />
+        )}
+        restaurants={data.restaurants}
+        selectedRestaurantId={selectedRestaurantId}
+      />
+    </>
   );
 }

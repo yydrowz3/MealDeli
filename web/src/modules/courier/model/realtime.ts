@@ -13,6 +13,7 @@ export function createCourierAvailableRealtimeAdapter(options: Readonly<{
   refetch: () => Promise<readonly Order[]>;
   getCurrent: () => readonly Order[];
   replace: (orders: readonly Order[]) => void;
+  onNewOrder?: (order: Order) => void;
   onConnectionState?: (state: OrderConnectionState) => void;
   retry?: (attempt: number) => Promise<void>;
 }>): RealtimeSubscription {
@@ -20,7 +21,15 @@ export function createCourierAvailableRealtimeAdapter(options: Readonly<{
     connect: () => options.subscriptions.courierReadyOrders(),
     onEvent: (event) => {
       if (!isCompleteAvailableEvent(event)) return;
-      options.replace(mergeAvailableOrders(options.getCurrent(), [event]));
+      const current = options.getCurrent();
+      const next = mergeAvailableOrders(current, [event]);
+      options.replace(next);
+      if (
+        !current.some((order) => order.id === event.id) &&
+        next.some((order) => order.id === event.id)
+      ) {
+        options.onNewOrder?.(event);
+      }
     },
     refetch: options.refetch,
     onAuthoritative: (orders) => {
@@ -30,4 +39,3 @@ export function createCourierAvailableRealtimeAdapter(options: Readonly<{
     retry: options.retry,
   });
 }
-

@@ -89,6 +89,17 @@ export function DeliveryPage({
   const reducedMotion = useReducedMotion();
   const activeRouteOrderId = route?.orderId;
 
+  const skipMap = useCallback(() => {
+    const details = detailsRef.current;
+    if (!details) return;
+
+    details.scrollIntoView?.({
+      behavior: reducedMotion ? "auto" : "smooth",
+      block: "start",
+    });
+    details.focus({ preventScroll: true });
+  }, [reducedMotion]);
+
   const finish = useCallback(() => {
     clearRoute();
     setConfirming(false);
@@ -225,7 +236,7 @@ export function DeliveryPage({
         restaurantName,
         failed: mapFailed,
         onTileFailure: () => setMapFailed(true),
-        onSkipMap: () => detailsRef.current?.focus(),
+        onSkipMap: skipMap,
       }
     : null;
 

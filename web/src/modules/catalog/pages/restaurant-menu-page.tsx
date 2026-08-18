@@ -1,3 +1,4 @@
+import { ArrowLeftIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 
@@ -72,7 +73,8 @@ export function RestaurantMenuPage({
   if (error) {
     return (
       <main className="catalog-page">
-        <Button onClick={onBack} variant="tertiary">
+        <Button className="catalog-back-button" onClick={onBack} variant="tertiary">
+          <ArrowLeftIcon aria-hidden="true" size={18} />
           Back to restaurants
         </Button>
         <div className="catalog-error-shell">
@@ -99,7 +101,8 @@ export function RestaurantMenuPage({
 
   return (
     <main className="catalog-page">
-      <Button onClick={onBack} variant="tertiary">
+      <Button className="catalog-back-button" onClick={onBack} variant="tertiary">
+        <ArrowLeftIcon aria-hidden="true" size={18} />
         Back to restaurants
       </Button>
       <CatalogImage

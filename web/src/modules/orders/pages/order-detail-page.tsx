@@ -1,3 +1,4 @@
+import { ArrowLeftIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 
 import {
@@ -57,7 +58,15 @@ export function OrderDetailPage({
     return (
       <main className="order-detail">
         <EmptyState
-          action={onBack ? { label: "Back to orders", onClick: onBack } : undefined}
+          action={
+            onBack
+              ? {
+                  icon: <ArrowLeftIcon aria-hidden="true" size={18} />,
+                  label: "Back to orders",
+                  onClick: onBack,
+                }
+              : undefined
+          }
           description="This order doesn’t exist or isn’t available to your account."
           title="Order not found"
         />
@@ -70,7 +79,10 @@ export function OrderDetailPage({
   return (
     <main className="order-detail">
       {connectionState === "reconnecting" ? <ConnectionBanner /> : null}
-      <Button onClick={onBack} variant="tertiary">Back to orders</Button>
+      <Button className="order-detail-back-button" onClick={onBack} variant="tertiary">
+        <ArrowLeftIcon aria-hidden="true" size={18} />
+        Back to orders
+      </Button>
       <header className="order-detail__header">
         <div>
           <p>Order #{order.id.slice(0, 8)}</p>

@@ -176,7 +176,8 @@ textarea.ui-control { min-height: calc(var(--control-height-md) * 2); resize: ve
   justify-content: center;
   padding: var(--space-4);
   position: fixed;
-  z-index: 50;
+  /* Leaflet controls and panes can reach z-index 1000. Keep dialogs above maps. */
+  z-index: 1100;
 }
 
 .ui-overlay {

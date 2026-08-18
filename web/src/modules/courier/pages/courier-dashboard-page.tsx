@@ -103,13 +103,14 @@ export function CourierDashboardPage({
       refetch: repository.availableOrders,
       getCurrent: () => availableRef.current,
       replace: replaceAvailable,
+      onNewOrder: () => notifier.info("A new order is ready for pickup."),
       onConnectionState: setConnectionState,
     });
     void realtime.start();
     return () => {
       void realtime.dispose();
     };
-  }, [replaceAvailable, repository, subscriptions]);
+  }, [notifier, replaceAvailable, repository, subscriptions]);
 
   useEffect(() => {
     const onVisibility = () => {
@@ -252,4 +253,3 @@ export function CourierDashboardPage({
     </main>
   );
 }
-

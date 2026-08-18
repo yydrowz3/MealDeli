@@ -60,6 +60,28 @@ describe('OrdersService courier dispatch contract', () => {
     expect(publish).toHaveBeenCalledWith('NEW_ORDER_UPDATE', { orderUpdates: order });
   });
 
+  it('publishes an owner-ready order to the courier realtime stream', async () => {
+    const cooking = { ...order, status: OrderStatus.COOKING, courierId: null };
+    const ready = { ...cooking, status: OrderStatus.WAITING };
+    const findUnique = jest.fn().mockResolvedValue(cooking);
+    const update = jest.fn().mockResolvedValue(ready);
+    const publish = jest.fn().mockResolvedValue(undefined);
+    const service = new OrdersService(
+      { order: { findUnique, update } } as unknown as PrismaService,
+      { publish } as unknown as PubSub,
+    );
+
+    await expect(
+      service.editOrder(
+        { id: 'owner-id', role: UserRole.OWNER } as User,
+        { id: 'order-id', status: OrderStatus.WAITING },
+      ),
+    ).resolves.toEqual({ ok: true });
+    expect(publish).toHaveBeenNthCalledWith(1, 'NEW_COOKED_ORDER', {
+      cookedOrders: ready,
+    });
+  });
+
   it('coordinates active and same-order conflicts without a second claim', async () => {
     const activeTransaction = jest.fn(async (callback) =>
       callback({
@@ -140,4 +162,3 @@ describe('OrdersService courier dispatch contract', () => {
     expect(update).toHaveBeenCalledTimes(1);
   });
 });
-

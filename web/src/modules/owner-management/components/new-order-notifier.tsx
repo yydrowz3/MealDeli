@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
   createOwnerPendingRealtimeAdapter,
@@ -31,6 +31,8 @@ export function NewOrderNotifier({
 }: NewOrderNotifierProps) {
   const [toasts, setToasts] = useState<readonly PendingOrderToast[]>([]);
   const [connection, setConnection] = useState<OrderConnectionState>("connecting");
+  const ordersRef = useRef(orders);
+  ordersRef.current = orders;
   const notifier = useMemo(
     () => createPendingOrderNotifier({ onToasts: setToasts, onPendingCount }),
     [onPendingCount],
@@ -41,13 +43,12 @@ export function NewOrderNotifier({
   }, [notifier, orders]);
 
   useEffect(() => {
-    let current = orders;
     const subscription = createOwnerPendingRealtimeAdapter({
       subscriptions: subscriptions as OrderSubscriptionPort,
       repository,
-      getCurrent: () => current,
+      getCurrent: () => ordersRef.current,
       replace: (next) => {
-        current = next;
+        ordersRef.current = next;
         replaceOrders(next);
         notifier.sync(next, true);
       },
@@ -60,7 +61,7 @@ export function NewOrderNotifier({
       notifier.dispose();
       void subscription.dispose();
     };
-  }, [notifier, orders, replaceOrders, repository, retry, subscriptions]);
+  }, [notifier, replaceOrders, repository, retry, subscriptions]);
 
   return (
     <>

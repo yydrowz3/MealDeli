@@ -17,6 +17,7 @@ describe("courier available realtime", () => {
     const fresh = buildOrder({ id: "fresh", status: "WAITING" });
     let current: readonly Order[] = [old];
     const states: string[] = [];
+    const onNewOrder = vi.fn();
     const refetch = vi.fn().mockResolvedValue([old, fresh]);
     const realtime = createCourierAvailableRealtimeAdapter({
       subscriptions: createFakeOrderSubscriptions({ cooked: [first, second] }),
@@ -25,6 +26,7 @@ describe("courier available realtime", () => {
       replace: (orders) => {
         current = orders;
       },
+      onNewOrder,
       onConnectionState: (state) => states.push(state),
       retry: async () => undefined,
     });
@@ -33,6 +35,13 @@ describe("courier available realtime", () => {
     first.push(old);
     await flushOrdersRealtime();
     expect(current).toHaveLength(1);
+    expect(onNewOrder).not.toHaveBeenCalled();
+    first.push(fresh);
+    await flushOrdersRealtime();
+    expect(onNewOrder).toHaveBeenCalledWith(fresh);
+    first.push(fresh);
+    await flushOrdersRealtime();
+    expect(onNewOrder).toHaveBeenCalledOnce();
     first.fail(new Error("socket closed"));
     await flushOrdersRealtime();
     expect(refetch).toHaveBeenCalledOnce();
@@ -42,4 +51,3 @@ describe("courier available realtime", () => {
     expect(second.returnCount).toBeGreaterThan(0);
   });
 });
-
