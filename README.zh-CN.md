@@ -58,7 +58,7 @@ MealDeli 是一款基于角色的全栈餐食配送应用，由相互独立的�
 
 本项目覆盖完整的配送生命周期——从发现餐厅、结账下单，到后厨备餐、骑手接单以及最终送达。
 
-![演示视频](./public/videos/demo.mp4)
+https://github.com/user-attachments/assets/f5f1f1cd-a971-4913-98bc-43f00e7465c2
 
 ## ✨ 项目亮点
 
@@ -92,22 +92,22 @@ MealDeli 是一款基于角色的全栈餐食配送应用，由相互独立的�
 
 ## 👥 产品体验
 
-| 角色 | 功能 |
-| ---- | ---- |
-| 顾客 | 浏览餐厅，按分类或名称搜索，自定义菜品，管理购物车，下单并实时跟踪订单进度 |
+| 角色 | 功能                                                                         |
+| ---- | ---------------------------------------------------------------------------- |
+| 顾客 | 浏览餐厅，按分类或名称搜索，自定义菜品，管理购物车，下单并实时跟踪订单进度   |
 | 商家 | 创建餐厅，管理菜单，接收新订单，推进后厨状态，查看经营动态并购买餐厅推广时段 |
-| 骑手 | 浏览可配送订单，接单，查看配送路线，推进配送状态并查看配送历史 |
+| 骑手 | 浏览可配送订单，接单，查看配送路线，推进配送状态并查看配送历史               |
 
 ## 🛠️ 技术栈
 
-| 领域 | 技术 |
-| ---- | ---- |
-| Web | React 19、TypeScript、Vite 8、TanStack Router、TanStack Form、Apollo Client、Jotai、Zod |
-| UI | Tailwind CSS、daisyUI、Phosphor Icons、Leaflet、Recharts、Sonner |
-| API | NestJS 11、Apollo Server、GraphQL、graphql-ws、class-validator |
-| 数据与认证 | PostgreSQL、Prisma 7、JWT、Argon2 |
-| 集成服务 | Resend、兼容 S3 的对象存储 |
-| 测试 | Jest、Supertest、Vitest、Testing Library、MSW |
+| 领域       | 技术                                                                                    |
+| ---------- | --------------------------------------------------------------------------------------- |
+| Web        | React 19、TypeScript、Vite 8、TanStack Router、TanStack Form、Apollo Client、Jotai、Zod |
+| UI         | Tailwind CSS、daisyUI、Phosphor Icons、Leaflet、Recharts、Sonner                        |
+| API        | NestJS 11、Apollo Server、GraphQL、graphql-ws、class-validator                          |
+| 数据与认证 | PostgreSQL、Prisma 7、JWT、Argon2                                                       |
+| 集成服务   | Resend、兼容 S3 的对象存储                                                              |
+| 测试       | Jest、Supertest、Vitest、Testing Library、MSW                                           |
 
 ## 🏗️ 系统架构
 
@@ -234,11 +234,11 @@ pnpm dev
 
 在 `api/` 目录中运行 `pnpm exec ts-node prisma/seed.ts`，将创建以下经过验证的开发账户：
 
-| 角色 | 邮箱 | 密码 |
-| ---- | ---- | ---- |
+| 角色 | 邮箱                    | 密码               |
+| ---- | ----------------------- | ------------------ |
 | 顾客 | `customer@mealdeli.com` | `passwordcustomer` |
-| 商家 | `owner@mealdeli.com` | `passwordowner` |
-| 骑手 | `courier@mealdeli.com` | `passwordcourier` |
+| 商家 | `owner@mealdeli.com`    | `passwordowner`    |
+| 骑手 | `courier@mealdeli.com`  | `passwordcourier`  |
 
 这些凭据仅供本地开发使用。切勿在公开环境或生产环境中重复使用。
 
@@ -256,15 +256,15 @@ PENDING ──商家──▶ COOKING ──商家──▶ WAITING ──骑手
 
 请在对应的项目目录中运行各项命令。
 
-| 任务 | `api/` | `web/` |
-| ---- | ------ | ------- |
-| 开发服务器 | `pnpm start:dev` | `pnpm dev` |
-| 生产构建 | `pnpm build` | `pnpm build` |
-| 代码检查 | `pnpm lint` | `pnpm lint` |
-| 单元测试 | `pnpm test` | `pnpm test` |
-| 测试覆盖率 | `pnpm test:cov` | `pnpm test:coverage` |
-| 端到端测试 | `pnpm test:e2e` | — |
-| 生成类型 | `pnpm exec prisma generate` | `pnpm codegen` |
+| 任务       | `api/`                      | `web/`               |
+| ---------- | --------------------------- | -------------------- |
+| 开发服务器 | `pnpm start:dev`            | `pnpm dev`           |
+| 生产构建   | `pnpm build`                | `pnpm build`         |
+| 代码检查   | `pnpm lint`                 | `pnpm lint`          |
+| 单元测试   | `pnpm test`                 | `pnpm test`          |
+| 测试覆盖率 | `pnpm test:cov`             | `pnpm test:coverage` |
+| 端到端测试 | `pnpm test:e2e`             | —                    |
+| 生成类型   | `pnpm exec prisma generate` | `pnpm codegen`       |
 
 当 GraphQL Schema 或前端 `.graphql` 文档发生变化时，请重新生成 Web 客户端产物：
 

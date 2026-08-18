@@ -58,7 +58,7 @@ MealDeli is a role-based full-stack meal delivery application built as two separ
 
 The project includes the complete delivery lifecycle—from restaurant discovery and checkout to kitchen preparation, courier assignment, and final delivery.
 
-![demo videos](./public/videos/demo.mp4)
+https://github.com/user-attachments/assets/f5f1f1cd-a971-4913-98bc-43f00e7465c2
 
 ## ✨ Highlights
 
