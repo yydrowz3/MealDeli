@@ -3,57 +3,89 @@
 </p>
 
 <p align="center">
-  A full-stack, real-time food delivery platform for customers, restaurant owners, and couriers.
+  A **full-stack**, real-time meal delivery platform for customers, restaurant owners, and couriers.
 </p>
 
 <p align="center">
   <a href="./api/README.md">API documentation</a>
   ·
   <a href="./web/README.md">Web documentation</a>
-  ·
+  <!-- ·
   <a href="./docs/detailed-designs/00-architecture.md">Architecture</a>
   ·
-  <a href="./docs/tasks/progress.md">Implementation status</a>
+  <a href="./docs/tasks/progress.md">Implementation status</a> -->
+</p>
+
+<p align="center">
+  <a href="https://mealdeli.onrender.com">
+  <img alt="live-demo-badge" src="https://img.shields.io/badge/Live Demo-Render-000000?logo=render" />
+  </a>
+</p>
+
+<p align="center">
+<img alt="NestJS" src="https://img.shields.io/badge/-NestJS-E0234E?style=flat-square&logo=nestjs&logoColor=white" />
+<img alt="GraphQL" src="https://img.shields.io/badge/-GraphQL-E10098?style=flat-square&logo=graphql&logoColor=white" />
+<img alt="Prisma" src="https://img.shields.io/badge/-Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white" />
+<img alt="PostgreSQL" src="https://img.shields.io/badge/-PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" />
+<img alt="React" src="https://img.shields.io/badge/-React-45b8d8?style=flat-square&logo=react&logoColor=white" />
+<img alt="TypeScript" src="https://img.shields.io/badge/-TypeScript-3178c6?style=flat-square&logo=typescript&logoColor=white" />
+<img alt="TailwindCSS" src="https://img.shields.io/badge/-Tailwind CSS-06b6d4?style=flat-square&logo=tailwindcss&logoColor=white" />
+<img alt="Node.js" src="https://img.shields.io/badge/-Node.js-5fa04e?style=flat-square&logo=node.js&logoColor=white" />
+</p>
+
+<p align="center">
+<img alt="Apollo" src="https://img.shields.io/badge/-Apollo-311C87?style=flat-square&logo=apollographql&logoColor=white" />
+<img alt="DaisyUI" src="https://img.shields.io/badge/-DaisyUI-FFC63A?style=flat-square&logo=daisyui&logoColor=white" />
+<img alt="Vite" src="https://img.shields.io/badge/-Vite-646CFF?style=flat-square&logo=Vite&logoColor=white" />
+<img alt="Vitest" src="https://img.shields.io/badge/-Vitest-6E9F18?style=flat-square&logo=Vitest&logoColor=white" />
+<img alt="Testing Library" src="https://img.shields.io/badge/-Testing Library-E33332?style=flat-square&logo=testinglibrary&logoColor=white" />
+<img alt="Neon" src="https://img.shields.io/badge/-Neon-34D59A?style=flat-square&logo=neon&logoColor=white" />
+<img alt="Resend" src="https://img.shields.io/badge/-Resend-025E8C?style=flat-square&logo=resend&logoColor=white" />
+<img alt="Oxc" src="https://img.shields.io/badge/-Oxc-00F7F1?style=flat-square&logo=oxc&logoColor=white" />
+
 </p>
 
 ## Overview
 
-MealDeli is a role-based food delivery application built as two independent pnpm projects. The NestJS backend exposes a GraphQL API, real-time subscriptions, and authenticated image uploads. The React frontend delivers responsive customer, owner, and courier experiences as an installable PWA.
+MealDeli is a role-based full-stack meal delivery application built as two separate backend & frontend node projects.
+
+⚡ [**NestJS**](https://nestjs.com/) for the Node.js based backend system. The NestJS backend exposes a GraphQL API, **real-time subscriptions**, and authenticated image uploads.
+
+🚀 [**React**](https://react.dev/) for the frontend system. The React frontend delivers **responsive** customer, owner, and courier experiences as an installable PWA.
 
 The project includes the complete delivery lifecycle—from restaurant discovery and checkout to kitchen preparation, courier assignment, and final delivery.
 
 ## Highlights
 
-- Three purpose-built experiences for customers, restaurant owners, and couriers
-- Short-lived JWT access tokens with rotating server-side refresh sessions
+- Three purpose-built experiences for **customers**, restaurant **owners**, and **couriers**
+- JWT access tokens with rotating server-side **refresh** sessions
 - Real-time order updates over `graphql-ws`
-- Strict server-side order state transitions and role authorization
+- Strict server-side order state transitions and **role authorization**
 - Restaurant, menu, dish option, image, and promotion management
 - PostgreSQL persistence with reviewed Prisma migrations
-- S3-compatible image storage and Resend email verification
+- **S3**-compatible image storage and **Resend** email verification
 - Installable PWA with safe runtime caching and update prompts
-- Typed GraphQL operations generated from the backend schema
+- Typed **GraphQL** operations generated from the backend schema
 - Unit, integration, and end-to-end test coverage across both applications
 
 ## Product experiences
 
-| Role | Capabilities |
-| --- | --- |
-| Customer | Discover restaurants, search by category or name, customize dishes, manage a cart, place orders, and follow live order progress |
-| Owner | Create restaurants, manage menus, receive incoming orders, advance kitchen states, review activity, and purchase restaurant promotion periods |
-| Courier | Browse available deliveries, claim an order, follow the delivery route, advance delivery states, and review delivery history |
+| Role     | Capabilities                                                                                                                                  |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Customer | Discover restaurants, search by category or name, customize dishes, manage a cart, place orders, and follow live order progress               |
+| Owner    | Create restaurants, manage menus, receive incoming orders, advance kitchen states, review activity, and purchase restaurant promotion periods |
+| Courier  | Browse available deliveries, claim an order, follow the delivery route, advance delivery states, and review delivery history                  |
 
 ## Tech stack
 
-| Area | Technologies |
-| --- | --- |
-| Web | React 19, TypeScript, Vite 8, TanStack Router, TanStack Form, Apollo Client, Jotai, Zod |
-| UI | Tailwind CSS, daisyUI, Phosphor Icons, Leaflet, Recharts, Sonner |
-| PWA | vite-plugin-pwa, Workbox |
-| API | NestJS 11, Apollo Server, GraphQL, graphql-ws, class-validator |
-| Data and auth | PostgreSQL, Prisma 7, JWT, Argon2 |
-| Integrations | Resend, S3-compatible object storage |
-| Testing | Jest, Supertest, Vitest, Testing Library, MSW |
+| Area          | Technologies                                                                            |
+| ------------- | --------------------------------------------------------------------------------------- |
+| Web           | React 19, TypeScript, Vite 8, TanStack Router, TanStack Form, Apollo Client, Jotai, Zod |
+| UI            | Tailwind CSS, daisyUI, Phosphor Icons, Leaflet, Recharts, Sonner                        |
+| API           | NestJS 11, Apollo Server, GraphQL, graphql-ws, class-validator                          |
+| Data and auth | PostgreSQL, Prisma 7, JWT, Argon2                                                       |
+| Integrations  | Resend, S3-compatible object storage                                                    |
+| Testing       | Jest, Supertest, Vitest, Testing Library, MSW                                           |
 
 ## Architecture
 
@@ -97,7 +129,7 @@ The repository does not have a root `package.json`. Install dependencies and run
 
 ### Prerequisites
 
-- A current Node.js LTS release
+- Node.js
 - pnpm
 - PostgreSQL
 - S3-compatible object storage, such as AWS S3 or MinIO
@@ -180,12 +212,12 @@ Open `http://localhost:5173`. See the [web guide](./web/README.md) for route per
 
 Running `pnpm exec ts-node prisma/seed.ts` inside `api/` creates the following verified development accounts:
 
-| Role | Email | Password |
-| --- | --- | --- |
-| Customer | `customer@mealdeli.com` | `passwordcustomer` |
-| Owner | `owner@mealdeli.com` | `passwordowner` |
-| Courier | `courier@mealdeli.com` | `passwordcourier` |
-| Sample restaurant owner | `test_owner@mealdeli.com` | `test_owner` |
+| Role                    | Email                     | Password           |
+| ----------------------- | ------------------------- | ------------------ |
+| Customer                | `customer@mealdeli.com`   | `passwordcustomer` |
+| Owner                   | `owner@mealdeli.com`      | `passwordowner`    |
+| Courier                 | `courier@mealdeli.com`    | `passwordcourier`  |
+| Sample restaurant owner | `test_owner@mealdeli.com` | `test_owner`       |
 
 These credentials are for local development only. Never reuse them in a public or production environment.
 
@@ -203,15 +235,15 @@ Order items preserve dish names, prices, selected options, and totals as snapsho
 
 Run each command from the relevant project directory.
 
-| Task | `api/` | `web/` |
-| --- | --- | --- |
-| Development server | `pnpm start:dev` | `pnpm dev` |
-| Production build | `pnpm build` | `pnpm build` |
-| Lint | `pnpm lint` | `pnpm lint` |
-| Unit tests | `pnpm test` | `pnpm test` |
-| Coverage | `pnpm test:cov` | `pnpm test:coverage` |
-| End-to-end tests | `pnpm test:e2e` | — |
-| Generated types | `pnpm exec prisma generate` | `pnpm codegen` |
+| Task               | `api/`                      | `web/`               |
+| ------------------ | --------------------------- | -------------------- |
+| Development server | `pnpm start:dev`            | `pnpm dev`           |
+| Production build   | `pnpm build`                | `pnpm build`         |
+| Lint               | `pnpm lint`                 | `pnpm lint`          |
+| Unit tests         | `pnpm test`                 | `pnpm test`          |
+| Coverage           | `pnpm test:cov`             | `pnpm test:coverage` |
+| End-to-end tests   | `pnpm test:e2e`             | —                    |
+| Generated types    | `pnpm exec prisma generate` | `pnpm codegen`       |
 
 When the GraphQL schema or a frontend `.graphql` document changes, regenerate the web client artifacts:
 
@@ -258,4 +290,6 @@ For database changes, inspect the generated migration SQL before committing it. 
 
 ## License
 
-The project packages are currently marked `UNLICENSED`. No permission to copy, modify, or distribute the software is granted by default.
+This Project is licensed as `MIT License`, refer to `LICENSE.md` for more information.
+
+Copyright © 2026 [MealDeli](https://github.com/yydrowz3/mealdeli).
