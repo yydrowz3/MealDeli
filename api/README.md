@@ -1,98 +1,270 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# MealDeli API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+The backend for MealDeli, built with NestJS, Apollo Server, Prisma, and PostgreSQL. It provides the platform's GraphQL contract, real-time order subscriptions, authentication sessions, role authorization, and authenticated media uploads.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+[Project overview](../README.md) · [Web app guide](../web/README.md) · [GraphQL schema](./src/schema.gql)
 
-## Description
+## Features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Customer, owner, and courier accounts with role-based authorization
+- Registration, email verification, login, logout, profile editing, and token refresh
+- Short-lived access tokens and revocable refresh sessions
+- Restaurant discovery, categories, search, pagination, menu management, and dish options
+- Order creation with server-calculated totals and immutable item snapshots
+- Role-aware order state machine and courier assignment
+- Live pending, ready-for-delivery, and per-order updates over GraphQL subscriptions
+- Promotion transaction records with duplicate transaction protection
+- Authenticated JPEG, PNG, and WebP uploads to S3-compatible storage
+- Prisma migrations, repeatable local seed data, unit tests, and end-to-end tests
 
-## Project setup
+## Stack
 
-```bash
-$ pnpm install
+- NestJS 11 and TypeScript
+- Apollo Server, GraphQL, and `graphql-ws`
+- Prisma 7 with PostgreSQL
+- JWT, Argon2, and class-validator
+- Resend for verification email
+- AWS SDK for S3-compatible storage
+- Jest and Supertest
+
+## Project structure
+
+```text
+api/
+├── prisma/
+│   ├── migrations/           # Versioned database migrations
+│   ├── sample_data/          # Local demo fixtures
+│   ├── schema.prisma         # Database schema
+│   └── seed.ts               # Repeatable development seed
+├── src/
+│   ├── auth/                 # GraphQL and REST guards, roles, current-user helpers
+│   ├── common/               # Shared GraphQL output and pagination types
+│   ├── generated/prisma/     # Generated Prisma client; do not edit
+│   ├── mails/                # Resend integration
+│   ├── orders/               # Commands, queries, state machine, subscriptions
+│   ├── payments/             # Promotion transactions and webhook placeholder
+│   ├── prisma/               # Prisma module and service
+│   ├── restaurants/          # Categories, restaurants, menus, and dishes
+│   ├── uploads/              # File validation and object storage
+│   ├── users/                # Identity, sessions, verification, and profiles
+│   ├── app.module.ts         # Root application and GraphQL configuration
+│   ├── main.ts               # Bootstrap, validation, and CORS
+│   └── schema.gql            # Generated code-first GraphQL schema
+└── test/                     # End-to-end tests
 ```
 
-## Compile and run the project
+Feature modules keep their resolver or controller, service, DTOs, entities, and tests together.
+
+## Getting started
+
+### Prerequisites
+
+- A current Node.js LTS release
+- pnpm
+- PostgreSQL
+- S3-compatible object storage
+- A Resend API key if verification emails should be delivered
+
+### Installation
 
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+pnpm install
+cp .env.example .env
 ```
 
-## Run tests
+On PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Configure `.env`, then prepare and run the application:
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+pnpm exec prisma migrate dev
+pnpm exec prisma generate
+pnpm start:dev
 ```
 
-## Deployment
+The development API listens on `http://localhost:3000` by default, with GraphiQL at `http://localhost:3000/graphql`.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## Configuration
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+| Variable | Required | Default or example | Description |
+| --- | --- | --- | --- |
+| `DATABASE_URL` | Yes | `postgresql://...` | PostgreSQL connection URL |
+| `PORT` | No | `3000` | HTTP and WebSocket port |
+| `FRONTEND_URL` | Yes | `http://localhost:5173` | Allowed credentialed CORS origin and verification-link origin |
+| `JWT_ISSUER` | Yes | `meal-deli-api` | JWT issuer claim |
+| `JWT_AUDIENCE` | Yes | `meal-deli-client` | JWT audience claim |
+| `JWT_ACCESS_SECRET` | Yes | — | HS256 access-token secret |
+| `JWT_ACCESS_EXPIRES_IN` | Yes | `15m` | Access-token lifetime |
+| `JWT_REFRESH_SECRET` | Yes | — | Independent refresh-token secret |
+| `JWT_REFRESH_EXPIRES_IN` | Yes | `1d` | Refresh-token JWT lifetime |
+| `JWT_REFRESH_TOKEN_COOKIE` | Yes | `meal_deli_refresh` | HttpOnly refresh cookie name |
+| `JWT_REFRESH_TOKEN_TTL_MS` | Yes | `86400000` | Refresh session and cookie lifetime in milliseconds |
+| `RESEND_API_KEY` | For email | — | Resend API key |
+| `RESEND_EMAIL_FROM` | For email | — | Verified sender address |
+| `CATEGORY_PAGE_SIZE` | No | `15` | Category page size |
+| `RESTAURANTS_PAGE_SIZE` | No | `15` | Restaurant browse and search page size |
+| `PROMOTION_DAYS` | No | `7` | Promotion duration; the current client contract requires exactly 7 |
+| `AWS_ENDPOINT_URL_S3` | For custom S3 | — | Custom endpoint, such as MinIO |
+| `AWS_ACCESS_KEY_ID` | Yes | — | Object storage access key |
+| `AWS_SECRET_ACCESS_KEY` | Yes | — | Object storage secret key |
+| `AWS_REGION` | Yes | — | Object storage region |
+| `AWS_S3_BUCKET` | Yes | — | Upload destination bucket |
+| `PUBLIC_ASSET_BASE_URL` | Recommended | `http://localhost:9000/meal-deli` | Public URL prefix returned for uploaded objects |
+
+Set `NODE_ENV=production` in production so the refresh cookie receives the Secure attribute. Keep access and refresh secrets different.
+
+## Database workflow
+
+### Create a migration
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+pnpm exec prisma migrate dev --name <change_name>
+pnpm exec prisma generate
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Review the generated SQL before committing it. Use the following command in deployment environments:
 
-## Resources
+```bash
+pnpm exec prisma migrate deploy
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+### Seed local data
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+pnpm exec ts-node prisma/seed.ts
+```
 
-## Support
+The seed is repeatable and creates verified users, categories, restaurants, and sample dishes. Development credentials are listed in the [root README](../README.md#demo-accounts).
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Prisma generates its client into `src/generated/prisma/`. Never edit that directory manually.
 
-## Stay in touch
+## API surface
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### GraphQL
 
-## License
+| Transport | Endpoint | Purpose |
+| --- | --- | --- |
+| HTTP | `/graphql` | Queries, mutations, and GraphiQL |
+| WebSocket | `/graphql` | `graphql-ws` subscriptions |
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Send the access token with HTTP operations:
+
+```http
+Authorization: Bearer <access-token>
+```
+
+Send the same credential when opening a WebSocket connection:
+
+```json
+{
+  "authorization": "Bearer <access-token>"
+}
+```
+
+Core operations include:
+
+| Domain | Operations |
+| --- | --- |
+| Identity | `signUp`, `signIn`, `me`, `userProfile`, `editProfile`, `verifyEmail`, `resendVerification`, `signOut`, `refreshAccessToken` |
+| Catalog | `allCategories`, `category`, `restaurants`, `restaurant`, `searchRestaurant` |
+| Owner management | `myRestaurants`, `myRestaurant`, restaurant CRUD, category CRUD, dish CRUD |
+| Orders | `createOrder`, `getOrders`, `getAvailableOrders`, `getOrder`, `editOrder`, `takeOrder` |
+| Subscriptions | `orderUpdates`, `pendingOrders`, `cookedOrders` |
+| Promotions | `createPayment`, `getPayments` |
+
+The generated [GraphQL schema](./src/schema.gql) is the source of truth for input and output types.
+
+### REST
+
+| Method | Path | Authentication | Description |
+| --- | --- | --- | --- |
+| `GET` | `/` | Public | Returns `Welcome to MealDeli API!` |
+| `POST` | `/uploads` | Bearer token | Uploads one multipart `file` field |
+| `POST` | `/payments` | Currently public | Placeholder provider webhook |
+
+The upload endpoint accepts JPEG, PNG, and WebP images up to 5 MiB. It validates the extension, MIME type, and binary signature before storing the object.
+
+Example upload response:
+
+```json
+{
+  "key": "uploads/<uuid>.webp",
+  "url": "https://assets.example.com/uploads/<uuid>.webp"
+}
+```
+
+The payment REST controller currently logs its input and returns `{ "ok": true }`. It is not a production-ready payment integration.
+
+## Domain model
+
+| Model | Responsibility |
+| --- | --- |
+| `User` | Identity, role, verification status, and profile |
+| `AuthSession` | Hashed refresh token, expiry, usage, and revocation |
+| `EmailVerification` | Hashed one-time verification token |
+| `Category` | Restaurant classification |
+| `Restaurant` | Ownership, category, address, image, and promotion window |
+| `Dish` | Menu item, price in minor units, image, and JSON option groups |
+| `Order` | Customer, restaurant, courier, total, and current state |
+| `OrderItem` | Immutable dish, price, option, quantity, and line-total snapshot |
+| `Payment` | Owner promotion transaction for a restaurant |
+
+### Order state machine
+
+Only adjacent transitions are allowed, and each transition belongs to a specific role:
+
+```text
+PENDING ──Owner──▶ COOKING ──Owner──▶ WAITING ──Courier──▶ PICKED ──Courier──▶ DELIVERED
+```
+
+Authorization and transition rules are enforced by the API, independent of client behavior.
+
+## Authentication flow
+
+1. Sign-up or sign-in returns a short-lived access token.
+2. A refresh token is sent in an HttpOnly cookie; only its hash is stored in `AuthSession`.
+3. Protected GraphQL and REST operations resolve the current user from the Bearer token.
+4. The client requests a new access token through the refresh mutation when needed.
+5. Sign-out revokes the server-side session and clears the refresh cookie.
+
+Credentialed cross-origin requests require `FRONTEND_URL` to match the browser origin exactly.
+
+## Scripts
+
+| Command | Description |
+| --- | --- |
+| `pnpm start:dev` | Start NestJS in watch mode |
+| `pnpm start:debug` | Start in debug and watch mode |
+| `pnpm build` | Compile the production application |
+| `pnpm start:prod` | Run `dist/src/main` |
+| `pnpm lint` | Run ESLint with automatic fixes |
+| `pnpm format` | Format source and e2e tests with Prettier |
+| `pnpm test` | Run Jest unit tests |
+| `pnpm test:watch` | Run unit tests in watch mode |
+| `pnpm test:cov` | Generate the Jest coverage report |
+| `pnpm test:e2e` | Run Supertest end-to-end tests |
+
+## Testing and quality
+
+Before opening a pull request:
+
+```bash
+pnpm lint
+pnpm test
+pnpm test:e2e
+pnpm build
+```
+
+Service, resolver, authentication, persistence, and transition changes should cover both success and failure paths. Unit tests live beside the implementation as `*.spec.ts`; end-to-end tests live in `test/`.
+
+## Conventions
+
+- Use strict TypeScript, two-space indentation, single quotes, and trailing commas.
+- Name files in kebab case with a role suffix, such as `edit-profile.dto.ts`.
+- Keep GraphQL metadata and validation beside their DTO or entity definitions.
+- Do not commit secrets, production data, `dist/`, `coverage/`, or generated Prisma client edits.
+- After a GraphQL contract change, regenerate the web client with `pnpm codegen` in `../web`.

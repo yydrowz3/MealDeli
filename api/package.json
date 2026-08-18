@@ -7,6 +7,8 @@
   "author": "github.com/yydrowz3",
   "scripts": {
     "build": "nest build",
+    "prisma:generate": "prisma generate",
+    "prebuild": "pnpm prisma:generate",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "prestart": "pnpm prisma:generate",
