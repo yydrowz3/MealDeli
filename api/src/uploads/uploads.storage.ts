@@ -21,9 +21,15 @@ export class S3UploadsStorage implements UploadsStorage {
 
   constructor(configService: ConfigService) {
     this.bucket = configService.getOrThrow<string>('AWS_S3_BUCKET');
+    const endpoint =
+      configService.get<string>('AWS_ENDPOINT_URL_S3') || undefined;
     this.client = new S3Client({
       region: configService.getOrThrow<string>('AWS_REGION'),
-      endpoint: configService.get<string>('AWS_ENDPOINT_URL_S3') || undefined,
+      endpoint,
+      // Neon Storage exposes one S3-compatible endpoint. Keep the bucket in
+      // the request path instead of turning it into a virtual-host name
+      // (https://<bucket>.<endpoint>), which is not a valid Neon host.
+      forcePathStyle: Boolean(endpoint),
       credentials: {
         accessKeyId: configService.getOrThrow<string>('AWS_ACCESS_KEY_ID'),
         secretAccessKey: configService.getOrThrow<string>(

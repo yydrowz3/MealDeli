@@ -1,4 +1,4 @@
-import { ConfigService } from "@nestjs/config";
+import { ConfigService } from '@nestjs/config';
 
 // function parsePublicAssetBaseUrl(value: unknown, nodeEnv: unknown): string {
 //   if (typeof value !== "string" || !value.trim()) {
@@ -33,15 +33,24 @@ import { ConfigService } from "@nestjs/config";
 // }
 
 export function getPublicAssetBaseUrl(configService: ConfigService): string {
-  // return parsePublicAssetBaseUrl(
-  //   configService.get<string>("PUBLIC_ASSET_BASE_URL"),
-  //   configService.get<string>("NODE_ENV"),
-  // );
-  const baseUrl = `${configService.get<string>("AWS_ENDPOINT_URL_S3")}/${configService.get<string>("AWS_S3_BUCKET")}`;
-  return baseUrl;
+  const endpoint = configService
+    .get<string>('AWS_ENDPOINT_URL_S3')
+    ?.trim()
+    .replace(/\/+$/, '');
+  const bucket = configService.get<string>('AWS_S3_BUCKET')?.trim();
+
+  if (endpoint && bucket) return `${endpoint}/${bucket}`;
+
+  // Keep the fallback for local/unit-test configurations that only provide
+  // the already-composed asset base URL.
+  const configuredBaseUrl = configService.get<string>('PUBLIC_ASSET_BASE_URL');
+  if (configuredBaseUrl?.trim())
+    return configuredBaseUrl.trim().replace(/\/+$/, '');
+
+  throw new Error('S3 upload configuration is incomplete.');
 }
 
 export function buildPublicAssetUrl(baseUrl: string, key: string): string {
-  const encodedKey = key.split("/").map(encodeURIComponent).join("/");
-  return `${baseUrl}/${encodedKey}`;
+  const encodedKey = key.split('/').map(encodeURIComponent).join('/');
+  return `${baseUrl.replace(/\/+$/, '')}/${encodedKey}`;
 }
