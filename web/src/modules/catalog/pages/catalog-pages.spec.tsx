@@ -103,10 +103,10 @@ describe("RestaurantDiscoveryPage", () => {
     );
     expect(await screen.findByText("Promoted")).toBeVisible();
     expect(screen.getByText("500 Mission Street")).toBeVisible();
-    expect(
-      screen.getByRole("img", { name: "MealDeli placeholder for Seoul Kitchen" }),
-    ).toBeVisible();
-    expect(document.querySelector('img[src*="uber.com"]')).toBeNull();
+    expect(document.querySelector('img[src*="uber.com"]')).toHaveAttribute(
+      "src",
+      "https://tb-static.uber.com/prod/blocked.jpeg",
+    );
     expect(
       screen.queryByText(/rating|ETA|distance|delivery fee|open now/i),
     ).not.toBeInTheDocument();
@@ -236,7 +236,10 @@ describe("RestaurantMenuPage", () => {
 
   it("uses cents, injected Cart slots, and keyboard Dish activation", async () => {
     const onSelectDish = vi.fn();
-    const dish = buildDish({ priceMinor: 1299 });
+    const dish = buildDish({
+      image: "https://tb-static.uber.com/dishes/bibimbap.jpeg",
+      priceMinor: 1299,
+    });
     const user = userEvent.setup();
     render(
       <RestaurantMenuPage
@@ -247,12 +250,24 @@ describe("RestaurantMenuPage", () => {
         onBack={() => undefined}
         onSelectDish={onSelectDish}
         repository={repository({
-          getRestaurant: async () => buildRestaurantDetail({ dishes: [dish] }),
+          getRestaurant: async () =>
+            buildRestaurantDetail({
+              dishes: [dish],
+              image: "https://tb-static.uber.com/restaurants/seoul-kitchen.jpeg",
+            }),
         })}
         restaurantId="restaurant"
       />,
     );
     const dishButton = await screen.findByRole("button", { name: "Select Bibimbap" });
+    expect(screen.getByAltText("Seoul Kitchen")).toHaveAttribute(
+      "src",
+      "https://tb-static.uber.com/restaurants/seoul-kitchen.jpeg",
+    );
+    expect(screen.getByAltText("Bibimbap")).toHaveAttribute(
+      "src",
+      "https://tb-static.uber.com/dishes/bibimbap.jpeg",
+    );
     expect(
       screen.getByText((_, element) => element?.textContent === "From $12.99"),
     ).toBeInTheDocument();

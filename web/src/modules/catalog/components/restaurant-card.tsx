@@ -12,7 +12,7 @@ export type RestaurantCardProps = {
 export function RestaurantCard({ restaurant, onViewMenu, now }: RestaurantCardProps) {
   return (
     <Card className="catalog-restaurant-card">
-      <CatalogImage alt={restaurant.name} source={restaurant.image} />
+      <CatalogImage allowExternalSource alt={restaurant.name} source={restaurant.image} />
       <div className="catalog-card__body">
         <div className="catalog-card__title-row">
           <h3>{restaurant.name}</h3>

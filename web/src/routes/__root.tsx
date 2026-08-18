@@ -1,4 +1,5 @@
 import { createRootRoute, Outlet, useRouterState } from "@tanstack/react-router";
+import { ReceiptIcon, StorefrontIcon, UserCircleIcon } from "@phosphor-icons/react";
 import { useAtomValue } from "jotai";
 import { useState } from "react";
 
@@ -39,9 +40,9 @@ const RootLayout = () => {
       <CustomerLayout
         cartCount={cartCount}
         navigation={[
-          { label: "Restaurants", href: "/restaurants", current: current(pathname, "/restaurants") },
-          { label: "Orders", href: "/orders", current: current(pathname, "/orders") },
-          { label: "Profile", href: "/profile", current: current(pathname, "/profile") },
+          { label: "Restaurants", href: "/restaurants", icon: StorefrontIcon, current: current(pathname, "/restaurants") },
+          { label: "Orders", href: "/orders", icon: ReceiptIcon, current: current(pathname, "/orders") },
+          { label: "Profile", href: "/profile", icon: UserCircleIcon, current: current(pathname, "/profile") },
         ]}
         onCartOpen={() => setCartOpen(true)}
       >

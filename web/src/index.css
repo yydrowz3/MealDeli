@@ -56,6 +56,22 @@ a {
   text-decoration: none;
 }
 
+.app-cart-button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  gap: var(--space-2);
+  justify-content: center;
+  padding: var(--space-2);
+}
+
+.app-cart-button:hover {
+  color: var(--color-jade-dark);
+}
+
 .app-header__actions,
 .app-desktop-nav,
 .landing-footer nav {
@@ -69,6 +85,12 @@ a {
 .landing-footer a {
   font-weight: 650;
   text-decoration: none;
+}
+
+.app-nav-link {
+  align-items: center;
+  display: inline-flex;
+  gap: var(--space-2);
 }
 
 .app-link-button {

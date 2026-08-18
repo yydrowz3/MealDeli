@@ -29,7 +29,7 @@ export function CategoryStrip({ categories, selected, onSelect }: CategoryStripP
           onClick={() => onSelect(category.slug)}
           type="button"
         >
-          <CatalogImage alt={category.name} source={category.image} />
+          <CatalogImage allowExternalSource alt={category.name} source={category.image} />
           <span>{category.name}</span>
           <small>{category.restaurantCount}</small>
         </button>

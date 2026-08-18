@@ -11,7 +11,6 @@ import { Category } from './entities/category.entity';
 import { RestaurantsService } from './restaurants.service';
 import { AllCategoriesOutput } from './dto/all-categories.dto';
 import { CategoryInput, CategoryOutput } from './dto/category.dto';
-import { RestaurantsInput, RestaurantsOutput } from './dto/restaurants.dto';
 import {
   CreateCategoryInput,
   CreateCategoryOutput,
@@ -46,13 +45,6 @@ export class CategoryResolver {
     @Args('input') categoryInput: CategoryInput,
   ): Promise<CategoryOutput> {
     return this.restaurantService.findCategoryBySlug(categoryInput);
-  }
-
-  @Query(() => RestaurantsOutput)
-  restaurants(
-    @Args('input') restaurantsInput: RestaurantsInput,
-  ): Promise<RestaurantsOutput> {
-    return this.restaurantService.allRestaurants(restaurantsInput);
   }
 
   @Mutation(() => CreateCategoryOutput)

@@ -51,7 +51,12 @@ export function CheckoutPage({
     return <ErrorState description="Customer access is required." title="Checkout unavailable" />;
   }
   if (state.kind === "verification-required") {
-    return <ErrorState description="Verify your email before placing an order." title="Verification required" />;
+    return (
+      <ErrorState
+        description="Verify your email before placing an order."
+        title="Verification required"
+      />
+    );
   }
   if (state.kind === "empty" || cart.lines.length === 0) {
     return (
@@ -63,7 +68,12 @@ export function CheckoutPage({
     );
   }
   if (state.kind === "restaurant-missing") {
-    return <ErrorState description="Return to restaurants to start a new cart." title="This restaurant is no longer available." />;
+    return (
+      <ErrorState
+        description="Return to restaurants to start a new cart."
+        title="This restaurant is no longer available."
+      />
+    );
   }
   if (state.kind === "error") {
     return <ErrorState description={state.message} title="Checkout unavailable" />;
@@ -87,7 +97,9 @@ export function CheckoutPage({
     } else if (result.kind === "error") {
       setSubmitError("We couldn’t place your order. Try again.");
     } else if (result.kind === "cart-changed") {
-      setSubmitError("Your cart changed while the order was being placed. Review it before continuing.");
+      setSubmitError(
+        "Your cart changed while the order was being placed. Review it before continuing.",
+      );
     }
     setSubmitting(false);
   };
@@ -103,7 +115,13 @@ export function CheckoutPage({
             {!editingAddress && address ? (
               <>
                 <p>{address}</p>
-                <Button disabled={submitting} onClick={() => setEditingAddress(true)} variant="secondary">Edit</Button>
+                <Button
+                  disabled={submitting}
+                  onClick={() => setEditingAddress(true)}
+                  variant="secondary"
+                >
+                  Edit
+                </Button>
               </>
             ) : (
               <AddressEditor
@@ -134,6 +152,7 @@ export function CheckoutPage({
           <p>No delivery fee in this demo.</p>
           {submitError ? <p role="alert">{submitError}</p> : null}
           <Button
+            className="mt-4"
             disabled={!addressValid || hasInvalidLines}
             loading={submitting}
             onClick={() => void placeOrder()}

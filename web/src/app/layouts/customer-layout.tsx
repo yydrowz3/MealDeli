@@ -1,3 +1,5 @@
+import { ShoppingCartIcon } from "@phosphor-icons/react";
+
 import { BrandLink } from "./brand-link";
 import { NavigationLinks } from "./layout-types";
 import type { LayoutProps } from "./layout-types";
@@ -11,7 +13,8 @@ export function CustomerLayout(props: LayoutProps & { cartCount: number; onCartO
           <NavigationLinks items={props.navigation} />
         </nav>
         <button aria-label={`Cart, ${props.cartCount} items`} className="app-cart-button" onClick={props.onCartOpen} type="button">
-          Cart {props.cartCount > 0 ? <span>{props.cartCount}</span> : null}
+          <ShoppingCartIcon aria-hidden="true" size={24} weight="bold" />
+          {props.cartCount > 0 ? <span>{props.cartCount}</span> : null}
         </button>
       </header>
       <main className="app-main">{props.children}</main>

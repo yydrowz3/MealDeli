@@ -1,13 +1,10 @@
+import { ArrowRightIcon, TrashIcon } from "@phosphor-icons/react";
 import { useAtomValue, useStore } from "jotai";
 import { useState } from "react";
 
 import type { JotaiStore } from "../../identity";
 import { Button, Drawer, EmptyState, Modal } from "../../../shared/ui";
-import {
-  cartAtom,
-  changeCartQuantityAtom,
-  removeCartLineAtom,
-} from "../model/cart-atoms";
+import { cartAtom, changeCartQuantityAtom, removeCartLineAtom } from "../model/cart-atoms";
 import { CartSummary } from "./cart-summary";
 
 export type CartDrawerProps = {
@@ -39,7 +36,15 @@ export function CartDrawer({
         dismissible={!locked}
         footer={
           cart.lines.length > 0 ? (
-            <Button disabled={locked} onClick={onCheckout} size="lg">Go to checkout</Button>
+            <Button
+              className="checkout-drawer-checkout-button"
+              disabled={locked}
+              onClick={onCheckout}
+              size="sm"
+            >
+              Go to checkout
+              <ArrowRightIcon aria-hidden="true" size={18} />
+            </Button>
           ) : undefined
         }
         onClose={onClose}
@@ -70,7 +75,9 @@ export function CartDrawer({
       <Modal
         footer={
           <div className="checkout-dialog-actions">
-            <Button onClick={() => setPendingRemoval(null)} variant="secondary">Keep item</Button>
+            <Button onClick={() => setPendingRemoval(null)} variant="secondary">
+              Keep item
+            </Button>
             <Button
               onClick={() => {
                 if (pendingRemoval) remove(pendingRemoval);
@@ -78,6 +85,7 @@ export function CartDrawer({
               }}
               variant="danger"
             >
+              <TrashIcon aria-hidden="true" size={18} />
               Remove item
             </Button>
           </div>

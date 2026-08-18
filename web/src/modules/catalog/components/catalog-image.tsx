@@ -6,10 +6,16 @@ export type CatalogImageProps = {
   source: string | null;
   alt: string;
   className?: string;
+  allowExternalSource?: boolean;
 };
 
-export function CatalogImage({ source, alt, className }: CatalogImageProps) {
-  const usableSource = source && !isUberAssetUrl(source) ? source : null;
+export function CatalogImage({
+  source,
+  alt,
+  className,
+  allowExternalSource = false,
+}: CatalogImageProps) {
+  const usableSource = source && (allowExternalSource || !isUberAssetUrl(source)) ? source : null;
   const [failed, setFailed] = useState(false);
 
   useEffect(() => setFailed(false), [usableSource]);

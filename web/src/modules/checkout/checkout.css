@@ -94,12 +94,22 @@
   color: var(--ui-color-danger, #b42318);
 }
 
-.checkout-text-button {
-  background: transparent;
-  border: 0;
-  color: var(--ui-color-primary, #7c3aed);
+.checkout-remove-button {
+  color: var(--ui-color-danger, #b42318);
   justify-self: start;
-  text-decoration: underline;
+}
+
+.checkout-drawer-checkout-button > span,
+.checkout-remove-button > span {
+  align-items: center;
+  display: inline-flex;
+  gap: var(--space-2);
+}
+
+.checkout-drawer-checkout-button {
+  height: 2.25rem;
+  min-height: 2.25rem;
+  padding-block: 0;
 }
 
 @media (min-width: 48rem) {

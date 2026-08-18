@@ -20,7 +20,7 @@ export function DishCard({ dish, onSelect }: DishCardProps) {
       type="button"
     >
       <Card className="catalog-dish-card">
-        <CatalogImage alt={dish.name} source={dish.image} />
+        <CatalogImage allowExternalSource alt={dish.name} source={dish.image} />
         <div className="catalog-card__body">
           <div className="catalog-card__title-row">
             <h3>{dish.name}</h3>

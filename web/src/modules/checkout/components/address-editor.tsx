@@ -86,7 +86,9 @@ export function AddressEditor({ repository, onSaved, store: injectedStore }: Add
       </form.Field>
       <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting] as const}>
         {([canSubmit, isSubmitting]) => (
-          <Button disabled={!canSubmit} loading={isSubmitting} type="submit">Save address</Button>
+          <Button className="mt-4 mb-2" disabled={!canSubmit} loading={isSubmitting} type="submit">
+            Save address
+          </Button>
         )}
       </form.Subscribe>
     </form>

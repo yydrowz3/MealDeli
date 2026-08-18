@@ -1,4 +1,6 @@
-import { Money } from "../../../shared/ui";
+import { TrashIcon } from "@phosphor-icons/react";
+
+import { Button, Money } from "../../../shared/ui";
 import { getCartLineTotalMinor, getCartTotalMinor } from "../model/cart-selectors";
 import type { CartState } from "../model/types";
 
@@ -59,15 +61,17 @@ export function CartSummary({
                 <p>Quantity: {line.quantity}</p>
               )}
               {onRemove ? (
-                <button
+                <Button
                   aria-label={`Remove ${line.dishName}`}
-                  className="checkout-text-button"
+                  className="checkout-remove-button"
                   disabled={disabled}
                   onClick={() => onRemove(line.lineId)}
-                  type="button"
+                  size="sm"
+                  variant="tertiary"
                 >
+                  <TrashIcon aria-hidden="true" size={16} />
                   Remove
-                </button>
+                </Button>
               ) : null}
             </li>
           );

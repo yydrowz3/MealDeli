@@ -102,7 +102,12 @@ export function RestaurantMenuPage({
       <Button onClick={onBack} variant="tertiary">
         Back to restaurants
       </Button>
-      <CatalogImage className="catalog-menu-hero" alt={restaurant.name} source={restaurant.image} />
+      <CatalogImage
+        allowExternalSource
+        className="catalog-menu-hero"
+        alt={restaurant.name}
+        source={restaurant.image}
+      />
       <header className="catalog-menu-header">
         <div>
           <div className="catalog-card__title-row">
@@ -115,7 +120,14 @@ export function RestaurantMenuPage({
           <address>{restaurant.address}</address>
         </div>
       </header>
-      <div className="catalog-menu-layout">
+      <div
+        className={[
+          "catalog-menu-layout",
+          cartSlots?.sidebar ? "catalog-menu-layout--with-cart" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
         <section aria-labelledby="catalog-menu-title">
           <h2 id="catalog-menu-title">Menu</h2>
           {restaurant.dishes.length === 0 ? (
