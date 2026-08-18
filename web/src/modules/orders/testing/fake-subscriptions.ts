@@ -57,11 +57,13 @@ export class ControllableAsyncIterable<T> implements AsyncIterable<T>, AsyncIter
   }
 }
 
-export function createFakeOrderSubscriptions(streams: Readonly<{
-  updates?: readonly ControllableAsyncIterable<OrderRealtimeEvent>[];
-  pending?: readonly ControllableAsyncIterable<OrderRealtimeEvent>[];
-  cooked?: readonly ControllableAsyncIterable<OrderRealtimeEvent>[];
-}>): OrderSubscriptionPort {
+export function createFakeOrderSubscriptions(
+  streams: Readonly<{
+    updates?: readonly ControllableAsyncIterable<OrderRealtimeEvent>[];
+    pending?: readonly ControllableAsyncIterable<OrderRealtimeEvent>[];
+    cooked?: readonly ControllableAsyncIterable<OrderRealtimeEvent>[];
+  }>,
+): OrderSubscriptionPort {
   let updateIndex = 0;
   let pendingIndex = 0;
   let cookedIndex = 0;

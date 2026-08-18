@@ -56,9 +56,9 @@ export function OrdersPage({
         : [],
     [restaurantId, role, state, status],
   );
-  const activeSection =
-    sections.find((section) => section.id === selectedSection) ?? sections[0];
-  const title = role === "CUSTOMER" ? "Your orders" : role === "COURIER" ? "Delivery history" : "Orders";
+  const activeSection = sections.find((section) => section.id === selectedSection) ?? sections[0];
+  const title =
+    role === "CUSTOMER" ? "Your orders" : role === "COURIER" ? "Delivery history" : "Orders";
 
   return (
     <main className="orders-page">
@@ -68,7 +68,9 @@ export function OrdersPage({
 
       {state.kind === "loading" ? (
         <div aria-label="Loading orders" className="orders-loading">
-          <Skeleton /><Skeleton /><Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
         </div>
       ) : null}
 
@@ -82,13 +84,29 @@ export function OrdersPage({
 
       {state.kind === "ready" && role === "OWNER" ? (
         <div className="orders-filters">
-          <Select label="Restaurant" onChange={(event) => setRestaurantId(event.target.value)} value={restaurantId}>
+          <Select
+            label="Restaurant"
+            onChange={(event) => setRestaurantId(event.target.value)}
+            value={restaurantId}
+          >
             <option value="">All restaurants</option>
-            {restaurants.map((restaurant) => <option key={restaurant.id} value={restaurant.id}>{restaurant.name}</option>)}
+            {restaurants.map((restaurant) => (
+              <option key={restaurant.id} value={restaurant.id}>
+                {restaurant.name}
+              </option>
+            ))}
           </Select>
-          <Select label="Status" onChange={(event) => setStatus(event.target.value as OrderStatus | "")} value={status}>
+          <Select
+            label="Status"
+            onChange={(event) => setStatus(event.target.value as OrderStatus | "")}
+            value={status}
+          >
             <option value="">All statuses</option>
-            {ORDER_STATUSES.map((orderStatus) => <option key={orderStatus} value={orderStatus}>{ORDER_STATUS_LABELS[orderStatus]}</option>)}
+            {ORDER_STATUSES.map((orderStatus) => (
+              <option key={orderStatus} value={orderStatus}>
+                {ORDER_STATUS_LABELS[orderStatus]}
+              </option>
+            ))}
           </Select>
         </div>
       ) : null}
@@ -116,7 +134,11 @@ export function OrdersPage({
             title={emptyCopy[activeSection.id][0]}
           />
         ) : role === "OWNER" ? (
-          <OrderTable orders={activeSection.orders} onView={onViewOrder} renderAction={renderAction} />
+          <OrderTable
+            orders={activeSection.orders}
+            onView={onViewOrder}
+            renderAction={renderAction}
+          />
         ) : (
           <div className="orders-grid">
             {activeSection.orders.map((order) => (
@@ -125,7 +147,13 @@ export function OrdersPage({
                 key={order.id}
                 onView={onViewOrder}
                 order={order}
-                viewLabel={role === "COURIER" && order.status === "PICKED" ? "Continue delivery" : order.status === "DELIVERED" ? "View order" : "Track order"}
+                viewLabel={
+                  role === "COURIER" && order.status === "PICKED"
+                    ? "Continue delivery"
+                    : order.status === "DELIVERED"
+                      ? "View order"
+                      : "Track order"
+                }
               />
             ))}
           </div>

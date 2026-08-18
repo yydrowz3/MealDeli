@@ -124,11 +124,7 @@ vi.mock("../modules/checkout", async () => {
 vi.mock("../modules/identity", async () => {
   const React = await import("react");
   const page = (label: string) => (props: { navigate?(to: string): void }) =>
-    React.createElement(
-      "button",
-      { onClick: () => props.navigate?.("/dashboard") },
-      label,
-    );
+    React.createElement("button", { onClick: () => props.navigate?.("/dashboard") }, label);
   return {
     identityAtom: "identity",
     sessionUserAtom: "session",
@@ -155,8 +151,16 @@ vi.mock("../modules/catalog", async () => {
         "div",
         null,
         "discovery page",
-        React.createElement("button", { onClick: () => props.onSearchChange({ page: 2 }) }, "search"),
-        React.createElement("button", { onClick: () => props.onViewRestaurant("restaurant-2") }, "view restaurant"),
+        React.createElement(
+          "button",
+          { onClick: () => props.onSearchChange({ page: 2 }) },
+          "search",
+        ),
+        React.createElement(
+          "button",
+          { onClick: () => props.onViewRestaurant("restaurant-2") },
+          "view restaurant",
+        ),
         React.createElement("button", { onClick: props.onEditAddress }, "edit address"),
       ),
     RestaurantMenuPage: (props: { onSelectDish(dish: { name: string }): void }) =>
@@ -237,8 +241,23 @@ beforeAll(async () => {
     import("./__root"),
   ]);
   const names = [
-    "index", "login", "signup", "verify", "profile", "restaurants", "new", "restaurant",
-    "menu", "settings", "promotion", "checkout", "orders", "order", "delivery", "dashboard", "root",
+    "index",
+    "login",
+    "signup",
+    "verify",
+    "profile",
+    "restaurants",
+    "new",
+    "restaurant",
+    "menu",
+    "settings",
+    "promotion",
+    "checkout",
+    "orders",
+    "order",
+    "delivery",
+    "dashboard",
+    "root",
   ];
   modules.forEach((module, index) => {
     routeModules[names[index]] = module.Route as unknown as FakeRoute;

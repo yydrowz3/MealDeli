@@ -14,7 +14,13 @@ describe("CartDrawer", () => {
     const store = createCartTestStore();
     render(
       <Provider store={store}>
-        <CartDrawer open onBrowseRestaurants={browse} onCheckout={vi.fn()} onClose={vi.fn()} store={store} />
+        <CartDrawer
+          open
+          onBrowseRestaurants={browse}
+          onCheckout={vi.fn()}
+          onClose={vi.fn()}
+          store={store}
+        />
       </Provider>,
     );
     expect(screen.getByText("Your cart is empty")).toBeVisible();
@@ -27,7 +33,13 @@ describe("CartDrawer", () => {
     const store = createCartTestStore({ initialState: buildCart() });
     render(
       <Provider store={store}>
-        <CartDrawer open onBrowseRestaurants={vi.fn()} onCheckout={vi.fn()} onClose={vi.fn()} store={store} />
+        <CartDrawer
+          open
+          onBrowseRestaurants={vi.fn()}
+          onCheckout={vi.fn()}
+          onClose={vi.fn()}
+          store={store}
+        />
       </Provider>,
     );
     expect(screen.getAllByText("$14.49").length).toBeGreaterThan(0);
@@ -44,7 +56,13 @@ describe("CartDrawer", () => {
     const store = createCartTestStore({ initialState: buildCart() });
     render(
       <Provider store={store}>
-        <CartDrawer open onBrowseRestaurants={vi.fn()} onCheckout={checkout} onClose={vi.fn()} store={store} />
+        <CartDrawer
+          open
+          onBrowseRestaurants={vi.fn()}
+          onCheckout={checkout}
+          onClose={vi.fn()}
+          store={store}
+        />
       </Provider>,
     );
     await user.click(screen.getByRole("button", { name: "Increase Bibimbap quantity" }));

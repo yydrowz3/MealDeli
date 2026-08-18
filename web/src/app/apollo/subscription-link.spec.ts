@@ -34,7 +34,9 @@ describe("RestartableSubscriptionLink", () => {
 
     expect(subscribe).toHaveBeenCalledTimes(1);
     expect(factories[0].connectionParams).toBeTypeOf("function");
-    expect((factories[0].connectionParams as () => object)()).toEqual({ Authorization: "Bearer old-token" });
+    expect((factories[0].connectionParams as () => object)()).toEqual({
+      Authorization: "Bearer old-token",
+    });
 
     token = "new-token";
     tokenListener?.();
@@ -42,7 +44,9 @@ describe("RestartableSubscriptionLink", () => {
     expect(disposeClients).toHaveBeenCalledTimes(1);
     expect(disposeSubscriptions).toHaveBeenCalledTimes(1);
     expect(subscribe).toHaveBeenCalledTimes(2);
-    expect((factories[1].connectionParams as () => object)()).toEqual({ Authorization: "Bearer new-token" });
+    expect((factories[1].connectionParams as () => object)()).toEqual({
+      Authorization: "Bearer new-token",
+    });
 
     subscription.unsubscribe();
     link.dispose();

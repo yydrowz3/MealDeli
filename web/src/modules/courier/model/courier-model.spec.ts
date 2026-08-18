@@ -39,7 +39,11 @@ describe("courier available and active models", () => {
 
   it("chooses the newest active order and exposes invariant violations", () => {
     const old = buildOrder({ id: "old", status: "PICKED", updatedAt: "2026-08-16T10:00:00Z" });
-    const recent = buildOrder({ id: "recent", status: "PICKED", updatedAt: "2026-08-17T10:00:00Z" });
+    const recent = buildOrder({
+      id: "recent",
+      status: "PICKED",
+      updatedAt: "2026-08-17T10:00:00Z",
+    });
     expect(selectActiveDelivery([old, recent])).toEqual({
       active: recent,
       hasInvariantError: true,
@@ -52,7 +56,13 @@ describe("demo route", () => {
     expect(stableOrderHash("order-1")).toBe(stableOrderHash("order-1"));
     expect(createDemoRoute("order-1")).toEqual(createDemoRoute("order-1"));
     expect(createDemoRoute("order-1").path).toHaveLength(26);
-    expect(new Set(["order-1", "order-2", "order-3", "order-4"].map((id) => createDemoRoute(id).restaurant.lat)).size).toBeGreaterThan(1);
+    expect(
+      new Set(
+        ["order-1", "order-2", "order-3", "order-4"].map(
+          (id) => createDemoRoute(id).restaurant.lat,
+        ),
+      ).size,
+    ).toBeGreaterThan(1);
   });
 
   it("clamps invalid and overflowing progress", () => {
@@ -73,8 +83,12 @@ describe("demo route", () => {
     const invalid = createMemoryCourierStorage({
       [COURIER_ROUTE_STORAGE_KEY]: JSON.stringify({ version: 2, orderId: "old" }),
     });
-    expect(createValidatedCourierStorage(valid).getItem(COURIER_ROUTE_STORAGE_KEY, null)?.orderId).toBe("hydrated");
-    expect(createValidatedCourierStorage(invalid).getItem(COURIER_ROUTE_STORAGE_KEY, null)).toBeNull();
+    expect(
+      createValidatedCourierStorage(valid).getItem(COURIER_ROUTE_STORAGE_KEY, null)?.orderId,
+    ).toBe("hydrated");
+    expect(
+      createValidatedCourierStorage(invalid).getItem(COURIER_ROUTE_STORAGE_KEY, null),
+    ).toBeNull();
     expect(invalid.getItem(COURIER_ROUTE_STORAGE_KEY)).toBeNull();
   });
 
@@ -93,4 +107,3 @@ describe("demo route", () => {
     expect(first.get(courierRouteAtom)).toBeNull();
   });
 });
-

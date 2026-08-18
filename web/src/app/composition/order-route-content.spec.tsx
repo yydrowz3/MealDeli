@@ -213,7 +213,10 @@ describe("route content composition", () => {
     expect(screen.getByTestId("skeleton")).toBeInTheDocument();
     await screen.findByText("empty");
     expect(doubles.loadCheckout).toHaveBeenCalledWith(
-      expect.objectContaining({ user: expect.objectContaining({ role: "CUSTOMER" }), cart: store.get(cartAtom) }),
+      expect.objectContaining({
+        user: expect.objectContaining({ role: "CUSTOMER" }),
+        cart: store.get(cartAtom),
+      }),
     );
   });
 });

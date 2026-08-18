@@ -10,19 +10,12 @@ import {
   Skeleton,
   toastAdapter,
 } from "../../../shared/ui";
-import type {
-  Order,
-  OrderConnectionState,
-  OrderSubscriptionPort,
-} from "../../orders";
+import type { Order, OrderConnectionState, OrderSubscriptionPort } from "../../orders";
 import type { CourierRepository } from "../api/courier-repository";
 import { ActiveDeliveryCard } from "../components/active-delivery-card";
 import { AvailableOrderCard } from "../components/available-order-card";
 import { selectActiveDelivery } from "../model/active-delivery";
-import {
-  mergeAvailableOrders,
-  removeAvailableOrder,
-} from "../model/available-orders";
+import { mergeAvailableOrders, removeAvailableOrder } from "../model/available-orders";
 import { createCourierAvailableRealtimeAdapter } from "../model/realtime";
 
 export type CourierNotifier = Readonly<{
@@ -52,8 +45,7 @@ export function CourierDashboardPage({
   const [data, setData] = useState<DashboardData | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [acceptingId, setAcceptingId] = useState<string | null>(null);
-  const [connectionState, setConnectionState] =
-    useState<OrderConnectionState>("connecting");
+  const [connectionState, setConnectionState] = useState<OrderConnectionState>("connecting");
   const availableRef = useRef<readonly Order[]>([]);
   const headingRefs = useRef(new Map<string, HTMLHeadingElement>());
   const emptyHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -167,12 +159,21 @@ export function CourierDashboardPage({
   };
 
   if (!data && !loadError) {
-    return <main aria-label="Loading courier dashboard"><Skeleton /><Skeleton /><Skeleton /></main>;
+    return (
+      <main aria-label="Loading courier dashboard">
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </main>
+    );
   }
   if (!data && loadError) {
     return (
       <main className="courier-dashboard">
-        <ErrorState action={{ label: "Try again", onClick: load }} title="We couldn’t load the courier dashboard." />
+        <ErrorState
+          action={{ label: "Try again", onClick: load }}
+          title="We couldn’t load the courier dashboard."
+        />
       </main>
     );
   }
@@ -192,21 +193,31 @@ export function CourierDashboardPage({
         <ConnectionBanner message="New order updates are reconnecting…" />
       ) : null}
       <header className="courier-dashboard__header">
-        <div><p className="courier-eyebrow">Courier workspace</p><h1>Courier dashboard</h1></div>
+        <div>
+          <p className="courier-eyebrow">Courier workspace</p>
+          <h1>Courier dashboard</h1>
+        </div>
         <Badge tone="success">Online</Badge>
       </header>
 
       {selection.active ? (
-        <ActiveDeliveryCard order={selection.active} onContinue={(order) => onNavigateDelivery(order.id)} />
+        <ActiveDeliveryCard
+          order={selection.active}
+          onContinue={(order) => onNavigateDelivery(order.id)}
+        />
       ) : null}
       {selection.hasInvariantError ? (
-        <p className="courier-invariant" role="alert">Multiple active deliveries need attention.</p>
+        <p className="courier-invariant" role="alert">
+          Multiple active deliveries need attention.
+        </p>
       ) : null}
 
       <section aria-labelledby="available-orders-heading">
         <div className="courier-section-heading">
           <h2 id="available-orders-heading">Available orders</h2>
-          <Button onClick={load} variant="tertiary">Refresh</Button>
+          <Button onClick={load} variant="tertiary">
+            Refresh
+          </Button>
         </div>
         {readyData.available.length === 0 ? (
           <div className="courier-empty-heading" ref={emptyHeadingRef} tabIndex={-1}>

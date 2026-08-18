@@ -78,20 +78,33 @@ describe("identity repository", () => {
     const mutate = vi
       .fn()
       .mockResolvedValueOnce({ data: { refreshAccessToken: { ok: true, accessToken: "fresh" } } })
-      .mockResolvedValueOnce({ data: { refreshAccessToken: { ok: false, error: "Refresh token expired" } } })
+      .mockResolvedValueOnce({
+        data: { refreshAccessToken: { ok: false, error: "Refresh token expired" } },
+      })
       .mockResolvedValueOnce({ data: undefined })
       .mockResolvedValueOnce({ data: { signIn: { ok: true, accessToken: "signed-in" } } })
       .mockResolvedValueOnce({ data: undefined });
-    const repository = createIdentityRepository({ mutate, query: vi.fn() } as unknown as IdentityGraphqlClient);
+    const repository = createIdentityRepository({
+      mutate,
+      query: vi.fn(),
+    } as unknown as IdentityGraphqlClient);
 
     await expect(repository.refreshAccessToken()).resolves.toEqual({ ok: true, value: "fresh" });
-    await expect(repository.refreshAccessToken()).resolves.toMatchObject({ ok: false, code: "UNAUTHORIZED" });
-    await expect(repository.refreshAccessToken()).resolves.toMatchObject({ ok: false, code: "UNKNOWN" });
+    await expect(repository.refreshAccessToken()).resolves.toMatchObject({
+      ok: false,
+      code: "UNAUTHORIZED",
+    });
+    await expect(repository.refreshAccessToken()).resolves.toMatchObject({
+      ok: false,
+      code: "UNKNOWN",
+    });
     await expect(repository.signIn({ email: "a@b.test", password: "password" })).resolves.toEqual({
       ok: true,
       value: "signed-in",
     });
-    await expect(repository.signIn({ email: "a@b.test", password: "password" })).resolves.toMatchObject({
+    await expect(
+      repository.signIn({ email: "a@b.test", password: "password" }),
+    ).resolves.toMatchObject({
       ok: false,
       code: "UNKNOWN",
     });
@@ -105,7 +118,10 @@ describe("identity repository", () => {
       .mockResolvedValueOnce({ data: { verifyEmail: { ok: false, error: "Token has expired" } } })
       .mockResolvedValueOnce({ data: { resendVerification: { ok: true } } })
       .mockResolvedValueOnce({ data: { editProfile: { ok: false, error: "Unauthorized" } } });
-    const repository = createIdentityRepository({ mutate, query: vi.fn() } as unknown as IdentityGraphqlClient);
+    const repository = createIdentityRepository({
+      mutate,
+      query: vi.fn(),
+    } as unknown as IdentityGraphqlClient);
     await expect(
       repository.signUp({ name: "A", email: "a@b.test", password: "password", role: "CUSTOMER" }),
     ).resolves.toEqual({ ok: true, value: undefined });
@@ -152,7 +168,10 @@ describe("identity repository", () => {
       .mockResolvedValueOnce({ data: undefined })
       .mockResolvedValueOnce({ data: { me: { id: "", email: "bad" } } })
       .mockRejectedValueOnce("offline");
-    const repository = createIdentityRepository({ mutate: vi.fn(), query } as unknown as IdentityGraphqlClient);
+    const repository = createIdentityRepository({
+      mutate: vi.fn(),
+      query,
+    } as unknown as IdentityGraphqlClient);
     await expect(repository.me("access")).resolves.toMatchObject({ ok: false, code: "NETWORK" });
     await expect(repository.me("access")).resolves.toMatchObject({ ok: false, code: "UNKNOWN" });
     await expect(repository.me("access")).resolves.toMatchObject({ ok: false, code: "NETWORK" });

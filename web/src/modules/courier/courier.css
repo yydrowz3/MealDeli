@@ -150,11 +150,17 @@
 }
 
 .courier-leaflet-marker--pickup,
-.courier-map-marker--pickup { background: #087f5b; }
+.courier-map-marker--pickup {
+  background: #087f5b;
+}
 .courier-leaflet-marker--destination,
-.courier-map-marker--destination { background: #334155; }
+.courier-map-marker--destination {
+  background: #334155;
+}
 .courier-leaflet-marker--courier,
-.courier-map-marker--courier { background: #c2410c; }
+.courier-map-marker--courier {
+  background: #c2410c;
+}
 
 .courier-map-fallback {
   background-color: #f2f5f3;
@@ -177,16 +183,26 @@
   stroke-width: 3;
 }
 
-.courier-route-remaining { stroke: #aeb9b4; }
-.courier-route-complete { stroke: #087f5b; }
+.courier-route-remaining {
+  stroke: #aeb9b4;
+}
+.courier-route-complete {
+  stroke: #087f5b;
+}
 
 .courier-map-marker {
   position: absolute;
   translate: -50% -50%;
 }
 
-.courier-map-marker--pickup { left: 8%; top: 80%; }
-.courier-map-marker--destination { left: 92%; top: 18%; }
+.courier-map-marker--pickup {
+  left: 8%;
+  top: 80%;
+}
+.courier-map-marker--destination {
+  left: 92%;
+  top: 18%;
+}
 
 @media (max-width: 767px) {
   .courier-dashboard,
@@ -213,4 +229,3 @@
     transition: none;
   }
 }
-

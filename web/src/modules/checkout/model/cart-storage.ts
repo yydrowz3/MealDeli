@@ -5,9 +5,7 @@ import type { CartState } from "./types";
 
 export type StringStorage = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 
-export function createMemoryStringStorage(
-  initial: Readonly<Record<string, string>> = {},
-): Storage {
+export function createMemoryStringStorage(initial: Readonly<Record<string, string>> = {}): Storage {
   const values = new Map(Object.entries(initial));
   return {
     get length() {

@@ -8,354 +8,350 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as CheckoutRouteImport } from './routes/checkout'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as SignupRouteImport } from './routes/signup'
-import { Route as VerifyEmailRouteImport } from './routes/verify-email'
-import { Route as DeliveriesOrderIdRouteImport } from './routes/deliveries.$orderId'
-import { Route as OrdersIndexRouteImport } from './routes/orders.index'
-import { Route as OrdersOrderIdRouteImport } from './routes/orders.$orderId'
-import { Route as RestaurantsIndexRouteImport } from './routes/restaurants.index'
-import { Route as RestaurantsNewRouteImport } from './routes/restaurants.new'
-import { Route as RestaurantsRestaurantIdIndexRouteImport } from './routes/restaurants.$restaurantId.index'
-import { Route as RestaurantsRestaurantIdMenuRouteImport } from './routes/restaurants.$restaurantId.menu'
-import { Route as RestaurantsRestaurantIdPromotionRouteImport } from './routes/restaurants.$restaurantId.promotion'
-import { Route as RestaurantsRestaurantIdSettingsRouteImport } from './routes/restaurants.$restaurantId.settings'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as IndexRouteImport } from "./routes/index";
+import { Route as CheckoutRouteImport } from "./routes/checkout";
+import { Route as DashboardRouteImport } from "./routes/dashboard";
+import { Route as LoginRouteImport } from "./routes/login";
+import { Route as ProfileRouteImport } from "./routes/profile";
+import { Route as SignupRouteImport } from "./routes/signup";
+import { Route as VerifyEmailRouteImport } from "./routes/verify-email";
+import { Route as DeliveriesOrderIdRouteImport } from "./routes/deliveries.$orderId";
+import { Route as OrdersIndexRouteImport } from "./routes/orders.index";
+import { Route as OrdersOrderIdRouteImport } from "./routes/orders.$orderId";
+import { Route as RestaurantsIndexRouteImport } from "./routes/restaurants.index";
+import { Route as RestaurantsNewRouteImport } from "./routes/restaurants.new";
+import { Route as RestaurantsRestaurantIdIndexRouteImport } from "./routes/restaurants.$restaurantId.index";
+import { Route as RestaurantsRestaurantIdMenuRouteImport } from "./routes/restaurants.$restaurantId.menu";
+import { Route as RestaurantsRestaurantIdPromotionRouteImport } from "./routes/restaurants.$restaurantId.promotion";
+import { Route as RestaurantsRestaurantIdSettingsRouteImport } from "./routes/restaurants.$restaurantId.settings";
 
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const CheckoutRoute = CheckoutRouteImport.update({
-  id: '/checkout',
-  path: '/checkout',
+  id: "/checkout",
+  path: "/checkout",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+  id: "/dashboard",
+  path: "/dashboard",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+  id: "/login",
+  path: "/login",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
+  id: "/profile",
+  path: "/profile",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const SignupRoute = SignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
+  id: "/signup",
+  path: "/signup",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
-  id: '/verify-email',
-  path: '/verify-email',
+  id: "/verify-email",
+  path: "/verify-email",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const DeliveriesOrderIdRoute = DeliveriesOrderIdRouteImport.update({
-  id: '/deliveries/$orderId',
-  path: '/deliveries/$orderId',
+  id: "/deliveries/$orderId",
+  path: "/deliveries/$orderId",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const OrdersIndexRoute = OrdersIndexRouteImport.update({
-  id: '/orders/',
-  path: '/orders/',
+  id: "/orders/",
+  path: "/orders/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const OrdersOrderIdRoute = OrdersOrderIdRouteImport.update({
-  id: '/orders/$orderId',
-  path: '/orders/$orderId',
+  id: "/orders/$orderId",
+  path: "/orders/$orderId",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const RestaurantsIndexRoute = RestaurantsIndexRouteImport.update({
-  id: '/restaurants/',
-  path: '/restaurants/',
+  id: "/restaurants/",
+  path: "/restaurants/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const RestaurantsNewRoute = RestaurantsNewRouteImport.update({
-  id: '/restaurants/new',
-  path: '/restaurants/new',
+  id: "/restaurants/new",
+  path: "/restaurants/new",
   getParentRoute: () => rootRouteImport,
-} as any)
-const RestaurantsRestaurantIdIndexRoute =
-  RestaurantsRestaurantIdIndexRouteImport.update({
-    id: '/restaurants/$restaurantId/',
-    path: '/restaurants/$restaurantId/',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const RestaurantsRestaurantIdMenuRoute =
-  RestaurantsRestaurantIdMenuRouteImport.update({
-    id: '/restaurants/$restaurantId/menu',
-    path: '/restaurants/$restaurantId/menu',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const RestaurantsRestaurantIdPromotionRoute =
-  RestaurantsRestaurantIdPromotionRouteImport.update({
-    id: '/restaurants/$restaurantId/promotion',
-    path: '/restaurants/$restaurantId/promotion',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const RestaurantsRestaurantIdSettingsRoute =
-  RestaurantsRestaurantIdSettingsRouteImport.update({
-    id: '/restaurants/$restaurantId/settings',
-    path: '/restaurants/$restaurantId/settings',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+} as any);
+const RestaurantsRestaurantIdIndexRoute = RestaurantsRestaurantIdIndexRouteImport.update({
+  id: "/restaurants/$restaurantId/",
+  path: "/restaurants/$restaurantId/",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const RestaurantsRestaurantIdMenuRoute = RestaurantsRestaurantIdMenuRouteImport.update({
+  id: "/restaurants/$restaurantId/menu",
+  path: "/restaurants/$restaurantId/menu",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const RestaurantsRestaurantIdPromotionRoute = RestaurantsRestaurantIdPromotionRouteImport.update({
+  id: "/restaurants/$restaurantId/promotion",
+  path: "/restaurants/$restaurantId/promotion",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const RestaurantsRestaurantIdSettingsRoute = RestaurantsRestaurantIdSettingsRouteImport.update({
+  id: "/restaurants/$restaurantId/settings",
+  path: "/restaurants/$restaurantId/settings",
+  getParentRoute: () => rootRouteImport,
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/checkout': typeof CheckoutRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/profile': typeof ProfileRoute
-  '/signup': typeof SignupRoute
-  '/verify-email': typeof VerifyEmailRoute
-  '/deliveries/$orderId': typeof DeliveriesOrderIdRoute
-  '/orders/$orderId': typeof OrdersOrderIdRoute
-  '/restaurants/new': typeof RestaurantsNewRoute
-  '/orders/': typeof OrdersIndexRoute
-  '/restaurants/': typeof RestaurantsIndexRoute
-  '/restaurants/$restaurantId/menu': typeof RestaurantsRestaurantIdMenuRoute
-  '/restaurants/$restaurantId/promotion': typeof RestaurantsRestaurantIdPromotionRoute
-  '/restaurants/$restaurantId/settings': typeof RestaurantsRestaurantIdSettingsRoute
-  '/restaurants/$restaurantId/': typeof RestaurantsRestaurantIdIndexRoute
+  "/": typeof IndexRoute;
+  "/checkout": typeof CheckoutRoute;
+  "/dashboard": typeof DashboardRoute;
+  "/login": typeof LoginRoute;
+  "/profile": typeof ProfileRoute;
+  "/signup": typeof SignupRoute;
+  "/verify-email": typeof VerifyEmailRoute;
+  "/deliveries/$orderId": typeof DeliveriesOrderIdRoute;
+  "/orders/$orderId": typeof OrdersOrderIdRoute;
+  "/restaurants/new": typeof RestaurantsNewRoute;
+  "/orders/": typeof OrdersIndexRoute;
+  "/restaurants/": typeof RestaurantsIndexRoute;
+  "/restaurants/$restaurantId/menu": typeof RestaurantsRestaurantIdMenuRoute;
+  "/restaurants/$restaurantId/promotion": typeof RestaurantsRestaurantIdPromotionRoute;
+  "/restaurants/$restaurantId/settings": typeof RestaurantsRestaurantIdSettingsRoute;
+  "/restaurants/$restaurantId/": typeof RestaurantsRestaurantIdIndexRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/checkout': typeof CheckoutRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/profile': typeof ProfileRoute
-  '/signup': typeof SignupRoute
-  '/verify-email': typeof VerifyEmailRoute
-  '/deliveries/$orderId': typeof DeliveriesOrderIdRoute
-  '/orders/$orderId': typeof OrdersOrderIdRoute
-  '/restaurants/new': typeof RestaurantsNewRoute
-  '/orders': typeof OrdersIndexRoute
-  '/restaurants': typeof RestaurantsIndexRoute
-  '/restaurants/$restaurantId/menu': typeof RestaurantsRestaurantIdMenuRoute
-  '/restaurants/$restaurantId/promotion': typeof RestaurantsRestaurantIdPromotionRoute
-  '/restaurants/$restaurantId/settings': typeof RestaurantsRestaurantIdSettingsRoute
-  '/restaurants/$restaurantId': typeof RestaurantsRestaurantIdIndexRoute
+  "/": typeof IndexRoute;
+  "/checkout": typeof CheckoutRoute;
+  "/dashboard": typeof DashboardRoute;
+  "/login": typeof LoginRoute;
+  "/profile": typeof ProfileRoute;
+  "/signup": typeof SignupRoute;
+  "/verify-email": typeof VerifyEmailRoute;
+  "/deliveries/$orderId": typeof DeliveriesOrderIdRoute;
+  "/orders/$orderId": typeof OrdersOrderIdRoute;
+  "/restaurants/new": typeof RestaurantsNewRoute;
+  "/orders": typeof OrdersIndexRoute;
+  "/restaurants": typeof RestaurantsIndexRoute;
+  "/restaurants/$restaurantId/menu": typeof RestaurantsRestaurantIdMenuRoute;
+  "/restaurants/$restaurantId/promotion": typeof RestaurantsRestaurantIdPromotionRoute;
+  "/restaurants/$restaurantId/settings": typeof RestaurantsRestaurantIdSettingsRoute;
+  "/restaurants/$restaurantId": typeof RestaurantsRestaurantIdIndexRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/checkout': typeof CheckoutRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/profile': typeof ProfileRoute
-  '/signup': typeof SignupRoute
-  '/verify-email': typeof VerifyEmailRoute
-  '/deliveries/$orderId': typeof DeliveriesOrderIdRoute
-  '/orders/$orderId': typeof OrdersOrderIdRoute
-  '/restaurants/new': typeof RestaurantsNewRoute
-  '/orders/': typeof OrdersIndexRoute
-  '/restaurants/': typeof RestaurantsIndexRoute
-  '/restaurants/$restaurantId/menu': typeof RestaurantsRestaurantIdMenuRoute
-  '/restaurants/$restaurantId/promotion': typeof RestaurantsRestaurantIdPromotionRoute
-  '/restaurants/$restaurantId/settings': typeof RestaurantsRestaurantIdSettingsRoute
-  '/restaurants/$restaurantId/': typeof RestaurantsRestaurantIdIndexRoute
+  __root__: typeof rootRouteImport;
+  "/": typeof IndexRoute;
+  "/checkout": typeof CheckoutRoute;
+  "/dashboard": typeof DashboardRoute;
+  "/login": typeof LoginRoute;
+  "/profile": typeof ProfileRoute;
+  "/signup": typeof SignupRoute;
+  "/verify-email": typeof VerifyEmailRoute;
+  "/deliveries/$orderId": typeof DeliveriesOrderIdRoute;
+  "/orders/$orderId": typeof OrdersOrderIdRoute;
+  "/restaurants/new": typeof RestaurantsNewRoute;
+  "/orders/": typeof OrdersIndexRoute;
+  "/restaurants/": typeof RestaurantsIndexRoute;
+  "/restaurants/$restaurantId/menu": typeof RestaurantsRestaurantIdMenuRoute;
+  "/restaurants/$restaurantId/promotion": typeof RestaurantsRestaurantIdPromotionRoute;
+  "/restaurants/$restaurantId/settings": typeof RestaurantsRestaurantIdSettingsRoute;
+  "/restaurants/$restaurantId/": typeof RestaurantsRestaurantIdIndexRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | '/'
-    | '/checkout'
-    | '/dashboard'
-    | '/login'
-    | '/profile'
-    | '/signup'
-    | '/verify-email'
-    | '/deliveries/$orderId'
-    | '/orders/$orderId'
-    | '/restaurants/new'
-    | '/orders/'
-    | '/restaurants/'
-    | '/restaurants/$restaurantId/menu'
-    | '/restaurants/$restaurantId/promotion'
-    | '/restaurants/$restaurantId/settings'
-    | '/restaurants/$restaurantId/'
-  fileRoutesByTo: FileRoutesByTo
+    | "/"
+    | "/checkout"
+    | "/dashboard"
+    | "/login"
+    | "/profile"
+    | "/signup"
+    | "/verify-email"
+    | "/deliveries/$orderId"
+    | "/orders/$orderId"
+    | "/restaurants/new"
+    | "/orders/"
+    | "/restaurants/"
+    | "/restaurants/$restaurantId/menu"
+    | "/restaurants/$restaurantId/promotion"
+    | "/restaurants/$restaurantId/settings"
+    | "/restaurants/$restaurantId/";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | '/'
-    | '/checkout'
-    | '/dashboard'
-    | '/login'
-    | '/profile'
-    | '/signup'
-    | '/verify-email'
-    | '/deliveries/$orderId'
-    | '/orders/$orderId'
-    | '/restaurants/new'
-    | '/orders'
-    | '/restaurants'
-    | '/restaurants/$restaurantId/menu'
-    | '/restaurants/$restaurantId/promotion'
-    | '/restaurants/$restaurantId/settings'
-    | '/restaurants/$restaurantId'
+    | "/"
+    | "/checkout"
+    | "/dashboard"
+    | "/login"
+    | "/profile"
+    | "/signup"
+    | "/verify-email"
+    | "/deliveries/$orderId"
+    | "/orders/$orderId"
+    | "/restaurants/new"
+    | "/orders"
+    | "/restaurants"
+    | "/restaurants/$restaurantId/menu"
+    | "/restaurants/$restaurantId/promotion"
+    | "/restaurants/$restaurantId/settings"
+    | "/restaurants/$restaurantId";
   id:
-    | '__root__'
-    | '/'
-    | '/checkout'
-    | '/dashboard'
-    | '/login'
-    | '/profile'
-    | '/signup'
-    | '/verify-email'
-    | '/deliveries/$orderId'
-    | '/orders/$orderId'
-    | '/restaurants/new'
-    | '/orders/'
-    | '/restaurants/'
-    | '/restaurants/$restaurantId/menu'
-    | '/restaurants/$restaurantId/promotion'
-    | '/restaurants/$restaurantId/settings'
-    | '/restaurants/$restaurantId/'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/"
+    | "/checkout"
+    | "/dashboard"
+    | "/login"
+    | "/profile"
+    | "/signup"
+    | "/verify-email"
+    | "/deliveries/$orderId"
+    | "/orders/$orderId"
+    | "/restaurants/new"
+    | "/orders/"
+    | "/restaurants/"
+    | "/restaurants/$restaurantId/menu"
+    | "/restaurants/$restaurantId/promotion"
+    | "/restaurants/$restaurantId/settings"
+    | "/restaurants/$restaurantId/";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  CheckoutRoute: typeof CheckoutRoute
-  DashboardRoute: typeof DashboardRoute
-  LoginRoute: typeof LoginRoute
-  ProfileRoute: typeof ProfileRoute
-  SignupRoute: typeof SignupRoute
-  VerifyEmailRoute: typeof VerifyEmailRoute
-  DeliveriesOrderIdRoute: typeof DeliveriesOrderIdRoute
-  OrdersOrderIdRoute: typeof OrdersOrderIdRoute
-  RestaurantsNewRoute: typeof RestaurantsNewRoute
-  OrdersIndexRoute: typeof OrdersIndexRoute
-  RestaurantsIndexRoute: typeof RestaurantsIndexRoute
-  RestaurantsRestaurantIdMenuRoute: typeof RestaurantsRestaurantIdMenuRoute
-  RestaurantsRestaurantIdPromotionRoute: typeof RestaurantsRestaurantIdPromotionRoute
-  RestaurantsRestaurantIdSettingsRoute: typeof RestaurantsRestaurantIdSettingsRoute
-  RestaurantsRestaurantIdIndexRoute: typeof RestaurantsRestaurantIdIndexRoute
+  IndexRoute: typeof IndexRoute;
+  CheckoutRoute: typeof CheckoutRoute;
+  DashboardRoute: typeof DashboardRoute;
+  LoginRoute: typeof LoginRoute;
+  ProfileRoute: typeof ProfileRoute;
+  SignupRoute: typeof SignupRoute;
+  VerifyEmailRoute: typeof VerifyEmailRoute;
+  DeliveriesOrderIdRoute: typeof DeliveriesOrderIdRoute;
+  OrdersOrderIdRoute: typeof OrdersOrderIdRoute;
+  RestaurantsNewRoute: typeof RestaurantsNewRoute;
+  OrdersIndexRoute: typeof OrdersIndexRoute;
+  RestaurantsIndexRoute: typeof RestaurantsIndexRoute;
+  RestaurantsRestaurantIdMenuRoute: typeof RestaurantsRestaurantIdMenuRoute;
+  RestaurantsRestaurantIdPromotionRoute: typeof RestaurantsRestaurantIdPromotionRoute;
+  RestaurantsRestaurantIdSettingsRoute: typeof RestaurantsRestaurantIdSettingsRoute;
+  RestaurantsRestaurantIdIndexRoute: typeof RestaurantsRestaurantIdIndexRoute;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checkout': {
-      id: '/checkout'
-      path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof CheckoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/verify-email': {
-      id: '/verify-email'
-      path: '/verify-email'
-      fullPath: '/verify-email'
-      preLoaderRoute: typeof VerifyEmailRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/deliveries/$orderId': {
-      id: '/deliveries/$orderId'
-      path: '/deliveries/$orderId'
-      fullPath: '/deliveries/$orderId'
-      preLoaderRoute: typeof DeliveriesOrderIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/orders/': {
-      id: '/orders/'
-      path: '/orders'
-      fullPath: '/orders/'
-      preLoaderRoute: typeof OrdersIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/orders/$orderId': {
-      id: '/orders/$orderId'
-      path: '/orders/$orderId'
-      fullPath: '/orders/$orderId'
-      preLoaderRoute: typeof OrdersOrderIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/restaurants/': {
-      id: '/restaurants/'
-      path: '/restaurants'
-      fullPath: '/restaurants/'
-      preLoaderRoute: typeof RestaurantsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/restaurants/new': {
-      id: '/restaurants/new'
-      path: '/restaurants/new'
-      fullPath: '/restaurants/new'
-      preLoaderRoute: typeof RestaurantsNewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/restaurants/$restaurantId/': {
-      id: '/restaurants/$restaurantId/'
-      path: '/restaurants/$restaurantId'
-      fullPath: '/restaurants/$restaurantId/'
-      preLoaderRoute: typeof RestaurantsRestaurantIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/restaurants/$restaurantId/menu': {
-      id: '/restaurants/$restaurantId/menu'
-      path: '/restaurants/$restaurantId/menu'
-      fullPath: '/restaurants/$restaurantId/menu'
-      preLoaderRoute: typeof RestaurantsRestaurantIdMenuRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/restaurants/$restaurantId/promotion': {
-      id: '/restaurants/$restaurantId/promotion'
-      path: '/restaurants/$restaurantId/promotion'
-      fullPath: '/restaurants/$restaurantId/promotion'
-      preLoaderRoute: typeof RestaurantsRestaurantIdPromotionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/restaurants/$restaurantId/settings': {
-      id: '/restaurants/$restaurantId/settings'
-      path: '/restaurants/$restaurantId/settings'
-      fullPath: '/restaurants/$restaurantId/settings'
-      preLoaderRoute: typeof RestaurantsRestaurantIdSettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/checkout": {
+      id: "/checkout";
+      path: "/checkout";
+      fullPath: "/checkout";
+      preLoaderRoute: typeof CheckoutRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/dashboard": {
+      id: "/dashboard";
+      path: "/dashboard";
+      fullPath: "/dashboard";
+      preLoaderRoute: typeof DashboardRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/login": {
+      id: "/login";
+      path: "/login";
+      fullPath: "/login";
+      preLoaderRoute: typeof LoginRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/profile": {
+      id: "/profile";
+      path: "/profile";
+      fullPath: "/profile";
+      preLoaderRoute: typeof ProfileRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/signup": {
+      id: "/signup";
+      path: "/signup";
+      fullPath: "/signup";
+      preLoaderRoute: typeof SignupRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/verify-email": {
+      id: "/verify-email";
+      path: "/verify-email";
+      fullPath: "/verify-email";
+      preLoaderRoute: typeof VerifyEmailRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/deliveries/$orderId": {
+      id: "/deliveries/$orderId";
+      path: "/deliveries/$orderId";
+      fullPath: "/deliveries/$orderId";
+      preLoaderRoute: typeof DeliveriesOrderIdRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/orders/": {
+      id: "/orders/";
+      path: "/orders";
+      fullPath: "/orders/";
+      preLoaderRoute: typeof OrdersIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/orders/$orderId": {
+      id: "/orders/$orderId";
+      path: "/orders/$orderId";
+      fullPath: "/orders/$orderId";
+      preLoaderRoute: typeof OrdersOrderIdRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/restaurants/": {
+      id: "/restaurants/";
+      path: "/restaurants";
+      fullPath: "/restaurants/";
+      preLoaderRoute: typeof RestaurantsIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/restaurants/new": {
+      id: "/restaurants/new";
+      path: "/restaurants/new";
+      fullPath: "/restaurants/new";
+      preLoaderRoute: typeof RestaurantsNewRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/restaurants/$restaurantId/": {
+      id: "/restaurants/$restaurantId/";
+      path: "/restaurants/$restaurantId";
+      fullPath: "/restaurants/$restaurantId/";
+      preLoaderRoute: typeof RestaurantsRestaurantIdIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/restaurants/$restaurantId/menu": {
+      id: "/restaurants/$restaurantId/menu";
+      path: "/restaurants/$restaurantId/menu";
+      fullPath: "/restaurants/$restaurantId/menu";
+      preLoaderRoute: typeof RestaurantsRestaurantIdMenuRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/restaurants/$restaurantId/promotion": {
+      id: "/restaurants/$restaurantId/promotion";
+      path: "/restaurants/$restaurantId/promotion";
+      fullPath: "/restaurants/$restaurantId/promotion";
+      preLoaderRoute: typeof RestaurantsRestaurantIdPromotionRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/restaurants/$restaurantId/settings": {
+      id: "/restaurants/$restaurantId/settings";
+      path: "/restaurants/$restaurantId/settings";
+      fullPath: "/restaurants/$restaurantId/settings";
+      preLoaderRoute: typeof RestaurantsRestaurantIdSettingsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
   }
 }
 
@@ -376,7 +372,7 @@ const rootRouteChildren: RootRouteChildren = {
   RestaurantsRestaurantIdPromotionRoute: RestaurantsRestaurantIdPromotionRoute,
   RestaurantsRestaurantIdSettingsRoute: RestaurantsRestaurantIdSettingsRoute,
   RestaurantsRestaurantIdIndexRoute: RestaurantsRestaurantIdIndexRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();

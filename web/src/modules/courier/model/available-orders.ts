@@ -2,19 +2,14 @@ import type { Order, OrderRealtimeEvent } from "../../orders";
 
 export type AvailableOrder = Order;
 
-export function isAvailableOrder(
-  order: Pick<Order, "status" | "courierId">,
-): boolean {
+export function isAvailableOrder(order: Pick<Order, "status" | "courierId">): boolean {
   return order.status === "WAITING" && order.courierId === null;
 }
 
-export function sortAvailableOrders(
-  orders: readonly AvailableOrder[],
-): readonly AvailableOrder[] {
+export function sortAvailableOrders(orders: readonly AvailableOrder[]): readonly AvailableOrder[] {
   return [...orders].sort(
     (left, right) =>
-      Date.parse(left.createdAt) - Date.parse(right.createdAt) ||
-      left.id.localeCompare(right.id),
+      Date.parse(left.createdAt) - Date.parse(right.createdAt) || left.id.localeCompare(right.id),
   );
 }
 
@@ -43,9 +38,6 @@ export function removeAvailableOrder(
   return orders.filter((order) => order.id !== id);
 }
 
-export function isCompleteAvailableEvent(
-  event: OrderRealtimeEvent,
-): event is Order {
+export function isCompleteAvailableEvent(event: OrderRealtimeEvent): event is Order {
   return event.restaurant !== undefined && event.items !== undefined;
 }
-

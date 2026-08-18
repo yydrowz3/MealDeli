@@ -31,7 +31,8 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
       const values = value as DishSelectionValues;
       if (!parsed) return;
       const firstInvalid = dish.options.find((option) => {
-        const count = values.selections.find((item) => item.optionId === option.id)?.choiceIds.length ?? 0;
+        const count =
+          values.selections.find((item) => item.optionId === option.id)?.choiceIds.length ?? 0;
         return count < option.minSelections || count > option.maxSelections;
       });
       optionRefs.current.get(firstInvalid?.id ?? dish.options[0]?.id ?? "")?.focus();
@@ -55,11 +56,7 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
         <Money minor={dish.priceMinor} />
       </header>
       {dish.options.map((option, optionIndex) => (
-        <form.Field
-          key={option.id}
-          mode="array"
-          name={`selections[${optionIndex}].choiceIds`}
-        >
+        <form.Field key={option.id} mode="array" name={`selections[${optionIndex}].choiceIds`}>
           {(field) => {
             const values = field.state.value;
             const atLimit = values.length >= option.maxSelections;
@@ -95,7 +92,11 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
                         type={single && option.minSelections > 0 ? "radio" : "checkbox"}
                       />
                       <span>{choice.name}</span>
-                      {choice.extraMinor > 0 ? <span>+<Money minor={choice.extraMinor} /></span> : null}
+                      {choice.extraMinor > 0 ? (
+                        <span>
+                          +<Money minor={choice.extraMinor} />
+                        </span>
+                      ) : null}
                     </label>
                   );
                 })}
@@ -135,7 +136,8 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
       <form.Subscribe selector={(state) => [state.values, state.isSubmitting] as const}>
         {([values, isSubmitting]) => (
           <Button loading={isSubmitting} size="lg" type="submit">
-            Add {values.quantity} to cart · <Money minor={getDishSelectionTotalMinor(dish, values)} />
+            Add {values.quantity} to cart ·{" "}
+            <Money minor={getDishSelectionTotalMinor(dish, values)} />
           </Button>
         )}
       </form.Subscribe>

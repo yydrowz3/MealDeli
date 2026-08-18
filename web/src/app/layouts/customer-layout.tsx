@@ -12,7 +12,12 @@ export function CustomerLayout(props: LayoutProps & { cartCount: number; onCartO
         <nav aria-label="Customer navigation" className="app-desktop-nav">
           <NavigationLinks items={props.navigation} />
         </nav>
-        <button aria-label={`Cart, ${props.cartCount} items`} className="app-cart-button" onClick={props.onCartOpen} type="button">
+        <button
+          aria-label={`Cart, ${props.cartCount} items`}
+          className="app-cart-button"
+          onClick={props.onCartOpen}
+          type="button"
+        >
           <ShoppingCartIcon aria-hidden="true" size={24} weight="bold" />
           {props.cartCount > 0 ? <span>{props.cartCount}</span> : null}
         </button>

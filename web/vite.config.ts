@@ -19,12 +19,7 @@ export default defineConfig({
     VitePWA({
       registerType: PWA_UPDATE_BEHAVIOR.registerType,
       injectRegister: null,
-      includeAssets: [
-        "favicon.svg",
-        "pwa/apple-touch-icon.png",
-        "brand/*.svg",
-        "brand/*.png",
-      ],
+      includeAssets: ["favicon.svg", "pwa/apple-touch-icon.png", "brand/*.svg", "brand/*.png"],
       workbox: {
         navigateFallback: "/index.html",
         runtimeCaching: [...PWA_RUNTIME_CACHING],

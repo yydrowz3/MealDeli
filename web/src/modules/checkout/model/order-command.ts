@@ -123,5 +123,10 @@ export function createCheckoutCoordinator(options: CheckoutCoordinatorOptions) {
     return task;
   };
 
-  return { submit, get isSubmitting() { return inFlight !== null; } };
+  return {
+    submit,
+    get isSubmitting() {
+      return inFlight !== null;
+    },
+  };
 }

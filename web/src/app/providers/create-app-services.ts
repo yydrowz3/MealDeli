@@ -27,8 +27,7 @@ export function createAppServices(
     config,
     auth: options.auth ?? anonymousAuthPort,
     clearPrivateState: options.clearPrivateState,
-    onSessionExpired:
-      options.onSessionExpired ?? (() => window.location.assign("/login")),
+    onSessionExpired: options.onSessionExpired ?? (() => window.location.assign("/login")),
   });
   return {
     apolloClient,

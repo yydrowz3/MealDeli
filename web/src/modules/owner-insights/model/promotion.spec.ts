@@ -25,7 +25,10 @@ describe("promotion model", () => {
 
   it("generates one transaction ID and reuses it after a timeout", async () => {
     const uuid = vi.fn(() => "00000000-0000-7000-8000-000000000009");
-    const create = vi.fn().mockRejectedValueOnce(new Error("timeout")).mockResolvedValueOnce({ kind: "created" });
+    const create = vi
+      .fn()
+      .mockRejectedValueOnce(new Error("timeout"))
+      .mockResolvedValueOnce({ kind: "created" });
     const repository: PromotionRepository = {
       create,
       refresh: vi.fn().mockResolvedValue(
@@ -36,7 +39,10 @@ describe("promotion model", () => {
     };
     repository.refresh = vi.fn().mockResolvedValue(
       buildPromotionData({
-        restaurant: { ...buildPromotionData().restaurant, promotedUntil: "2026-08-24T12:00:00.000Z" },
+        restaurant: {
+          ...buildPromotionData().restaurant,
+          promotedUntil: "2026-08-24T12:00:00.000Z",
+        },
       }),
     );
     const coordinator = createPromotionCoordinator({
@@ -56,7 +62,10 @@ describe("promotion model", () => {
       create: vi.fn().mockResolvedValue({ kind: "duplicate" }),
       refresh: vi.fn().mockResolvedValue(
         buildPromotionData({
-          restaurant: { ...buildPromotionData().restaurant, promotedUntil: "2026-08-24T12:00:00.000Z" },
+          restaurant: {
+            ...buildPromotionData().restaurant,
+            promotedUntil: "2026-08-24T12:00:00.000Z",
+          },
         }),
       ),
     };

@@ -37,7 +37,9 @@ const dish = buildDish({
 describe("dish selection schema", () => {
   it("enforces field-array ownership, min/max, and duplicate choices/options", () => {
     const schema = createDishSelectionSchema(dish);
-    expect(schema.safeParse({ quantity: 1, selections: [{ optionId: "size", choiceIds: [] }] }).success).toBe(false);
+    expect(
+      schema.safeParse({ quantity: 1, selections: [{ optionId: "size", choiceIds: [] }] }).success,
+    ).toBe(false);
     expect(
       schema.safeParse({
         quantity: 1,
@@ -98,7 +100,10 @@ describe("DishCustomizer", () => {
     expect(screen.getByRole("button", { name: /Add 2 to cart · \$34\.48/ })).toBeVisible();
     await user.click(screen.getByRole("button", { name: /Add 2 to cart/ }));
     await waitFor(() => expect(onAdd).toHaveBeenCalledTimes(1));
-    expect(onAdd.mock.calls[0][0]).toMatchObject({ quantity: 2, lineId: expect.stringContaining("fixed-uuid") });
+    expect(onAdd.mock.calls[0][0]).toMatchObject({
+      quantity: 2,
+      lineId: expect.stringContaining("fixed-uuid"),
+    });
   });
 
   it("focuses the first invalid option group", async () => {

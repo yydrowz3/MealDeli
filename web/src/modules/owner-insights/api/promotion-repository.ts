@@ -40,8 +40,7 @@ function adaptRestaurant(
   return {
     id: restaurant.id,
     name: restaurant.name,
-    promotedUntil:
-      typeof restaurant.promotedUntil === "string" ? restaurant.promotedUntil : null,
+    promotedUntil: typeof restaurant.promotedUntil === "string" ? restaurant.promotedUntil : null,
   };
 }
 

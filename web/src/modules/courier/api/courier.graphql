@@ -48,4 +48,3 @@ mutation CourierTakeOrder($input: TakeOrderInput!) {
     error
   }
 }
-

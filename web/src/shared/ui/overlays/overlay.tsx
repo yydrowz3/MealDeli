@@ -107,7 +107,9 @@ export function Overlay({
         aria-describedby={description ? descriptionId : undefined}
         aria-labelledby={titleId}
         aria-modal="true"
-        className={["ui-overlay", kind === "drawer" ? "ui-overlay--drawer" : ""].filter(Boolean).join(" ")}
+        className={["ui-overlay", kind === "drawer" ? "ui-overlay--drawer" : ""]
+          .filter(Boolean)
+          .join(" ")}
         onKeyDown={trapFocus}
         ref={panelRef}
         role="dialog"

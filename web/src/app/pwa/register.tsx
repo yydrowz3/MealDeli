@@ -8,9 +8,14 @@ export function PwaUpdatePrompt({ register }: { register?: PwaRegistrar } = {}) 
 
   return (
     <aside aria-live="polite" className="app-update-prompt">
-      <div><strong>A new version is ready.</strong><p>Reload when you’re ready to use it.</p></div>
+      <div>
+        <strong>A new version is ready.</strong>
+        <p>Reload when you’re ready to use it.</p>
+      </div>
       <Button onClick={() => void update.reload()}>Reload</Button>
-      <Button onClick={update.dismiss} variant="tertiary">Later</Button>
+      <Button onClick={update.dismiss} variant="tertiary">
+        Later
+      </Button>
     </aside>
   );
 }

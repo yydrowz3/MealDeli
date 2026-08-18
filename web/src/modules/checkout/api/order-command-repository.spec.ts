@@ -1,7 +1,10 @@
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import { describe, expect, it } from "vitest";
 
-import { createOrderCommandRepository, type CheckoutGraphqlTransport } from "./order-command-repository";
+import {
+  createOrderCommandRepository,
+  type CheckoutGraphqlTransport,
+} from "./order-command-repository";
 import type { CreateOrderPayload } from "../model/types";
 
 const payload: CreateOrderPayload = {
@@ -59,12 +62,20 @@ describe("createOrderCommandRepository", () => {
       ).create(payload),
     ).resolves.toEqual({ kind: "business-error", message: "Invalid dish" });
     await expect(
-      createOrderCommandRepository(new FakeTransport(undefined, new Error("offline"))).create(payload),
-    ).resolves.toEqual({ kind: "network-error", message: "We couldn’t place your order. Try again." });
+      createOrderCommandRepository(new FakeTransport(undefined, new Error("offline"))).create(
+        payload,
+      ),
+    ).resolves.toEqual({
+      kind: "network-error",
+      message: "We couldn’t place your order. Try again.",
+    });
     const timeout = new Error("request timed out");
     timeout.name = "TimeoutError";
     await expect(
       createOrderCommandRepository(new FakeTransport(undefined, timeout)).create(payload),
-    ).resolves.toEqual({ kind: "timeout", message: "We couldn’t confirm whether your order was placed." });
+    ).resolves.toEqual({
+      kind: "timeout",
+      message: "We couldn’t confirm whether your order was placed.",
+    });
   });
 });

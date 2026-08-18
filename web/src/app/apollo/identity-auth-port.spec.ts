@@ -28,7 +28,11 @@ function repository(): IdentityRepository {
 
 describe("Identity auth port", () => {
   it("uses only Identity public atoms and notifies token subscribers after refresh", async () => {
-    const store = createIdentityTestStore({ status: "authenticated", accessToken: "old-token", user });
+    const store = createIdentityTestStore({
+      status: "authenticated",
+      accessToken: "old-token",
+      user,
+    });
     const port = createIdentityAuthPort(store, repository);
     const tokenChanged = vi.fn();
     const unsubscribe = port.subscribeAccessToken?.(tokenChanged);

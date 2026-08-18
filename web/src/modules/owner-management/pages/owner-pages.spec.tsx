@@ -66,7 +66,9 @@ describe("Owner page integration", () => {
         restaurantId={buildOwnerRestaurant().id}
       />,
     );
-    expect(await screen.findByRole("heading", { name: buildOwnerRestaurant().name })).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { name: buildOwnerRestaurant().name }),
+    ).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Manage menu" }));
     expect(navigate).toHaveBeenCalledWith(expect.stringContaining("/menu"));
     expect(screen.getAllByText("$12.99")).toHaveLength(2);
@@ -88,7 +90,11 @@ describe("Owner page integration", () => {
     ownerRender(
       <OwnerRestaurantOverviewPage
         navigate={vi.fn()}
-        orderRepository={{ list: vi.fn(async () => { throw new Error("offline"); }) }}
+        orderRepository={{
+          list: vi.fn(async () => {
+            throw new Error("offline");
+          }),
+        }}
         repository={repository()}
         restaurantId="broken"
       />,
@@ -141,7 +147,11 @@ describe("Owner page integration", () => {
 
     ownerRender(
       <OwnerMenuPage
-        repository={repository({ get: vi.fn(async () => { throw new Error("offline"); }) })}
+        repository={repository({
+          get: vi.fn(async () => {
+            throw new Error("offline");
+          }),
+        })}
         restaurantId="broken"
       />,
     );

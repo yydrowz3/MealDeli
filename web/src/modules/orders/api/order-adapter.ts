@@ -105,12 +105,7 @@ export function adaptOrder(value: unknown, diagnostic?: OrdersDiagnostic): Order
         dishName: item.dishName,
         quantity: item.quantity,
         lineTotalMinor: item.lineTotalMinor,
-        selectedOptions: adaptSelectedOptions(
-          item.selectedOptions,
-          parsed.id,
-          item.id,
-          diagnostic,
-        ),
+        selectedOptions: adaptSelectedOptions(item.selectedOptions, parsed.id, item.id, diagnostic),
       }))
       .sort((left, right) => left.position - right.position || left.id.localeCompare(right.id)),
   };
@@ -122,9 +117,7 @@ export function adaptOrderRealtimeEvent(
 ): OrderRealtimeEvent {
   const order = adaptOrder(value, diagnostic);
   const record =
-    value && typeof value === "object"
-      ? (value as Readonly<Record<string, unknown>>)
-      : {};
+    value && typeof value === "object" ? (value as Readonly<Record<string, unknown>>) : {};
   return {
     ...order,
     restaurant: Object.hasOwn(record, "restaurant")

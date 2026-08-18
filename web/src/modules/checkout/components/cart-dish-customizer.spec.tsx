@@ -43,7 +43,9 @@ describe("CartDishCustomizer", () => {
       <Provider store={store}>
         <CartDishCustomizer
           dish={buildDish()}
-          onAdded={() => { added += 1; }}
+          onAdded={() => {
+            added += 1;
+          }}
           restaurant={{ id: "restaurant-seoul-kitchen", name: "Seoul Kitchen" }}
           uuid={() => "fixed"}
         />

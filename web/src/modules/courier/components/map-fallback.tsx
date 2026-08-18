@@ -18,8 +18,20 @@ export function MapFallback({ route, restaurantName }: MapFallbackProps) {
           style={{ strokeDasharray: `${progress} 1` }}
         />
       </svg>
-      <span aria-label={`Pickup: ${restaurantName}`} className="courier-map-marker courier-map-marker--pickup" role="img">R</span>
-      <span aria-label="Demo delivery destination" className="courier-map-marker courier-map-marker--destination" role="img">⌂</span>
+      <span
+        aria-label={`Pickup: ${restaurantName}`}
+        className="courier-map-marker courier-map-marker--pickup"
+        role="img"
+      >
+        R
+      </span>
+      <span
+        aria-label="Demo delivery destination"
+        className="courier-map-marker courier-map-marker--destination"
+        role="img"
+      >
+        ⌂
+      </span>
       <span
         aria-label="Simulated courier location"
         className="courier-map-marker courier-map-marker--courier"
@@ -31,4 +43,3 @@ export function MapFallback({ route, restaurantName }: MapFallbackProps) {
     </div>
   );
 }
-

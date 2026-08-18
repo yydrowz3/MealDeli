@@ -1,10 +1,4 @@
-import {
-  Bicycle,
-  CheckCircle,
-  CookingPot,
-  Package,
-  Receipt,
-} from "@phosphor-icons/react";
+import { Bicycle, CheckCircle, CookingPot, Package, Receipt } from "@phosphor-icons/react";
 import type { IconProps } from "@phosphor-icons/react";
 import type { ComponentType } from "react";
 

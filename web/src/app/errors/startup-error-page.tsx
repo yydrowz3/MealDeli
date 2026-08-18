@@ -22,7 +22,9 @@ export function ChunkLoadErrorPage() {
     <main className="app-state" role="alert">
       <h1>We couldn’t load this part of MealDeli.</h1>
       <p>Reload once to get the latest version. If this continues, contact support.</p>
-      <button className="app-link-button" onClick={() => window.location.reload()} type="button">Reload</button>
+      <button className="app-link-button" onClick={() => window.location.reload()} type="button">
+        Reload
+      </button>
     </main>
   );
 }

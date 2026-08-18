@@ -50,9 +50,7 @@ export function PromotionPage({
     void repository
       .refresh(restaurantId)
       .then((data) => setPage(data ? { kind: "ready", data } : { kind: "not-found" }))
-      .catch(() =>
-        setPage({ kind: "error", message: "We couldn’t load this promotion." }),
-      );
+      .catch(() => setPage({ kind: "error", message: "We couldn’t load this promotion." }));
   };
 
   useEffect(load, [repository, restaurantId]);
@@ -89,7 +87,11 @@ export function PromotionPage({
         <p className="owner-insights-eyebrow">Demo promotion</p>
         <h1>Promote your restaurant</h1>
       </header>
-      <PromotionCard active={active} onPromote={() => setConfirming(true)} restaurant={data.restaurant} />
+      <PromotionCard
+        active={active}
+        onPromote={() => setConfirming(true)}
+        restaurant={data.restaurant}
+      />
 
       <section aria-labelledby="promotion-history-title" className="owner-insights-history">
         <h2 id="promotion-history-title">Promotion history</h2>
@@ -101,9 +103,13 @@ export function PromotionPage({
               <li key={payment.id}>
                 <div>
                   <strong>{payment.restaurantName}</strong>
-                  <span><DateTime value={payment.createdAt} /></span>
+                  <span>
+                    <DateTime value={payment.createdAt} />
+                  </span>
                 </div>
-                <code title={payment.transactionId}>{truncateTransactionId(payment.transactionId)}</code>
+                <code title={payment.transactionId}>
+                  {truncateTransactionId(payment.transactionId)}
+                </code>
                 <span>{DEMO_PROMOTION.durationDays} days</span>
                 <span>Demo promotion</span>
               </li>
@@ -131,9 +137,18 @@ export function PromotionPage({
         title={`Promote ${data.restaurant.name}?`}
       >
         <dl className="owner-insights-confirmation">
-          <div><dt>Duration</dt><dd>{DEMO_PROMOTION.durationDays} days</dd></div>
-          <div><dt>Price</dt><dd>$9.99</dd></div>
-          <div><dt>Payment</dt><dd>Demo payment</dd></div>
+          <div>
+            <dt>Duration</dt>
+            <dd>{DEMO_PROMOTION.durationDays} days</dd>
+          </div>
+          <div>
+            <dt>Price</dt>
+            <dd>$9.99</dd>
+          </div>
+          <div>
+            <dt>Payment</dt>
+            <dd>Demo payment</dd>
+          </div>
         </dl>
         <p>No real charge will be made.</p>
         {submitError ? <p role="alert">{submitError}</p> : null}

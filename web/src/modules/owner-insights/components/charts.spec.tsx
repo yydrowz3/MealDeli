@@ -21,13 +21,20 @@ describe("owner insight charts", () => {
     expect(screen.getByText("Garden bowl was the top dish with 4 items.")).toBeVisible();
     expect(screen.getByRole("img", { name: "Daily sales chart" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Top dishes chart" })).toBeInTheDocument();
-    expect(screen.getByText("Sales · Last 7 days").closest("figure")?.parentElement).toHaveClass("owner-insights-charts");
+    expect(screen.getByText("Sales · Last 7 days").closest("figure")?.parentElement).toHaveClass(
+      "owner-insights-charts",
+    );
   });
 
   it("shows explicit empty copy instead of misleading zero charts", () => {
     render(
       <>
-        <SalesChart dailySales={Array.from({ length: 7 }, (_, index) => ({ date: `2026-08-${11 + index}`, salesMinor: 0 }))} />
+        <SalesChart
+          dailySales={Array.from({ length: 7 }, (_, index) => ({
+            date: `2026-08-${11 + index}`,
+            salesMinor: 0,
+          }))}
+        />
         <TopDishesChart dishes={[]} />
       </>,
     );

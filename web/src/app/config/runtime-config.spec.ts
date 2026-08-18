@@ -27,6 +27,8 @@ describe("parseRuntimeConfig", () => {
     ["VITE_APP_ORIGIN", "https://mealdeli.test/application"],
     ["VITE_APP_ORIGIN", "not-a-url"],
   ])("rejects an invalid %s", (key, value) => {
-    expect(() => parseRuntimeConfig({ ...validEnvironment, [key]: value })).toThrow(RuntimeConfigError);
+    expect(() => parseRuntimeConfig({ ...validEnvironment, [key]: value })).toThrow(
+      RuntimeConfigError,
+    );
   });
 });

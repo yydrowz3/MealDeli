@@ -61,20 +61,19 @@ describe("CourierDashboardPage", () => {
     const delivered = buildOrder({ id: "delivered", status: "DELIVERED", courierId: "courier-1" });
     const repository = createRepository({
       availableOrders: vi.fn().mockResolvedValue([waiting]),
-      listOrders: vi.fn().mockImplementation((status) =>
-        Promise.resolve(status === "PICKED" ? [active] : [delivered]),
-      ),
+      listOrders: vi
+        .fn()
+        .mockImplementation((status) =>
+          Promise.resolve(status === "PICKED" ? [active] : [delivered]),
+        ),
     });
-    render(
-      <CourierDashboardPage
-        onNavigateDelivery={vi.fn()}
-        repository={repository}
-      />,
-    );
+    render(<CourierDashboardPage onNavigateDelivery={vi.fn()} repository={repository} />);
     expect(await screen.findAllByRole("heading", { name: "Jade Kitchen" })).toHaveLength(2);
     expect(screen.getByText("Active delivery")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Accept order" })).toBeDisabled();
-    expect(screen.getByText("Complete your active delivery before accepting another order.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Complete your active delivery before accepting another order."),
+    ).toBeInTheDocument();
     expect(repository.availableOrders).toHaveBeenCalledOnce();
     expect(repository.listOrders).toHaveBeenCalledWith("PICKED");
     expect(repository.listOrders).toHaveBeenCalledWith("DELIVERED");
@@ -97,10 +96,14 @@ describe("CourierDashboardPage", () => {
     );
     const acceptButtons = await screen.findAllByRole("button", { name: "Accept order" });
     fireEvent.click(acceptButtons[0]);
-    await waitFor(() => expect(screen.getAllByRole("button", { name: "Accept order" })).toHaveLength(1));
+    await waitFor(() =>
+      expect(screen.getAllByRole("button", { name: "Accept order" })).toHaveLength(1),
+    );
     expect(repository.takeOrder).toHaveBeenCalledTimes(1);
     expect(notifier.info).toHaveBeenCalledWith("This order was accepted by another courier.");
-    await waitFor(() => expect(screen.getByRole("heading", { name: "Jade Kitchen" })).toHaveFocus());
+    await waitFor(() =>
+      expect(screen.getByRole("heading", { name: "Jade Kitchen" })).toHaveFocus(),
+    );
   });
 
   it("navigates after a successful accept and performs one mutation", async () => {
@@ -122,15 +125,23 @@ describe("CourierDashboardPage", () => {
     let accepted = false;
     const repository = createRepository({
       availableOrders: vi.fn().mockResolvedValue([waitingOrder("other")]),
-      listOrders: vi.fn().mockImplementation((status) =>
-        Promise.resolve(status === "PICKED" && accepted ? [active] : []),
-      ),
+      listOrders: vi
+        .fn()
+        .mockImplementation((status) =>
+          Promise.resolve(status === "PICKED" && accepted ? [active] : []),
+        ),
       takeOrder: vi.fn().mockImplementation(async () => {
         accepted = true;
         return { kind: "already-active" as const };
       }),
     });
-    render(<CourierDashboardPage notifier={notifier} onNavigateDelivery={vi.fn()} repository={repository} />);
+    render(
+      <CourierDashboardPage
+        notifier={notifier}
+        onNavigateDelivery={vi.fn()}
+        repository={repository}
+      />,
+    );
     fireEvent.click(await screen.findByRole("button", { name: "Accept order" }));
     expect(await screen.findByText("Active delivery")).toBeInTheDocument();
     expect(notifier.info).toHaveBeenCalledWith("You already have an active delivery.");
@@ -142,7 +153,13 @@ describe("CourierDashboardPage", () => {
       availableOrders: vi.fn().mockResolvedValue([waitingOrder("retry")]),
       takeOrder: vi.fn().mockResolvedValue({ kind: "error" }),
     });
-    render(<CourierDashboardPage notifier={notifier} onNavigateDelivery={vi.fn()} repository={repository} />);
+    render(
+      <CourierDashboardPage
+        notifier={notifier}
+        onNavigateDelivery={vi.fn()}
+        repository={repository}
+      />,
+    );
     fireEvent.click(await screen.findByRole("button", { name: "Accept order" }));
     await waitFor(() =>
       expect(notifier.error).toHaveBeenCalledWith("We couldn’t accept this order. Try again."),
@@ -160,12 +177,12 @@ describe("CourierDashboardPage", () => {
       return { kind: "timeout" as const };
     });
     const repository = createRepository({
-      availableOrders: vi.fn()
-        .mockResolvedValueOnce([waiting])
-        .mockResolvedValueOnce([]),
-      listOrders: vi.fn().mockImplementation((status) =>
-        Promise.resolve(status === "PICKED" && accepted ? [claimed] : []),
-      ),
+      availableOrders: vi.fn().mockResolvedValueOnce([waiting]).mockResolvedValueOnce([]),
+      listOrders: vi
+        .fn()
+        .mockImplementation((status) =>
+          Promise.resolve(status === "PICKED" && accepted ? [claimed] : []),
+        ),
       takeOrder,
     });
     render(<CourierDashboardPage onNavigateDelivery={navigate} repository={repository} />);
@@ -184,7 +201,13 @@ describe("DeliveryPage", () => {
     });
     const view = render(
       <Provider store={createCourierRouteTestStore()}>
-        <DeliveryPage courierId="courier-1" onBackDashboard={vi.fn()} orderId={order.id} repository={repository} renderMap={() => <div>Map</div>} />
+        <DeliveryPage
+          courierId="courier-1"
+          onBackDashboard={vi.fn()}
+          orderId={order.id}
+          repository={repository}
+          renderMap={() => <div>Map</div>}
+        />
       </Provider>,
     );
     await screen.findByRole("button", { name: "Complete delivery" });
@@ -222,7 +245,9 @@ describe("DeliveryPage", () => {
     fireEvent.click(screen.getByRole("button", { name: "Advance demo route" }));
     expect(screen.getByText("Progress 1")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Fail tiles" }));
-    expect(screen.getByText("Map tiles are unavailable. The demo route is still active.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Map tiles are unavailable. The demo route is still active."),
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Complete delivery" })).toBeEnabled();
     fireEvent.click(screen.getByRole("button", { name: "Skip map" }));
     expect(screen.getByRole("heading", { name: "Jade Kitchen" }).closest("section")).toHaveFocus();
@@ -239,7 +264,13 @@ describe("DeliveryPage", () => {
     });
     render(
       <Provider store={createCourierRouteTestStore()}>
-        <DeliveryPage courierId="courier-1" onBackDashboard={vi.fn()} orderId={order.id} repository={repository} renderMap={() => <div>Map</div>} />
+        <DeliveryPage
+          courierId="courier-1"
+          onBackDashboard={vi.fn()}
+          orderId={order.id}
+          repository={repository}
+          renderMap={() => <div>Map</div>}
+        />
       </Provider>,
     );
     fireEvent.click(await screen.findByRole("button", { name: "Complete delivery" }));
@@ -259,7 +290,14 @@ describe("DeliveryPage", () => {
     });
     render(
       <Provider store={createCourierRouteTestStore()}>
-        <DeliveryPage courierId="courier-1" onAssignmentLost={lost} onBackDashboard={back} orderId={order.id} repository={repository} renderMap={() => <div>Map</div>} />
+        <DeliveryPage
+          courierId="courier-1"
+          onAssignmentLost={lost}
+          onBackDashboard={back}
+          orderId={order.id}
+          repository={repository}
+          renderMap={() => <div>Map</div>}
+        />
       </Provider>,
     );
     fireEvent.click(await screen.findByRole("button", { name: "Complete delivery" }));
@@ -272,14 +310,21 @@ describe("DeliveryPage", () => {
     const order = activeOrder();
     const delivered = { ...order, status: "DELIVERED" as const };
     const repository = createRepository({
-      getOrder: vi.fn()
+      getOrder: vi
+        .fn()
         .mockResolvedValueOnce({ kind: "found", order })
         .mockResolvedValueOnce({ kind: "found", order: delivered }),
       completeOrder: vi.fn().mockResolvedValue({ kind: "timeout" }),
     });
     render(
       <Provider store={createCourierRouteTestStore()}>
-        <DeliveryPage courierId="courier-1" onBackDashboard={vi.fn()} orderId={order.id} repository={repository} renderMap={() => <div>Map</div>} />
+        <DeliveryPage
+          courierId="courier-1"
+          onBackDashboard={vi.fn()}
+          orderId={order.id}
+          repository={repository}
+          renderMap={() => <div>Map</div>}
+        />
       </Provider>,
     );
     fireEvent.click(await screen.findByRole("button", { name: "Complete delivery" }));

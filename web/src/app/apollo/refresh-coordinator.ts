@@ -15,9 +15,11 @@ export function createRefreshCoordinator(options: {
           await options.onRefreshFailed();
           throw error;
         });
-        void inFlight.finally(() => {
-          inFlight = null;
-        }).catch(() => undefined);
+        void inFlight
+          .finally(() => {
+            inFlight = null;
+          })
+          .catch(() => undefined);
       }
       return inFlight;
     },

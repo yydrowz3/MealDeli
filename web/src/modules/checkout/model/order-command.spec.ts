@@ -27,7 +27,11 @@ describe("order command", () => {
   it("deduplicates concurrent submits and clears after success", async () => {
     const store = createCartTestStore({ initialState: buildCart() });
     let resolveCreate!: (value: { kind: "success"; orderId: string }) => void;
-    const create = vi.fn().mockReturnValue(new Promise((resolve) => { resolveCreate = resolve; }));
+    const create = vi.fn().mockReturnValue(
+      new Promise((resolve) => {
+        resolveCreate = resolve;
+      }),
+    );
     const onOrderCreated = vi.fn();
     const coordinator = createCheckoutCoordinator({
       store,
@@ -40,7 +44,11 @@ describe("order command", () => {
     expect(first).toBe(second);
     expect(create).toHaveBeenCalledTimes(1);
     resolveCreate({ kind: "success", orderId: "order-1" });
-    await expect(first).resolves.toEqual({ kind: "success", orderId: "order-1", reconciled: false });
+    await expect(first).resolves.toEqual({
+      kind: "success",
+      orderId: "order-1",
+      reconciled: false,
+    });
     expect(store.get(cartAtom).lines).toHaveLength(0);
     expect(onOrderCreated).toHaveBeenCalledWith("order-1");
   });
@@ -68,7 +76,10 @@ describe("order command", () => {
         repository: { create: vi.fn().mockResolvedValue(result) },
         reconcile: vi.fn(),
       });
-      await expect(coordinator.submit()).resolves.toEqual({ kind: "error", message: result.message });
+      await expect(coordinator.submit()).resolves.toEqual({
+        kind: "error",
+        message: result.message,
+      });
       expect(store.get(cartAtom)).toEqual(cart);
     }
   });
@@ -84,7 +95,10 @@ describe("order command", () => {
       reconcile,
       now: () => 123,
     });
-    await expect(coordinator.submit()).resolves.toEqual({ kind: "timeout-unresolved", message: "Timed out" });
+    await expect(coordinator.submit()).resolves.toEqual({
+      kind: "timeout-unresolved",
+      message: "Timed out",
+    });
     expect(create).toHaveBeenCalledTimes(1);
     expect(reconcile).toHaveBeenCalledWith(mapCartToCreateOrderPayload(cart), 123);
     expect(store.get(cartAtom)).toEqual(cart);
@@ -97,7 +111,11 @@ describe("order command", () => {
       repository: { create: vi.fn().mockResolvedValue({ kind: "timeout", message: "Timed out" }) },
       reconcile: vi.fn().mockResolvedValue("order-found"),
     });
-    await expect(coordinator.submit()).resolves.toEqual({ kind: "success", orderId: "order-found", reconciled: true });
+    await expect(coordinator.submit()).resolves.toEqual({
+      kind: "success",
+      orderId: "order-found",
+      reconciled: true,
+    });
     expect(store.get(cartAtom).lines).toHaveLength(0);
   });
 
@@ -107,7 +125,10 @@ describe("order command", () => {
       store,
       repository: {
         create: vi.fn().mockImplementation(async () => {
-          store.set(cartStorageAtom, buildCart({ lines: [{ ...buildCart().lines[0], quantity: 2 }] }));
+          store.set(
+            cartStorageAtom,
+            buildCart({ lines: [{ ...buildCart().lines[0], quantity: 2 }] }),
+          );
           return { kind: "success" as const, orderId: "order-1" };
         }),
       },
@@ -125,7 +146,10 @@ describe("order command", () => {
       repository: { create: vi.fn().mockResolvedValue({ kind: "timeout", message: "Timed out" }) },
       reconcile: vi.fn().mockRejectedValue(new Error("query failed")),
     });
-    await expect(coordinator.submit()).resolves.toEqual({ kind: "timeout-unresolved", message: "Timed out" });
+    await expect(coordinator.submit()).resolves.toEqual({
+      kind: "timeout-unresolved",
+      message: "Timed out",
+    });
     expect(store.get(cartAtom)).toEqual(cart);
   });
 

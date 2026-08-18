@@ -22,7 +22,11 @@ const user: SessionUser = {
 
 function repository(overrides: Partial<IdentityRepository> = {}): IdentityRepository {
   return {
-    refreshAccessToken: vi.fn(async () => ({ ok: false as const, code: "UNAUTHORIZED" as const, message: "No session" })),
+    refreshAccessToken: vi.fn(async () => ({
+      ok: false as const,
+      code: "UNAUTHORIZED" as const,
+      message: "No session",
+    })),
     me: vi.fn(async () => ({ ok: true as const, value: user })),
     signIn: vi.fn(async () => ({ ok: true as const, value: "token" })),
     signUp: vi.fn(async () => ({ ok: true as const, value: undefined })),
@@ -80,13 +84,17 @@ describe("Identity page shells", () => {
         <LoginPage navigate={vi.fn()} repository={repository()} store={unverified} />
       </Provider>,
     );
-    expect(screen.getByRole("heading", { name: "Verify your email to continue." })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Verify your email to continue." }),
+    ).toBeInTheDocument();
     expect(screen.getByText(user.email)).toBeInTheDocument();
   });
 
   it("renders role selection and role-specific Signup headings", () => {
     const first = render(<SignupPage navigate={vi.fn()} repository={repository()} role={null} />);
-    expect(screen.getByRole("heading", { name: "Choose how you want to use MealDeli" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Choose how you want to use MealDeli" }),
+    ).toBeInTheDocument();
     first.unmount();
     render(<SignupPage navigate={vi.fn()} repository={repository()} role="OWNER" />);
     expect(screen.getByRole("heading", { name: "Create your owner account" })).toBeInTheDocument();

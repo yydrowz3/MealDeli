@@ -126,7 +126,9 @@ export function OrderDetailRouteContent({ orderId }: Readonly<{ orderId: string 
     setState({ kind: "loading" });
     try {
       const result = await runtime.orderRepository.get(orderId);
-      setState(result.kind === "found" ? { kind: "ready", order: result.order } : { kind: "not-found" });
+      setState(
+        result.kind === "found" ? { kind: "ready", order: result.order } : { kind: "not-found" },
+      );
     } catch (error) {
       setState({ kind: "error", message: error instanceof Error ? error.message : undefined });
     }

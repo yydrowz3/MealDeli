@@ -8,5 +8,9 @@ export type StatusBadgeProps = {
 
 export function StatusBadge({ status }: StatusBadgeProps) {
   const { label, tone, Icon } = getOrderStatusPresentation(status);
-  return <Badge icon={<Icon aria-hidden="true" size={18} />} tone={tone}>{label}</Badge>;
+  return (
+    <Badge icon={<Icon aria-hidden="true" size={18} />} tone={tone}>
+      {label}
+    </Badge>
+  );
 }

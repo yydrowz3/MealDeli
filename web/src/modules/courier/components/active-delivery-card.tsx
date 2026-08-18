@@ -16,11 +16,20 @@ export function ActiveDeliveryCard({ order, onContinue }: ActiveDeliveryCardProp
       </div>
       <StatusBadge status="PICKED" />
       <dl className="courier-order-card__facts">
-        <div><dt>Order total</dt><dd><Money minor={order.totalMinor} /></dd></div>
-        <div><dt>Accepted</dt><dd><DateTime value={order.updatedAt} /></dd></div>
+        <div>
+          <dt>Order total</dt>
+          <dd>
+            <Money minor={order.totalMinor} />
+          </dd>
+        </div>
+        <div>
+          <dt>Accepted</dt>
+          <dd>
+            <DateTime value={order.updatedAt} />
+          </dd>
+        </div>
       </dl>
       <Button onClick={() => onContinue(order)}>Continue delivery</Button>
     </Card>
   );
 }
-

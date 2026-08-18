@@ -69,4 +69,3 @@ export function createDemoRoute(orderId: string, progressIndex = 0): DemoRoute {
     progressIndex: clampRouteProgress(progressIndex, path.length),
   };
 }
-

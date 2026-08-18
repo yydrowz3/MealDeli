@@ -31,13 +31,23 @@ export function OrderTable({ orders, onView, renderAction }: OrderTableProps) {
             <tr key={order.id}>
               <td>#{order.id.slice(0, 8)}</td>
               <td>{order.restaurant?.name ?? "Restaurant unavailable"}</td>
-              <td><DateTime value={order.createdAt} /></td>
-              <td><OrderStatusBadge status={order.status} /></td>
+              <td>
+                <DateTime value={order.createdAt} />
+              </td>
+              <td>
+                <OrderStatusBadge status={order.status} />
+              </td>
               <td>{order.items.reduce((total, item) => total + item.quantity, 0)}</td>
-              <td><Money minor={order.totalMinor} /></td>
+              <td>
+                <Money minor={order.totalMinor} />
+              </td>
               <td>
                 {renderAction?.(order) ??
-                  (onView ? <Button onClick={() => onView(order)} size="sm" variant="secondary">View order</Button> : null)}
+                  (onView ? (
+                    <Button onClick={() => onView(order)} size="sm" variant="secondary">
+                      View order
+                    </Button>
+                  ) : null)}
               </td>
             </tr>
           ))}

@@ -40,9 +40,24 @@ const RootLayout = () => {
       <CustomerLayout
         cartCount={cartCount}
         navigation={[
-          { label: "Restaurants", href: "/restaurants", icon: StorefrontIcon, current: current(pathname, "/restaurants") },
-          { label: "Orders", href: "/orders", icon: ReceiptIcon, current: current(pathname, "/orders") },
-          { label: "Profile", href: "/profile", icon: UserCircleIcon, current: current(pathname, "/profile") },
+          {
+            label: "Restaurants",
+            href: "/restaurants",
+            icon: StorefrontIcon,
+            current: current(pathname, "/restaurants"),
+          },
+          {
+            label: "Orders",
+            href: "/orders",
+            icon: ReceiptIcon,
+            current: current(pathname, "/orders"),
+          },
+          {
+            label: "Profile",
+            href: "/profile",
+            icon: UserCircleIcon,
+            current: current(pathname, "/profile"),
+          },
         ]}
         onCartOpen={() => setCartOpen(true)}
       >
@@ -62,7 +77,11 @@ const RootLayout = () => {
       <OwnerLayout
         navigation={[
           { label: "Dashboard", href: "/dashboard", current: current(pathname, "/dashboard") },
-          { label: "Restaurants", href: "/restaurants", current: current(pathname, "/restaurants") },
+          {
+            label: "Restaurants",
+            href: "/restaurants",
+            current: current(pathname, "/restaurants"),
+          },
           { label: "Orders", href: "/orders", current: current(pathname, "/orders") },
           { label: "Profile", href: "/profile", current: current(pathname, "/profile") },
         ]}

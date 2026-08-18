@@ -41,7 +41,13 @@ export function OrderDetailPage({
   onBack,
 }: OrderDetailPageProps) {
   if (state.kind === "loading") {
-    return <main aria-label="Loading order" className="order-detail"><Skeleton /><Skeleton /><Skeleton /></main>;
+    return (
+      <main aria-label="Loading order" className="order-detail">
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </main>
+    );
   }
   if (state.kind === "error") {
     return (
@@ -94,7 +100,9 @@ export function OrderDetailPage({
       </header>
 
       <section aria-labelledby="restaurant-summary-heading" className="order-detail__section">
-        <h2 id="restaurant-summary-heading">{order.restaurant?.name ?? "Restaurant unavailable"}</h2>
+        <h2 id="restaurant-summary-heading">
+          {order.restaurant?.name ?? "Restaurant unavailable"}
+        </h2>
         {order.restaurant ? <p>{order.restaurant.address}</p> : null}
       </section>
 
@@ -108,9 +116,16 @@ export function OrderDetailPage({
         <ul className="order-items">
           {order.items.map((item) => (
             <li key={item.id}>
-              <div><strong>{item.quantity} × {item.dishName}</strong><Money minor={item.lineTotalMinor} /></div>
+              <div>
+                <strong>
+                  {item.quantity} × {item.dishName}
+                </strong>
+                <Money minor={item.lineTotalMinor} />
+              </div>
               {item.selectedOptions.map((option) => (
-                <p key={option.optionId}>{option.name}: {option.choices.map((choice) => choice.name).join(", ")}</p>
+                <p key={option.optionId}>
+                  {option.name}: {option.choices.map((choice) => choice.name).join(", ")}
+                </p>
               ))}
             </li>
           ))}
@@ -120,9 +135,24 @@ export function OrderDetailPage({
       <section aria-labelledby="summary-heading" className="order-detail__section order-summary">
         <h2 id="summary-heading">Order summary</h2>
         <dl>
-          <div><dt>Subtotal</dt><dd><Money minor={order.totalMinor} /></dd></div>
-          <div><dt>Delivery</dt><dd><Money minor={0} /></dd></div>
-          <div><dt>Total</dt><dd><Money minor={order.totalMinor} /></dd></div>
+          <div>
+            <dt>Subtotal</dt>
+            <dd>
+              <Money minor={order.totalMinor} />
+            </dd>
+          </div>
+          <div>
+            <dt>Delivery</dt>
+            <dd>
+              <Money minor={0} />
+            </dd>
+          </div>
+          <div>
+            <dt>Total</dt>
+            <dd>
+              <Money minor={order.totalMinor} />
+            </dd>
+          </div>
         </dl>
         {role === "CUSTOMER" ? <p>Payment completed in demo mode.</p> : null}
       </section>

@@ -26,25 +26,36 @@ describe("validated cart storage", () => {
   it.each([
     ["damaged JSON", "{"],
     ["unknown version", JSON.stringify({ ...buildCart(), version: 2 })],
-    ["unsafe cents", JSON.stringify(buildCart({ lines: [buildCartLine({ basePriceMinor: Number.MAX_VALUE })] }))],
+    [
+      "unsafe cents",
+      JSON.stringify(buildCart({ lines: [buildCartLine({ basePriceMinor: Number.MAX_VALUE })] })),
+    ],
     [
       "unsafe derived total",
       JSON.stringify(
         buildCart({
-          lines: [buildCartLine({ basePriceMinor: Number.MAX_SAFE_INTEGER, options: [], quantity: 2 })],
+          lines: [
+            buildCartLine({ basePriceMinor: Number.MAX_SAFE_INTEGER, options: [], quantity: 2 }),
+          ],
         }),
       ),
     ],
     ["invalid quantity", JSON.stringify(buildCart({ lines: [buildCartLine({ quantity: 0 })] }))],
   ])("clears %s", (_label, raw) => {
     const storage = createMemoryStringStorage({ [CART_STORAGE_KEY]: raw });
-    expect(createValidatedCartStorage(storage).getItem(CART_STORAGE_KEY, EMPTY_CART)).toEqual(EMPTY_CART);
+    expect(createValidatedCartStorage(storage).getItem(CART_STORAGE_KEY, EMPTY_CART)).toEqual(
+      EMPTY_CART,
+    );
     expect(storage.getItem(CART_STORAGE_KEY)).toBeNull();
   });
 
   it("rejects inconsistent and duplicate snapshots", () => {
-    expect(cartStateSchema.safeParse({ version: 1, restaurant: null, lines: [buildCartLine()] }).success).toBe(false);
-    expect(cartStateSchema.safeParse(buildCart({ lines: [buildCartLine(), buildCartLine()] })).success).toBe(false);
+    expect(
+      cartStateSchema.safeParse({ version: 1, restaurant: null, lines: [buildCartLine()] }).success,
+    ).toBe(false);
+    expect(
+      cartStateSchema.safeParse(buildCart({ lines: [buildCartLine(), buildCartLine()] })).success,
+    ).toBe(false);
     expect(
       cartStateSchema.safeParse(
         buildCart({
@@ -86,7 +97,9 @@ describe("cart atoms", () => {
   it("adds, merges deterministic selections, changes quantity, removes, and clears", () => {
     const store = createCartTestStore();
     const restaurant = { id: "restaurant-seoul-kitchen", name: "Seoul Kitchen" };
-    expect(store.set(addCartLineAtom, { restaurant, line: buildCartLine() })).toEqual({ kind: "ADDED" });
+    expect(store.set(addCartLineAtom, { restaurant, line: buildCartLine() })).toEqual({
+      kind: "ADDED",
+    });
     expect(
       store.set(addCartLineAtom, {
         restaurant,
@@ -107,7 +120,9 @@ describe("cart atoms", () => {
     expect(store.get(cartTotalMinorAtom)).toBe((1_299 + 150) * 3);
     store.set(changeCartQuantityAtom, { lineId: "line-bibimbap", quantity: 99 });
     expect(store.get(cartCountAtom)).toBe(99);
-    expect(store.set(addCartLineAtom, { restaurant, line: buildCartLine() })).toEqual({ kind: "QUANTITY_LIMIT" });
+    expect(store.set(addCartLineAtom, { restaurant, line: buildCartLine() })).toEqual({
+      kind: "QUANTITY_LIMIT",
+    });
     store.set(removeCartLineAtom, "line-bibimbap");
     expect(store.get(cartAtom)).toEqual(EMPTY_CART);
     store.set(addCartLineAtom, { restaurant, line: buildCartLine() });
@@ -128,7 +143,11 @@ describe("cart atoms", () => {
     });
     expect(store.get(cartAtom)).toEqual(original);
     store.set(replaceRestaurantCartAtom, next);
-    expect(store.get(cartAtom)).toEqual({ version: 1, restaurant: next.restaurant, lines: [next.line] });
+    expect(store.get(cartAtom)).toEqual({
+      version: 1,
+      restaurant: next.restaurant,
+      lines: [next.line],
+    });
   });
 
   it("isolates stores", () => {

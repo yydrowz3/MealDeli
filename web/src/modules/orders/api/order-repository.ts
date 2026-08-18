@@ -1,20 +1,12 @@
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 
-import {
-  adaptOrderDetailFragment,
-  adaptOrderSummaryFragments,
-} from "./order-adapter";
+import { adaptOrderDetailFragment, adaptOrderSummaryFragments } from "./order-adapter";
 import {
   OrdersEditOrderDocument,
   OrdersGetOrderDocument,
   OrdersGetOrdersDocument,
 } from "../../../gql/graphql";
-import type {
-  Order,
-  OrderDetailResult,
-  OrderStatus,
-  OrdersDiagnostic,
-} from "../model/types";
+import type { Order, OrderDetailResult, OrderStatus, OrdersDiagnostic } from "../model/types";
 
 export interface OrderGraphqlTransport {
   execute<TResult, TVariables>(

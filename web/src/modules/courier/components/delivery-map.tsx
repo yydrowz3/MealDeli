@@ -6,9 +6,18 @@ import { MapFrame } from "../../../shared/ui";
 import type { DemoRoute } from "../model/demo-route";
 import { MapFallback } from "./map-fallback";
 
-const pickupIcon = divIcon({ className: "courier-leaflet-marker courier-leaflet-marker--pickup", html: "R" });
-const destinationIcon = divIcon({ className: "courier-leaflet-marker courier-leaflet-marker--destination", html: "⌂" });
-const courierIcon = divIcon({ className: "courier-leaflet-marker courier-leaflet-marker--courier", html: "➤" });
+const pickupIcon = divIcon({
+  className: "courier-leaflet-marker courier-leaflet-marker--pickup",
+  html: "R",
+});
+const destinationIcon = divIcon({
+  className: "courier-leaflet-marker courier-leaflet-marker--destination",
+  html: "⌂",
+});
+const courierIcon = divIcon({
+  className: "courier-leaflet-marker courier-leaflet-marker--courier",
+  html: "➤",
+});
 
 export type DeliveryMapProps = Readonly<{
   route: DemoRoute;
@@ -48,7 +57,11 @@ export function DeliveryMap({
           <Polyline pathOptions={{ color: "#b7c2bd", weight: 6 }} positions={remaining} />
           <Polyline pathOptions={{ color: "#087f5b", weight: 7 }} positions={completed} />
           <Marker alt={`Pickup: ${restaurantName}`} icon={pickupIcon} position={route.restaurant} />
-          <Marker alt="Demo delivery destination" icon={destinationIcon} position={route.destination} />
+          <Marker
+            alt="Demo delivery destination"
+            icon={destinationIcon}
+            position={route.destination}
+          />
           <Marker alt="Simulated courier location" icon={courierIcon} position={courier} />
         </MapContainer>
         <ul className="courier-map-labels">
@@ -60,4 +73,3 @@ export function DeliveryMap({
     </MapFrame>
   );
 }
-

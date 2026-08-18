@@ -16,11 +16,21 @@ describe("accessPolicy", () => {
   });
 
   it("allows a public route while a session check is in progress", () => {
-    expect(accessPolicy({ ...base, sessionStatus: "checking", route: {} })).toEqual({ kind: "allow" });
+    expect(accessPolicy({ ...base, sessionStatus: "checking", route: {} })).toEqual({
+      kind: "allow",
+    });
   });
 
   it("sends a guest to login with an encoded internal return target", () => {
-    expect(accessPolicy({ ...base, sessionStatus: "guest", role: null, pathname: "/orders", search: "?tab=past" })).toEqual({
+    expect(
+      accessPolicy({
+        ...base,
+        sessionStatus: "guest",
+        role: null,
+        pathname: "/orders",
+        search: "?tab=past",
+      }),
+    ).toEqual({
       kind: "redirect",
       to: "/login?returnTo=%2Forders%3Ftab%3Dpast",
       reason: "login",
@@ -28,7 +38,14 @@ describe("accessPolicy", () => {
   });
 
   it("requires verification before evaluating the role", () => {
-    expect(accessPolicy({ ...base, verifiedAt: null, role: "COURIER", route: { requiresVerification: true, allowedRoles: ["OWNER"] } })).toEqual({
+    expect(
+      accessPolicy({
+        ...base,
+        verifiedAt: null,
+        role: "COURIER",
+        route: { requiresVerification: true, allowedRoles: ["OWNER"] },
+      }),
+    ).toEqual({
       kind: "redirect",
       to: "/verify-email",
       reason: "verify",
@@ -40,7 +57,13 @@ describe("accessPolicy", () => {
     ["OWNER", "/dashboard"],
     ["COURIER", "/dashboard"],
   ])("routes a denied %s to its default path", (role, destination) => {
-    expect(accessPolicy({ ...base, role, route: { allowedRoles: [role === "OWNER" ? "CUSTOMER" : "OWNER"] } })).toEqual({
+    expect(
+      accessPolicy({
+        ...base,
+        role,
+        route: { allowedRoles: [role === "OWNER" ? "CUSTOMER" : "OWNER"] },
+      }),
+    ).toEqual({
       kind: "redirect",
       to: destination,
       reason: "role",
@@ -49,7 +72,9 @@ describe("accessPolicy", () => {
   });
 
   it.each<UserRole>(["CUSTOMER", "OWNER", "COURIER"])("allows the permitted %s role", (role) => {
-    expect(accessPolicy({ ...base, role, route: { allowedRoles: [role] } })).toEqual({ kind: "allow" });
+    expect(accessPolicy({ ...base, role, route: { allowedRoles: [role] } })).toEqual({
+      kind: "allow",
+    });
   });
 });
 
@@ -64,7 +89,10 @@ describe("sanitizeReturnTo", () => {
     expect(sanitizeReturnTo(input, origin)).toBe(expected);
   });
 
-  it.each(["https://evil.test/orders", "//evil.test/orders", "/unknown", "/orders\\evil"])("rejects unsafe returnTo %s", (input) => {
-    expect(sanitizeReturnTo(input, origin)).toBeNull();
-  });
+  it.each(["https://evil.test/orders", "//evil.test/orders", "/unknown", "/orders\\evil"])(
+    "rejects unsafe returnTo %s",
+    (input) => {
+      expect(sanitizeReturnTo(input, origin)).toBeNull();
+    },
+  );
 });

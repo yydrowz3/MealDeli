@@ -127,15 +127,11 @@ describe("catalog adapter", () => {
     expect(() => adaptCategoriesOutput({ ok: false, error: null, categories: [] })).toThrow(
       "The catalog request failed.",
     );
-    expect(() => adaptRestaurantPageOutput({ ok: false, error: "Offline" }, 1)).toThrow(
-      "Offline",
-    );
+    expect(() => adaptRestaurantPageOutput({ ok: false, error: "Offline" }, 1)).toThrow("Offline");
   });
 
   it("rejects malformed collection and detail response shapes", () => {
-    expect(() => adaptCategory({ id: "", name: "", slug: "" })).toThrow(
-      CatalogResponseError,
-    );
+    expect(() => adaptCategory({ id: "", name: "", slug: "" })).toThrow(CatalogResponseError);
     expect(() => adaptCategoriesOutput({ ok: true, categories: "bad" })).toThrow(
       "Malformed categories response.",
     );

@@ -7,10 +7,14 @@ export function OwnerLayout(props: LayoutProps & { ownerName?: string; onLogOut:
     <div className="app-shell app-owner-shell">
       <aside className="app-owner-sidebar">
         <BrandLink />
-        <nav aria-label="Owner navigation"><NavigationLinks items={props.navigation} /></nav>
+        <nav aria-label="Owner navigation">
+          <NavigationLinks items={props.navigation} />
+        </nav>
         <div className="app-owner-account">
           {props.ownerName ? <span>{props.ownerName}</span> : null}
-          <button onClick={props.onLogOut} type="button">Log out</button>
+          <button onClick={props.onLogOut} type="button">
+            Log out
+          </button>
         </div>
       </aside>
       <main className="app-main">{props.children}</main>

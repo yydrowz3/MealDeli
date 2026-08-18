@@ -1,9 +1,4 @@
-import type {
-  Order,
-  OrderDetailResult,
-  OrderRepository,
-  OrderStatus,
-} from "../../orders";
+import type { Order, OrderDetailResult, OrderRepository, OrderStatus } from "../../orders";
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import {
   CourierAvailableOrdersDocument,

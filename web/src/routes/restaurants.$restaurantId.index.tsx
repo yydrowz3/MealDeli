@@ -17,7 +17,10 @@ function RestaurantRoute() {
   const { restaurantId } = Route.useParams();
   const user = useAtomValue(sessionUserAtom);
   const runtime = getMealDeliRuntime();
-  const [selection, setSelection] = useState<Readonly<{ dish: Dish; restaurantName: string }> | null>(null);
+  const [selection, setSelection] = useState<Readonly<{
+    dish: Dish;
+    restaurantName: string;
+  }> | null>(null);
 
   const page =
     user?.role === "OWNER" ? (
@@ -32,9 +35,11 @@ function RestaurantRoute() {
         <RestaurantMenuPage
           onBack={() => window.location.assign("/restaurants")}
           onSelectDish={(dish) => {
-            void runtime.catalogRepository.getRestaurant(restaurantId).then((restaurant) =>
-              setSelection({ dish, restaurantName: restaurant?.name ?? "Restaurant" }),
-            );
+            void runtime.catalogRepository
+              .getRestaurant(restaurantId)
+              .then((restaurant) =>
+                setSelection({ dish, restaurantName: restaurant?.name ?? "Restaurant" }),
+              );
           }}
           repository={runtime.catalogRepository}
           restaurantId={restaurantId}
@@ -56,7 +61,11 @@ function RestaurantRoute() {
     );
   return (
     <RequireAccess
-      route={{ requiresAuth: true, requiresVerification: true, allowedRoles: ["CUSTOMER", "OWNER"] }}
+      route={{
+        requiresAuth: true,
+        requiresVerification: true,
+        allowedRoles: ["CUSTOMER", "OWNER"],
+      }}
     >
       {page}
     </RequireAccess>

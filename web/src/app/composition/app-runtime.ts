@@ -22,10 +22,7 @@ import {
   identityAtom,
 } from "../../modules/identity";
 import { createHttpMediaUploader } from "../../modules/media";
-import {
-  createOrderRepository,
-  createOrderSubscriptionPort,
-} from "../../modules/orders";
+import { createOrderRepository, createOrderSubscriptionPort } from "../../modules/orders";
 import {
   clearOwnerRestaurantSelectionAtom,
   createOwnerRestaurantRepository,

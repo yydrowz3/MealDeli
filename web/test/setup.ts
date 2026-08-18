@@ -35,9 +35,18 @@ class MemoryStorage implements Storage {
 const localStoragePolyfill = new MemoryStorage();
 const sessionStoragePolyfill = new MemoryStorage();
 Object.defineProperty(window, "localStorage", { configurable: true, value: localStoragePolyfill });
-Object.defineProperty(window, "sessionStorage", { configurable: true, value: sessionStoragePolyfill });
-Object.defineProperty(globalThis, "localStorage", { configurable: true, value: localStoragePolyfill });
-Object.defineProperty(globalThis, "sessionStorage", { configurable: true, value: sessionStoragePolyfill });
+Object.defineProperty(window, "sessionStorage", {
+  configurable: true,
+  value: sessionStoragePolyfill,
+});
+Object.defineProperty(globalThis, "localStorage", {
+  configurable: true,
+  value: localStoragePolyfill,
+});
+Object.defineProperty(globalThis, "sessionStorage", {
+  configurable: true,
+  value: sessionStoragePolyfill,
+});
 
 beforeAll(() => {
   testServer.listen({ onUnhandledRequest: "error" });

@@ -60,7 +60,11 @@ export function OwnerDashboardPage({
       <main className="owner-insights-page">
         <h1>Dashboard</h1>
         <EmptyState
-          action={onCreateRestaurant ? { label: "Create restaurant", onClick: onCreateRestaurant } : undefined}
+          action={
+            onCreateRestaurant
+              ? { label: "Create restaurant", onClick: onCreateRestaurant }
+              : undefined
+          }
           description="Add your restaurant details, then build a menu and start receiving orders."
           title="Create your first restaurant"
         />
@@ -87,7 +91,9 @@ export function OwnerDashboardPage({
         >
           <option value="">All restaurants</option>
           {restaurants.map((restaurant) => (
-            <option key={restaurant.id} value={restaurant.id}>{restaurant.name}</option>
+            <option key={restaurant.id} value={restaurant.id}>
+              {restaurant.name}
+            </option>
           ))}
         </Select>
       </header>
@@ -98,7 +104,11 @@ export function OwnerDashboardPage({
           label="Sales"
           value={<Money minor={metrics.salesMinor} />}
         />
-        <MetricCard description="Orders in the last 7 days" label="Orders" value={metrics.orderCount} />
+        <MetricCard
+          description="Orders in the last 7 days"
+          label="Orders"
+          value={metrics.orderCount}
+        />
         <MetricCard
           description="Rounded to the nearest cent"
           label="Average order"

@@ -19,19 +19,16 @@ export type OwnerAnalyticsDiagnostic = (
   details?: Readonly<Record<string, unknown>>,
 ) => void;
 
-const ACTIVE_STATUSES = new Set<Order["status"]>([
-  "PENDING",
-  "COOKING",
-  "WAITING",
-  "PICKED",
-]);
+const ACTIVE_STATUSES = new Set<Order["status"]>(["PENDING", "COOKING", "WAITING", "PICKED"]);
 
-export function computeOwnerMetrics(input: Readonly<{
-  orders: readonly Order[];
-  now: Date;
-  restaurantId?: string;
-  diagnostic?: OwnerAnalyticsDiagnostic;
-}>): OwnerMetrics {
+export function computeOwnerMetrics(
+  input: Readonly<{
+    orders: readonly Order[];
+    now: Date;
+    restaurantId?: string;
+    diagnostic?: OwnerAnalyticsDiagnostic;
+  }>,
+): OwnerMetrics {
   const buckets = buildLocalDateBuckets(input.now);
   const rangeStart = buckets[0].start.getTime();
   const rangeEnd = buckets[buckets.length - 1].end.getTime();
@@ -62,7 +59,8 @@ export function computeOwnerMetrics(input: Readonly<{
     const bucket = buckets.find(
       (candidate) => timestamp >= candidate.start.getTime() && timestamp < candidate.end.getTime(),
     );
-    if (bucket) salesByDate.set(bucket.date, (salesByDate.get(bucket.date) ?? 0) + order.totalMinor);
+    if (bucket)
+      salesByDate.set(bucket.date, (salesByDate.get(bucket.date) ?? 0) + order.totalMinor);
 
     const items = order.items as Order["items"] | null | undefined;
     if (!items) {
@@ -87,7 +85,10 @@ export function computeOwnerMetrics(input: Readonly<{
     })),
     topDishes: [...dishQuantities]
       .map(([dishName, quantity]) => ({ dishName, quantity }))
-      .sort((left, right) => right.quantity - left.quantity || left.dishName.localeCompare(right.dishName))
+      .sort(
+        (left, right) =>
+          right.quantity - left.quantity || left.dishName.localeCompare(right.dishName),
+      )
       .slice(0, 5),
   };
 }

@@ -54,7 +54,11 @@ describe("identity media auth port", () => {
     const port = createIdentityMediaAuthPort(
       store,
       repository(
-        vi.fn(async () => ({ ok: false as const, code: "UNAUTHORIZED" as const, message: "expired" })),
+        vi.fn(async () => ({
+          ok: false as const,
+          code: "UNAUTHORIZED" as const,
+          message: "expired",
+        })),
         vi.fn(),
       ),
     );

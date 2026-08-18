@@ -154,7 +154,9 @@ describe("owner restaurant repository", () => {
     await expect(deniedList.list()).rejects.toThrow("Restaurant not found.");
 
     const failedGet = createOwnerRestaurantRepository(
-      new QueueTransport([{ myRestaurant: { ok: false, error: "Database unavailable", restaurant: null } }]),
+      new QueueTransport([
+        { myRestaurant: { ok: false, error: "Database unavailable", restaurant: null } },
+      ]),
     );
     await expect(failedGet.get(restaurant.id)).rejects.toThrow("Database unavailable");
 
@@ -225,7 +227,9 @@ describe("owner restaurant repository", () => {
       ]),
     );
     await expect(success.createDish(restaurant.id, draft)).resolves.toMatchObject({ ok: true });
-    await expect(success.deleteDish(restaurant.dishes[0]!.id, restaurant.id)).resolves.toMatchObject({
+    await expect(
+      success.deleteDish(restaurant.dishes[0]!.id, restaurant.id),
+    ).resolves.toMatchObject({
       ok: true,
     });
 

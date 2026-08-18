@@ -60,13 +60,17 @@ export const cartStateSchema = z
           0,
         );
       if (!Number.isSafeInteger(unitMinor) || !Number.isSafeInteger(unitMinor * line.quantity)) {
-        context.addIssue({ code: "custom", message: "Cart line total must use safe integer cents." });
+        context.addIssue({
+          code: "custom",
+          message: "Cart line total must use safe integer cents.",
+        });
       }
     }
     const totalMinor = cart.lines.reduce((total, line) => {
       const extras = line.options.reduce(
         (optionTotal, option) =>
-          optionTotal + option.choices.reduce((choiceTotal, choice) => choiceTotal + choice.extraMinor, 0),
+          optionTotal +
+          option.choices.reduce((choiceTotal, choice) => choiceTotal + choice.extraMinor, 0),
         0,
       );
       return total + (line.basePriceMinor + extras) * line.quantity;

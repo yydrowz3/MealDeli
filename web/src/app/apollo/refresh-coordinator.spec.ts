@@ -4,7 +4,12 @@ import { createRefreshCoordinator } from "./refresh-coordinator";
 describe("refresh coordinator", () => {
   it("shares one refresh across concurrent unauthorized operations", async () => {
     let resolveRefresh!: (token: string) => void;
-    const refreshAccessToken = vi.fn(() => new Promise<string>((resolve) => { resolveRefresh = resolve; }));
+    const refreshAccessToken = vi.fn(
+      () =>
+        new Promise<string>((resolve) => {
+          resolveRefresh = resolve;
+        }),
+    );
     const onRefreshFailed = vi.fn();
     const coordinator = createRefreshCoordinator({ refreshAccessToken, onRefreshFailed });
 
@@ -20,7 +25,12 @@ describe("refresh coordinator", () => {
 
   it("clears private state exactly once when a shared refresh fails", async () => {
     let rejectRefresh!: (error: Error) => void;
-    const refreshAccessToken = vi.fn(() => new Promise<string>((_resolve, reject) => { rejectRefresh = reject; }));
+    const refreshAccessToken = vi.fn(
+      () =>
+        new Promise<string>((_resolve, reject) => {
+          rejectRefresh = reject;
+        }),
+    );
     const onRefreshFailed = vi.fn();
     const coordinator = createRefreshCoordinator({ refreshAccessToken, onRefreshFailed });
 

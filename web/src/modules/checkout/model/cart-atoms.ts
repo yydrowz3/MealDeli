@@ -5,12 +5,7 @@ import { atomWithStorage, RESET } from "jotai/utils";
 import { cartLineSchema, cartStateSchema, EMPTY_CART } from "./cart-schema";
 import { getCartCount, getCartSelectionKey, getCartTotalMinor } from "./cart-selectors";
 import { createMemoryStringStorage, createValidatedCartStorage } from "./cart-storage";
-import type {
-  AddCartLineInput,
-  AddCartLineResult,
-  CartState,
-  ChangeQuantityInput,
-} from "./types";
+import type { AddCartLineInput, AddCartLineResult, CartState, ChangeQuantityInput } from "./types";
 import { CART_STORAGE_KEY } from "./types";
 
 const browserStorage =
@@ -47,7 +42,9 @@ export const addCartLineAtom = atom<null, [AddCartLineInput], AddCartLineResult>
       const match = current.lines[matchIndex];
       if (match.quantity + line.quantity > 99) return { kind: "QUANTITY_LIMIT" };
       const lines = current.lines.map((candidate, index) =>
-        index === matchIndex ? { ...candidate, quantity: candidate.quantity + line.quantity } : candidate,
+        index === matchIndex
+          ? { ...candidate, quantity: candidate.quantity + line.quantity }
+          : candidate,
       );
       set(cartStorageAtom, cartStateSchema.parse({ ...current, lines }));
       return { kind: "MERGED" };

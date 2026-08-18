@@ -64,15 +64,15 @@ describe("AddressEditor errors", () => {
     });
     const override: Partial<IdentityRepository> =
       failure === "edit"
-        ? { editProfile: vi.fn().mockResolvedValue({ ok: false, code: "UNKNOWN", message: "failed" }) }
+        ? {
+            editProfile: vi
+              .fn()
+              .mockResolvedValue({ ok: false, code: "UNKNOWN", message: "failed" }),
+          }
         : { me: vi.fn().mockResolvedValue({ ok: false, code: "NETWORK", message: "offline" }) };
     render(
       <Provider store={store}>
-        <AddressEditor
-          onSaved={vi.fn()}
-          repository={buildRepository(override)}
-          store={store}
-        />
+        <AddressEditor onSaved={vi.fn()} repository={buildRepository(override)} store={store} />
       </Provider>,
     );
     await enterAndSave();

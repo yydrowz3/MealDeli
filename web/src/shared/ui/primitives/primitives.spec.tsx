@@ -9,15 +9,28 @@ describe("Button", () => {
     const { container } = render(
       <>
         <Button variant="primary">Primary</Button>
-        <Button size="sm" variant="secondary">Secondary</Button>
-        <Button size="lg" variant="tertiary">Tertiary</Button>
+        <Button size="sm" variant="secondary">
+          Secondary
+        </Button>
+        <Button size="lg" variant="tertiary">
+          Tertiary
+        </Button>
         <Button variant="danger">Danger</Button>
       </>,
     );
 
-    expect(screen.getByRole("button", { name: "Primary" })).toHaveClass("ui-button--primary", "ui-button--md");
-    expect(screen.getByRole("button", { name: "Secondary" })).toHaveClass("ui-button--secondary", "ui-button--sm");
-    expect(screen.getByRole("button", { name: "Tertiary" })).toHaveClass("ui-button--tertiary", "ui-button--lg");
+    expect(screen.getByRole("button", { name: "Primary" })).toHaveClass(
+      "ui-button--primary",
+      "ui-button--md",
+    );
+    expect(screen.getByRole("button", { name: "Secondary" })).toHaveClass(
+      "ui-button--secondary",
+      "ui-button--sm",
+    );
+    expect(screen.getByRole("button", { name: "Tertiary" })).toHaveClass(
+      "ui-button--tertiary",
+      "ui-button--lg",
+    );
     expect(screen.getByRole("button", { name: "Danger" })).toHaveClass("ui-button--danger");
     expect(container.querySelectorAll("button")).toHaveLength(4);
   });
@@ -28,7 +41,9 @@ describe("Button", () => {
     render(
       <>
         <Button onClick={onClick}>Continue</Button>
-        <Button disabled onClick={onClick}>Unavailable</Button>
+        <Button disabled onClick={onClick}>
+          Unavailable
+        </Button>
       </>,
     );
 
@@ -43,7 +58,11 @@ describe("Button", () => {
   it("prevents duplicate actions while loading and retains its label", async () => {
     const user = userEvent.setup();
     const onClick = vi.fn();
-    render(<Button loading onClick={onClick}>Save changes</Button>);
+    render(
+      <Button loading onClick={onClick}>
+        Save changes
+      </Button>,
+    );
 
     const button = screen.getByRole("button", { name: "Save changes" });
     expect(button).toBeDisabled();
@@ -54,11 +73,19 @@ describe("Button", () => {
   });
 
   it("requires an accessible name for explicitly icon-only buttons", () => {
-    expect(() => render(<Button iconOnly><span>×</span></Button>)).toThrow(
-      "Icon-only buttons require an aria-label.",
-    );
+    expect(() =>
+      render(
+        <Button iconOnly>
+          <span>×</span>
+        </Button>,
+      ),
+    ).toThrow("Icon-only buttons require an aria-label.");
 
-    render(<Button aria-label="Close" iconOnly><span aria-hidden="true">×</span></Button>);
+    render(
+      <Button aria-label="Close" iconOnly>
+        <span aria-hidden="true">×</span>
+      </Button>,
+    );
     expect(screen.getByRole("button", { name: "Close" })).toBeInTheDocument();
   });
 });
@@ -98,7 +125,9 @@ describe("form primitives", () => {
     await user.selectOptions(screen.getByRole("combobox", { name: "Role" }), "Courier");
     expect(screen.getByRole("textbox", { name: "Delivery note" })).toHaveValue("Ring the bell");
     expect(screen.getByRole("combobox", { name: "Role" })).toHaveValue("Courier");
-    expect(screen.getByRole("combobox", { name: "Role" })).toHaveAccessibleDescription("Choose one option.");
+    expect(screen.getByRole("combobox", { name: "Role" })).toHaveAccessibleDescription(
+      "Choose one option.",
+    );
   });
 
   it("moves focus through a form error summary callback", async () => {
@@ -119,7 +148,11 @@ describe("form primitives", () => {
   });
 
   it("renders a semantic card without changing native props", () => {
-    render(<Card aria-label="Order summary" className="custom">Contents</Card>);
+    render(
+      <Card aria-label="Order summary" className="custom">
+        Contents
+      </Card>,
+    );
     expect(screen.getByLabelText("Order summary")).toHaveClass("ui-card", "custom");
   });
 });

@@ -16,10 +16,7 @@ export type {
 } from "./model/types";
 export { CART_STORAGE_KEY } from "./model/types";
 export { cartStateSchema, cartLineSchema, EMPTY_CART } from "./model/cart-schema";
-export {
-  createMemoryStringStorage,
-  createValidatedCartStorage,
-} from "./model/cart-storage";
+export { createMemoryStringStorage, createValidatedCartStorage } from "./model/cart-storage";
 export {
   cartAtom,
   cartCountAtom,
@@ -48,7 +45,10 @@ export {
   optionSelectionRule,
 } from "./model/dish-selection";
 export type { DishOptionSelection, DishSelectionValues } from "./model/dish-selection";
-export { checkoutAddressSchema, createCheckoutAddressFormOptions } from "./forms/checkout-form-options";
+export {
+  checkoutAddressSchema,
+  createCheckoutAddressFormOptions,
+} from "./forms/checkout-form-options";
 export { createDishCustomizerFormOptions } from "./forms/dish-customizer-form-options";
 export { loadCheckout } from "./model/checkout-loader";
 export type { CheckoutLoadResult, InvalidCartLine } from "./model/checkout-loader";
@@ -57,9 +57,7 @@ export {
   createRecentOrderReconciler,
   mapCartToCreateOrderPayload,
 } from "./model/order-command";
-export {
-  createOrderCommandRepository,
-} from "./api/order-command-repository";
+export { createOrderCommandRepository } from "./api/order-command-repository";
 export type { CheckoutGraphqlTransport } from "./api/order-command-repository";
 export { DishCustomizer } from "./components/dish-customizer";
 export type { DishCustomizerProps } from "./components/dish-customizer";

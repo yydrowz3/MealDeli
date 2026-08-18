@@ -10,7 +10,8 @@ describe("CategoryStrip", () => {
       <CategoryStrip
         categories={[
           buildCategory({
-            image: "https://cn-geo1.uber.com/static/mobile-content/eats/cuisine-filters/v1/Korean.png",
+            image:
+              "https://cn-geo1.uber.com/static/mobile-content/eats/cuisine-filters/v1/Korean.png",
           }),
           buildCategory({ id: "category-fast-food", name: "Fast Food", image: null }),
         ]}
@@ -22,8 +23,6 @@ describe("CategoryStrip", () => {
       "src",
       "https://cn-geo1.uber.com/static/mobile-content/eats/cuisine-filters/v1/Korean.png",
     );
-    expect(
-      screen.getByRole("img", { name: "MealDeli placeholder for Fast Food" }),
-    ).toBeVisible();
+    expect(screen.getByRole("img", { name: "MealDeli placeholder for Fast Food" })).toBeVisible();
   });
 });

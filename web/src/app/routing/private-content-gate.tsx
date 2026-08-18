@@ -22,7 +22,11 @@ export function PrivateContentGate(props: {
       return (
         <main className="app-state" role="alert">
           <h1>You don’t have access to this page.</h1>
-          <button className="app-text-link" onClick={() => props.onRedirect(decision.to)} type="button">
+          <button
+            className="app-text-link"
+            onClick={() => props.onRedirect(decision.to)}
+            type="button"
+          >
             Continue
           </button>
         </main>

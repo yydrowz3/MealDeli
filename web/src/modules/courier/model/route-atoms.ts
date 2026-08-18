@@ -78,25 +78,22 @@ export const courierRouteAtom = atom<DemoRoute | null>((get) => {
   return stored ? createDemoRoute(stored.orderId, stored.progressIndex) : null;
 });
 
-export const initializeCourierRouteAtom = atom<null, [string], void>(
-  null,
-  (get, set, orderId) => {
-    const current = get(storedCourierRouteAtom);
-    if (current?.orderId === orderId) {
-      const route = createDemoRoute(orderId, current.progressIndex);
-      if (route.progressIndex !== current.progressIndex) {
-        set(storedCourierRouteAtom, { ...current, progressIndex: route.progressIndex });
-      }
-      return;
+export const initializeCourierRouteAtom = atom<null, [string], void>(null, (get, set, orderId) => {
+  const current = get(storedCourierRouteAtom);
+  if (current?.orderId === orderId) {
+    const route = createDemoRoute(orderId, current.progressIndex);
+    if (route.progressIndex !== current.progressIndex) {
+      set(storedCourierRouteAtom, { ...current, progressIndex: route.progressIndex });
     }
-    set(storedCourierRouteAtom, {
-      version: 1,
-      orderId,
-      progressIndex: 0,
-      startedAt: Date.now(),
-    });
-  },
-);
+    return;
+  }
+  set(storedCourierRouteAtom, {
+    version: 1,
+    orderId,
+    progressIndex: 0,
+    startedAt: Date.now(),
+  });
+});
 
 export const advanceCourierRouteAtom = atom<null, [], void>(null, (get, set) => {
   const current = get(storedCourierRouteAtom);
@@ -120,15 +117,10 @@ export type RouteTestStoreOptions = Readonly<{
   startedAt?: number;
 }>;
 
-export function createCourierRouteTestStore(
-  options: RouteTestStoreOptions = {},
-): JotaiStore {
+export function createCourierRouteTestStore(options: RouteTestStoreOptions = {}): JotaiStore {
   const store = createStore();
   const storage = options.storage ?? createMemoryCourierStorage();
-  const hydrated = createValidatedCourierStorage(storage).getItem(
-    COURIER_ROUTE_STORAGE_KEY,
-    null,
-  );
+  const hydrated = createValidatedCourierStorage(storage).getItem(COURIER_ROUTE_STORAGE_KEY, null);
   const initial = options.orderId
     ? {
         version: 1 as const,
@@ -140,4 +132,3 @@ export function createCourierRouteTestStore(
   store.set(storedCourierRouteAtom, initial);
   return store;
 }
-

@@ -27,10 +27,7 @@ export type {
   PromotionState,
   PromotionSubmitResult,
 } from "./model/promotion";
-export {
-  createPromotionRepository,
-  PromotionRepositoryError,
-} from "./api/promotion-repository";
+export { createPromotionRepository, PromotionRepositoryError } from "./api/promotion-repository";
 export type { PromotionGraphqlTransport } from "./api/promotion-repository";
 export { OwnerDashboardPage } from "./pages/owner-dashboard-page";
 export type { OwnerDashboardPageProps } from "./pages/owner-dashboard-page";

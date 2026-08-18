@@ -43,7 +43,9 @@ describe("order realtime adapter", () => {
     const second = new ControllableAsyncIterable<OrderRealtimeEvent>();
     const subscriptions = createFakeOrderSubscriptions({ updates: [first, second] });
     let current = buildOrder();
-    const replace = vi.fn((order: Order) => { current = order; });
+    const replace = vi.fn((order: Order) => {
+      current = order;
+    });
     const states: string[] = [];
     const refetched = buildOrder({
       status: "COOKING",
@@ -96,7 +98,9 @@ describe("order realtime adapter", () => {
       subscriptions: createFakeOrderSubscriptions({ updates: [stream] }),
       repository: { get: vi.fn() },
       getCurrent: () => current,
-      replace: (order) => { current = order; },
+      replace: (order) => {
+        current = order;
+      },
       onAcceptedEvent: accepted,
     });
     const running = adapter.start();
@@ -134,7 +138,9 @@ describe("Owner pending realtime adapter", () => {
       subscriptions: createFakeOrderSubscriptions({ pending: [first, second] }),
       repository,
       getCurrent: () => current,
-      replace: (orders) => { current = orders; },
+      replace: (orders) => {
+        current = orders;
+      },
       onNewOrder,
       retry: () => Promise.resolve(),
     });

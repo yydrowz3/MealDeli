@@ -8,7 +8,9 @@ export function GuestLayout({ children }: { children: ReactNode }) {
         <BrandLink />
         <nav aria-label="Guest navigation" className="app-header__actions">
           <a href="/login">Log in</a>
-          <a className="app-link-button" href="/signup">Sign up</a>
+          <a className="app-link-button" href="/signup">
+            Sign up
+          </a>
         </nav>
       </header>
       {children}

@@ -46,9 +46,7 @@ export function buildPromotionRestaurant(
   };
 }
 
-export function buildPromotionPayment(
-  overrides: Partial<PromotionPayment> = {},
-): PromotionPayment {
+export function buildPromotionPayment(overrides: Partial<PromotionPayment> = {}): PromotionPayment {
   return {
     id: "payment-1",
     transactionId: "demo_00000000-0000-7000-8000-000000000009",

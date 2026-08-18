@@ -44,7 +44,10 @@ export function sanitizeReturnTo(value: string | null | undefined, appOrigin: st
   if (!value || value.startsWith("//") || value.includes("\\")) return null;
   try {
     const url = new URL(value, appOrigin);
-    if (url.origin !== appOrigin || !knownPathPatterns.some((pattern) => pattern.test(url.pathname))) {
+    if (
+      url.origin !== appOrigin ||
+      !knownPathPatterns.some((pattern) => pattern.test(url.pathname))
+    ) {
       return null;
     }
     return `${url.pathname}${url.search}${url.hash}`;
@@ -69,7 +72,10 @@ export function accessPolicy(input: AccessPolicyInput): AccessDecision {
   if (input.route.requiresVerification && !input.verifiedAt) {
     return { kind: "redirect", to: "/verify-email", reason: "verify" };
   }
-  if (input.route.allowedRoles?.length && (!input.role || !input.route.allowedRoles.includes(input.role))) {
+  if (
+    input.route.allowedRoles?.length &&
+    (!input.role || !input.route.allowedRoles.includes(input.role))
+  ) {
     return { kind: "redirect", to: getRoleDefaultPath(input.role), reason: "role" };
   }
   return { kind: "allow" };

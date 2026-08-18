@@ -20,10 +20,7 @@ import {
   replaceApolloOrderAuthoritatively,
   type ApolloOrderCachePort,
 } from "./cache-updates";
-import {
-  createOrderRepository,
-  type OrderGraphqlTransport,
-} from "./order-repository";
+import { createOrderRepository, type OrderGraphqlTransport } from "./order-repository";
 import type { Order } from "../model/types";
 
 describe("order adapter", () => {
@@ -49,9 +46,7 @@ describe("order adapter", () => {
   it("degrades an invalid option snapshot and reports diagnostics", () => {
     const diagnostic = vi.fn();
     const raw = buildOrder({
-      items: [
-        { ...buildOrderItem(), selectedOptions: "not-a-snapshot" as never },
-      ],
+      items: [{ ...buildOrderItem(), selectedOptions: "not-a-snapshot" as never }],
     });
     const order = adaptOrder(raw, diagnostic);
     expect(order.items[0].selectedOptions).toEqual([]);
@@ -115,9 +110,11 @@ describe("order repository", () => {
         document: TypedDocumentNode<TResult, TVariables>,
         _variables: TVariables,
       ): Promise<TResult> {
-        return (Object.is(document, OrdersGetOrdersDocument)
-          ? { getOrders: { ok: false, error: "list failed" } }
-          : { editOrder: { ok: false, error: "edit failed" } }) as TResult;
+        return (
+          Object.is(document, OrdersGetOrdersDocument)
+            ? { getOrders: { ok: false, error: "list failed" } }
+            : { editOrder: { ok: false, error: "edit failed" } }
+        ) as TResult;
       },
     };
     const repository = createOrderRepository(transport);
@@ -145,7 +142,10 @@ describe("order event merge", () => {
 
   it.each([
     ["duplicate", { ...current }],
-    ["out of order", { ...current, status: "PENDING" as const, updatedAt: "2026-08-16T12:07:00.000Z" }],
+    [
+      "out of order",
+      { ...current, status: "PENDING" as const, updatedAt: "2026-08-16T12:07:00.000Z" },
+    ],
     ["older same state", { ...current, updatedAt: "2026-08-16T12:04:00.000Z" }],
     ["different id", { ...current, id: "another-order", updatedAt: "2026-08-16T12:07:00.000Z" }],
   ])("ignores a %s event", (_case, event) => {
@@ -169,9 +169,13 @@ describe("order event merge", () => {
     let list: readonly Order[] = [current];
     const cache: ApolloOrderCachePort = {
       readOrder: () => order,
-      writeOrder: (next) => { order = next; },
+      writeOrder: (next) => {
+        order = next;
+      },
       readOrderList: () => list,
-      writeOrderList: (next) => { list = next; },
+      writeOrderList: (next) => {
+        list = next;
+      },
     };
     expect(
       mergeApolloOrderEvent(cache, {

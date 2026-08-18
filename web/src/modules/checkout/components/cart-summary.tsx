@@ -26,7 +26,11 @@ export function CartSummary({
         {cart.lines.map((line) => {
           const invalid = invalidLineIds.has(line.lineId);
           return (
-            <li className="checkout-cart-line" data-invalid={invalid || undefined} key={line.lineId}>
+            <li
+              className="checkout-cart-line"
+              data-invalid={invalid || undefined}
+              key={line.lineId}
+            >
               <div>
                 <h3>{line.dishName}</h3>
                 {line.options.map((option) => (
@@ -38,7 +42,11 @@ export function CartSummary({
               </div>
               <Money minor={getCartLineTotalMinor(line)} />
               {onChangeQuantity ? (
-                <div aria-label={`Quantity for ${line.dishName}`} className="checkout-stepper" role="group">
+                <div
+                  aria-label={`Quantity for ${line.dishName}`}
+                  className="checkout-stepper"
+                  role="group"
+                >
                   <button
                     aria-label={`Decrease ${line.dishName} quantity`}
                     disabled={disabled}
@@ -80,15 +88,21 @@ export function CartSummary({
       <dl className="checkout-totals">
         <div>
           <dt>Subtotal</dt>
-          <dd><Money minor={totalMinor} /></dd>
+          <dd>
+            <Money minor={totalMinor} />
+          </dd>
         </div>
         <div>
           <dt>Delivery</dt>
-          <dd><Money minor={0} /></dd>
+          <dd>
+            <Money minor={0} />
+          </dd>
         </div>
         <div className="checkout-totals__total">
           <dt>Total</dt>
-          <dd><Money minor={totalMinor} /></dd>
+          <dd>
+            <Money minor={totalMinor} />
+          </dd>
         </div>
       </dl>
     </div>

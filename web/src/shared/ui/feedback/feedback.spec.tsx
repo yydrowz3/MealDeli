@@ -28,13 +28,18 @@ describe("feedback components", () => {
           icon={<Check />}
           title="No restaurants yet"
         />
-        <ErrorState action={{ label: "Try again", onClick: retry }} title="We couldn’t load orders" />
+        <ErrorState
+          action={{ label: "Try again", onClick: retry }}
+          title="We couldn’t load orders"
+        />
       </>,
     );
 
     expect(screen.getByRole("heading", { name: "No restaurants yet" })).toBeInTheDocument();
     expect(screen.getByText("Create your first restaurant.")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Add restaurant" })).toHaveClass("ui-button--primary");
+    expect(screen.getByRole("button", { name: "Add restaurant" })).toHaveClass(
+      "ui-button--primary",
+    );
     expect(screen.getByRole("button", { name: "Try again" })).toHaveClass("ui-button--secondary");
     await user.click(screen.getByRole("button", { name: "Add restaurant" }));
     await user.click(screen.getByRole("button", { name: "Try again" }));
@@ -58,7 +63,11 @@ describe("feedback components", () => {
   it("renders badges with semantic tones and optional icons", () => {
     const { rerender } = render(<Badge>New</Badge>);
     expect(screen.getByText("New")).toHaveAttribute("data-tone", "neutral");
-    rerender(<Badge icon={<Check data-testid="badge-icon" />} tone="success">Complete</Badge>);
+    rerender(
+      <Badge icon={<Check data-testid="badge-icon" />} tone="success">
+        Complete
+      </Badge>,
+    );
     expect(screen.getByText("Complete")).toHaveAttribute("data-tone", "success");
     expect(screen.getByTestId("badge-icon")).toBeInTheDocument();
   });
@@ -67,7 +76,9 @@ describe("feedback components", () => {
     const action = vi.fn();
     render(<ToastViewport />);
     expect(toastAdapter.success("Saved.")).toBeTruthy();
-    expect(toastAdapter.error("Failed.", { action: { label: "Retry", onClick: action } })).toBeTruthy();
+    expect(
+      toastAdapter.error("Failed.", { action: { label: "Retry", onClick: action } }),
+    ).toBeTruthy();
     expect(toastAdapter.info("Reconnecting…")).toBeTruthy();
   });
 });
@@ -75,7 +86,11 @@ describe("feedback components", () => {
 describe("ChartFrame", () => {
   it("always provides a title and visible text summary", () => {
     render(
-      <ChartFrame description="The last seven days." summary="Revenue rose on Friday." title="Revenue">
+      <ChartFrame
+        description="The last seven days."
+        summary="Revenue rose on Friday."
+        title="Revenue"
+      >
         <div>chart canvas</div>
       </ChartFrame>,
     );
@@ -106,13 +121,25 @@ describe("ChartFrame", () => {
 
   it("provides useful defaults for non-ready states", () => {
     const { rerender } = render(
-      <ChartFrame state="loading" summary="Loading." title="Orders">ready</ChartFrame>,
+      <ChartFrame state="loading" summary="Loading." title="Orders">
+        ready
+      </ChartFrame>,
     );
     expect(document.querySelector(".ui-skeleton")).toHaveAttribute("aria-hidden", "true");
-    rerender(<ChartFrame state="empty" summary="Empty." title="Orders">ready</ChartFrame>);
+    rerender(
+      <ChartFrame state="empty" summary="Empty." title="Orders">
+        ready
+      </ChartFrame>,
+    );
     expect(screen.getByRole("heading", { name: "No chart data yet" })).toBeInTheDocument();
-    rerender(<ChartFrame state="error" summary="Failed." title="Orders">ready</ChartFrame>);
-    expect(screen.getByRole("heading", { name: "We couldn’t load this chart" })).toBeInTheDocument();
+    rerender(
+      <ChartFrame state="error" summary="Failed." title="Orders">
+        ready
+      </ChartFrame>,
+    );
+    expect(
+      screen.getByRole("heading", { name: "We couldn’t load this chart" }),
+    ).toBeInTheDocument();
   });
 });
 
@@ -121,7 +148,11 @@ describe("MapFrame", () => {
     const user = userEvent.setup();
     const onSkipMap = vi.fn();
     const { rerender } = render(
-      <MapFrame attribution="© OpenStreetMap contributors" onSkipMap={onSkipMap} title="Delivery route">
+      <MapFrame
+        attribution="© OpenStreetMap contributors"
+        onSkipMap={onSkipMap}
+        title="Delivery route"
+      >
         Map content
       </MapFrame>,
     );
@@ -133,14 +164,24 @@ describe("MapFrame", () => {
     expect(onSkipMap).toHaveBeenCalledOnce();
 
     rerender(
-      <MapFrame loadingSlot={<div>Loading route</div>} onSkipMap={onSkipMap} state="loading" title="Route">
+      <MapFrame
+        loadingSlot={<div>Loading route</div>}
+        onSkipMap={onSkipMap}
+        state="loading"
+        title="Route"
+      >
         Map content
       </MapFrame>,
     );
     expect(screen.getByText("Loading route")).toBeInTheDocument();
 
     rerender(
-      <MapFrame fallbackSlot={<div>Use written directions</div>} onSkipMap={onSkipMap} state="fallback" title="Route">
+      <MapFrame
+        fallbackSlot={<div>Use written directions</div>}
+        onSkipMap={onSkipMap}
+        state="fallback"
+        title="Route"
+      >
         Map content
       </MapFrame>,
     );
@@ -149,10 +190,16 @@ describe("MapFrame", () => {
 
   it("provides default loading and unavailable fallback content", () => {
     const { rerender } = render(
-      <MapFrame onSkipMap={() => undefined} state="loading" title="Route">Map</MapFrame>,
+      <MapFrame onSkipMap={() => undefined} state="loading" title="Route">
+        Map
+      </MapFrame>,
     );
     expect(document.querySelector(".ui-skeleton")).toBeInTheDocument();
-    rerender(<MapFrame onSkipMap={() => undefined} state="fallback" title="Route">Map</MapFrame>);
+    rerender(
+      <MapFrame onSkipMap={() => undefined} state="fallback" title="Route">
+        Map
+      </MapFrame>,
+    );
     expect(screen.getByText("The map is unavailable.")).toBeInTheDocument();
   });
 });

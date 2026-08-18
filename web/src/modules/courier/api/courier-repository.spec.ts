@@ -41,14 +41,22 @@ describe("courier GraphQL adapter", () => {
       { get: vi.fn().mockResolvedValue({ kind: "not-found" }), updateStatus: vi.fn() },
     );
     await expect(commands.availableOrders()).resolves.toEqual([
-      expect.objectContaining({ id: "available-1", status: "WAITING", restaurant: expect.objectContaining({ name: "Jade Kitchen" }) }),
+      expect.objectContaining({
+        id: "available-1",
+        status: "WAITING",
+        restaurant: expect.objectContaining({ name: "Jade Kitchen" }),
+      }),
     ]);
-    await expect(commands.takeOrder("available-1")).resolves.toEqual({ kind: "no-longer-available" });
+    await expect(commands.takeOrder("available-1")).resolves.toEqual({
+      kind: "no-longer-available",
+    });
     await expect(commands.takeOrder("available-1")).resolves.toEqual({ kind: "already-active" });
   });
 
   it("classifies timeouts without retrying mutations and maps complete branches", async () => {
-    const execute = vi.fn().mockRejectedValue(Object.assign(new Error("timed out"), { name: "TimeoutError" }));
+    const execute = vi
+      .fn()
+      .mockRejectedValue(Object.assign(new Error("timed out"), { name: "TimeoutError" }));
     const updateStatus = vi
       .fn()
       .mockRejectedValueOnce(new Error("This order is not assigned to this courier."))
@@ -63,7 +71,9 @@ describe("courier GraphQL adapter", () => {
     await expect(commands.takeOrder("available-1")).resolves.toEqual({ kind: "timeout" });
     expect(execute).toHaveBeenCalledTimes(1);
     await expect(commands.completeOrder("active-1")).resolves.toEqual({ kind: "assignment-lost" });
-    await expect(commands.completeOrder("active-1")).resolves.toEqual({ kind: "already-delivered" });
+    await expect(commands.completeOrder("active-1")).resolves.toEqual({
+      kind: "already-delivered",
+    });
   });
 
   it("composes Courier commands with the shared Orders read model", async () => {

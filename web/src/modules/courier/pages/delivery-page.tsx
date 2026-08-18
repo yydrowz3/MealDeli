@@ -1,20 +1,7 @@
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 
-import {
-  Button,
-  ConnectionBanner,
-  ErrorState,
-  Modal,
-  Money,
-  Skeleton,
-} from "../../../shared/ui";
+import { Button, ConnectionBanner, ErrorState, Modal, Money, Skeleton } from "../../../shared/ui";
 import {
   createOrderRealtimeAdapter,
   type Order,
@@ -38,13 +25,15 @@ export type DeliveryPageProps = Readonly<{
   subscriptions?: OrderSubscriptionPort;
   onBackDashboard: () => void;
   onAssignmentLost?: () => void;
-  renderMap?: (props: Readonly<{
-    route: DemoRoute;
-    restaurantName: string;
-    failed: boolean;
-    onTileFailure: () => void;
-    onSkipMap: () => void;
-  }>) => ReactNode;
+  renderMap?: (
+    props: Readonly<{
+      route: DemoRoute;
+      restaurantName: string;
+      failed: boolean;
+      onTileFailure: () => void;
+      onSkipMap: () => void;
+    }>,
+  ) => ReactNode;
 }>;
 
 function useReducedMotion(): boolean {
@@ -79,8 +68,7 @@ export function DeliveryPage({
   const [confirming, setConfirming] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [mapFailed, setMapFailed] = useState(false);
-  const [connectionState, setConnectionState] =
-    useState<OrderConnectionState>("connected");
+  const [connectionState, setConnectionState] = useState<OrderConnectionState>("connected");
   const detailsRef = useRef<HTMLElement>(null);
   const route = useAtomValue(courierRouteAtom);
   const initializeRoute = useSetAtom(initializeCourierRouteAtom);
@@ -208,7 +196,13 @@ export function DeliveryPage({
   };
 
   if (loading) {
-    return <main aria-label="Loading delivery"><Skeleton /><Skeleton /><Skeleton /></main>;
+    return (
+      <main aria-label="Loading delivery">
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </main>
+    );
   }
   if (completed) {
     return (
@@ -223,7 +217,10 @@ export function DeliveryPage({
   if (!order || error === "Order not found") {
     return (
       <main className="courier-delivery-page">
-        <ErrorState action={{ label: "Back to dashboard", onClick: onBackDashboard }} title="Order not found" />
+        <ErrorState
+          action={{ label: "Back to dashboard", onClick: onBackDashboard }}
+          title="Order not found"
+        />
       </main>
     );
   }
@@ -252,13 +249,19 @@ export function DeliveryPage({
       ) : null}
       <div className="courier-delivery-layout">
         <div className="courier-delivery-layout__map">
-          {mapProps
-            ? renderMap
-              ? renderMap(mapProps)
-              : <DeliveryMap {...mapProps} />
-            : <Skeleton />}
+          {mapProps ? (
+            renderMap ? (
+              renderMap(mapProps)
+            ) : (
+              <DeliveryMap {...mapProps} />
+            )
+          ) : (
+            <Skeleton />
+          )}
           {reducedMotion && activeRoute ? (
-            <Button onClick={() => advanceRoute()} variant="secondary">Advance demo route</Button>
+            <Button onClick={() => advanceRoute()} variant="secondary">
+              Advance demo route
+            </Button>
           ) : null}
         </div>
 
@@ -272,19 +275,25 @@ export function DeliveryPage({
           <ul className="courier-item-list">
             {order.items.map((item) => (
               <li key={item.id}>
-                <strong>{item.quantity} × {item.dishName}</strong>
+                <strong>
+                  {item.quantity} × {item.dishName}
+                </strong>
                 {item.selectedOptions.length > 0 ? (
                   <details>
                     <summary>Options</summary>
                     {item.selectedOptions.map((option) => (
-                      <p key={option.optionId}>{option.name}: {option.choices.map((choice) => choice.name).join(", ")}</p>
+                      <p key={option.optionId}>
+                        {option.name}: {option.choices.map((choice) => choice.name).join(", ")}
+                      </p>
                     ))}
                   </details>
                 ) : null}
               </li>
             ))}
           </ul>
-          <p className="courier-order-total">Order total <Money minor={order.totalMinor} /></p>
+          <p className="courier-order-total">
+            Order total <Money minor={order.totalMinor} />
+          </p>
           {error ? <p role="alert">{error}</p> : null}
           <Button disabled={submitting} loading={submitting} onClick={() => setConfirming(true)}>
             Complete delivery
@@ -296,8 +305,12 @@ export function DeliveryPage({
         dismissible={!submitting}
         footer={
           <>
-            <Button disabled={submitting} onClick={() => void complete()} loading={submitting}>Complete delivery</Button>
-            <Button disabled={submitting} onClick={() => setConfirming(false)} variant="secondary">Keep delivering</Button>
+            <Button disabled={submitting} onClick={() => void complete()} loading={submitting}>
+              Complete delivery
+            </Button>
+            <Button disabled={submitting} onClick={() => setConfirming(false)} variant="secondary">
+              Keep delivering
+            </Button>
           </>
         }
         onClose={() => setConfirming(false)}

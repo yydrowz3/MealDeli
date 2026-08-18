@@ -1,12 +1,14 @@
 import type { CartLine, CartState } from "./types";
 
 export function getCartLineUnitMinor(line: CartLine): number {
-  return line.basePriceMinor +
+  return (
+    line.basePriceMinor +
     line.options.reduce(
       (optionTotal, option) =>
         optionTotal + option.choices.reduce((total, choice) => total + choice.extraMinor, 0),
       0,
-    );
+    )
+  );
 }
 
 export function getCartLineTotalMinor(line: CartLine): number {

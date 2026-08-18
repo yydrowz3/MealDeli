@@ -12,11 +12,7 @@ import {
 } from "../../../gql/graphql";
 import type { Order, OrderRealtimeEvent, OrdersDiagnostic } from "../model/types";
 
-export type OrderConnectionState =
-  | "connecting"
-  | "connected"
-  | "reconnecting"
-  | "disconnected";
+export type OrderConnectionState = "connecting" | "connected" | "reconnecting" | "disconnected";
 
 export interface OrderSubscriptionPort {
   orderUpdates(id: string): AsyncIterable<OrderRealtimeEvent>;
@@ -182,17 +178,19 @@ export function createRealtimeSubscription<TEvent, TAuthoritative>(
   };
 }
 
-export function createOrderRealtimeAdapter(options: Readonly<{
-  orderId: string;
-  subscriptions: OrderSubscriptionPort;
-  repository: Pick<OrderRepository, "get">;
-  getCurrent: () => Order;
-  replace: (order: Order) => void;
-  onAcceptedEvent?: (order: Order) => void;
-  onConnectionState?: (state: OrderConnectionState) => void;
-  retry?: (attempt: number) => Promise<void>;
-  diagnostic?: OrdersDiagnostic;
-}>): RealtimeSubscription {
+export function createOrderRealtimeAdapter(
+  options: Readonly<{
+    orderId: string;
+    subscriptions: OrderSubscriptionPort;
+    repository: Pick<OrderRepository, "get">;
+    getCurrent: () => Order;
+    replace: (order: Order) => void;
+    onAcceptedEvent?: (order: Order) => void;
+    onConnectionState?: (state: OrderConnectionState) => void;
+    retry?: (attempt: number) => Promise<void>;
+    diagnostic?: OrdersDiagnostic;
+  }>,
+): RealtimeSubscription {
   return createRealtimeSubscription({
     connect: () => options.subscriptions.orderUpdates(options.orderId),
     onEvent: (event) => {
@@ -214,16 +212,18 @@ export function createOrderRealtimeAdapter(options: Readonly<{
   });
 }
 
-export function createOwnerPendingRealtimeAdapter(options: Readonly<{
-  subscriptions: OrderSubscriptionPort;
-  repository: Pick<OrderRepository, "list">;
-  getCurrent: () => readonly Order[];
-  replace: (orders: readonly Order[]) => void;
-  onNewOrder?: (order: Order) => void;
-  onConnectionState?: (state: OrderConnectionState) => void;
-  retry?: (attempt: number) => Promise<void>;
-  diagnostic?: OrdersDiagnostic;
-}>): RealtimeSubscription {
+export function createOwnerPendingRealtimeAdapter(
+  options: Readonly<{
+    subscriptions: OrderSubscriptionPort;
+    repository: Pick<OrderRepository, "list">;
+    getCurrent: () => readonly Order[];
+    replace: (orders: readonly Order[]) => void;
+    onNewOrder?: (order: Order) => void;
+    onConnectionState?: (state: OrderConnectionState) => void;
+    retry?: (attempt: number) => Promise<void>;
+    diagnostic?: OrdersDiagnostic;
+  }>,
+): RealtimeSubscription {
   return createRealtimeSubscription({
     connect: () => options.subscriptions.ownerPendingOrders(),
     onEvent: (event) => {

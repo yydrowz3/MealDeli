@@ -99,10 +99,7 @@ export function optionSelectionRule(minSelections: number, maxSelections: number
   return `Choose ${minSelections}–${maxSelections}.`;
 }
 
-export function getDishSelectionUnitMinor(
-  dish: Dish,
-  values: DishSelectionValues,
-): number {
+export function getDishSelectionUnitMinor(dish: Dish, values: DishSelectionValues): number {
   const extraMinor = values.selections.reduce((total, selection) => {
     const option = dish.options.find((candidate) => candidate.id === selection.optionId);
     if (!option) return total;
@@ -144,7 +141,13 @@ export function createCartLineFromSelection(
     })
     .filter((option) => option !== null);
   const selectionKey = selectedOptions
-    .map((option) => `${option.optionId}:${option.choices.map((choice) => choice.choiceId).sort().join(",")}`)
+    .map(
+      (option) =>
+        `${option.optionId}:${option.choices
+          .map((choice) => choice.choiceId)
+          .sort()
+          .join(",")}`,
+    )
     .sort()
     .join("|");
   const line: CartLine = {

@@ -4,13 +4,7 @@ import { buildInsightsOrder, buildInsightsOrderItem } from "../testing/fixtures"
 import { computeOwnerMetrics } from "./analytics";
 import { buildLocalDateBuckets } from "./date-buckets";
 
-function localIso(
-  year: number,
-  month: number,
-  day: number,
-  hour = 0,
-  minute = 0,
-): string {
+function localIso(year: number, month: number, day: number, hour = 0, minute = 0): string {
   return new Date(year, month - 1, day, hour, minute).toISOString();
 }
 
@@ -46,7 +40,9 @@ describe("computeOwnerMetrics", () => {
       const buckets = buildLocalDateBuckets(new Date(2026, 2, 10, 12));
       const springForward = buckets.find((bucket) => bucket.date === "2026-03-08");
       expect(springForward).toBeDefined();
-      expect(springForward!.end.getTime() - springForward!.start.getTime()).toBe(23 * 60 * 60 * 1000);
+      expect(springForward!.end.getTime() - springForward!.start.getTime()).toBe(
+        23 * 60 * 60 * 1000,
+      );
     } finally {
       process.env.TZ = originalTimeZone;
     }
@@ -58,17 +54,43 @@ describe("computeOwnerMetrics", () => {
       restaurantId: "restaurant-insights-1",
       orders: [
         buildInsightsOrder({ id: "one", totalMinor: 100, createdAt: localIso(2026, 8, 17, 8) }),
-        buildInsightsOrder({ id: "two", totalMinor: 101, createdAt: localIso(2026, 8, 16, 8), status: "DELIVERED" }),
-        buildInsightsOrder({ id: "old-active", totalMinor: 900, createdAt: localIso(2026, 7, 1, 8), status: "WAITING" }),
-        buildInsightsOrder({ id: "other", restaurantId: "other", totalMinor: 9_999, createdAt: localIso(2026, 8, 17, 8) }),
+        buildInsightsOrder({
+          id: "two",
+          totalMinor: 101,
+          createdAt: localIso(2026, 8, 16, 8),
+          status: "DELIVERED",
+        }),
+        buildInsightsOrder({
+          id: "old-active",
+          totalMinor: 900,
+          createdAt: localIso(2026, 7, 1, 8),
+          status: "WAITING",
+        }),
+        buildInsightsOrder({
+          id: "other",
+          restaurantId: "other",
+          totalMinor: 9_999,
+          createdAt: localIso(2026, 8, 17, 8),
+        }),
       ],
     });
-    expect(metrics).toMatchObject({ salesMinor: 201, orderCount: 2, averageOrderMinor: 101, activeOrderCount: 2 });
+    expect(metrics).toMatchObject({
+      salesMinor: 201,
+      orderCount: 2,
+      averageOrderMinor: 101,
+      activeOrderCount: 2,
+    });
   });
 
   it("returns seven zero buckets and a zero average without orders", () => {
     const metrics = computeOwnerMetrics({ orders: [], now: new Date(2026, 7, 17, 12) });
-    expect(metrics).toMatchObject({ salesMinor: 0, orderCount: 0, averageOrderMinor: 0, activeOrderCount: 0, topDishes: [] });
+    expect(metrics).toMatchObject({
+      salesMinor: 0,
+      orderCount: 0,
+      averageOrderMinor: 0,
+      activeOrderCount: 0,
+      topDishes: [],
+    });
     expect(metrics.dailySales).toHaveLength(7);
     expect(metrics.dailySales.every((bucket) => bucket.salesMinor === 0)).toBe(true);
   });

@@ -48,7 +48,11 @@ function RestaurantsRoute() {
     );
   return (
     <RequireAccess
-      route={{ requiresAuth: true, requiresVerification: true, allowedRoles: ["CUSTOMER", "OWNER"] }}
+      route={{
+        requiresAuth: true,
+        requiresVerification: true,
+        allowedRoles: ["CUSTOMER", "OWNER"],
+      }}
     >
       {page}
     </RequireAccess>

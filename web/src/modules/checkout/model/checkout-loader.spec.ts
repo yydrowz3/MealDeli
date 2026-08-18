@@ -26,9 +26,15 @@ function catalog(detail = buildRestaurantDetail()): CatalogRepository {
 describe("loadCheckout", () => {
   it("gates customer and verification before catalog access", async () => {
     const repository = catalog();
-    expect(await loadCheckout({ user: null, cart: buildCart(), catalog: repository })).toEqual({ kind: "forbidden" });
+    expect(await loadCheckout({ user: null, cart: buildCart(), catalog: repository })).toEqual({
+      kind: "forbidden",
+    });
     expect(
-      await loadCheckout({ user: { ...customer, verifiedAt: null }, cart: buildCart(), catalog: repository }),
+      await loadCheckout({
+        user: { ...customer, verifiedAt: null },
+        cart: buildCart(),
+        catalog: repository,
+      }),
     ).toEqual({ kind: "verification-required" });
     expect(repository.getRestaurant).not.toHaveBeenCalled();
   });
@@ -79,7 +85,9 @@ describe("loadCheckout", () => {
   it("maps missing restaurants and network errors", async () => {
     const missing = catalog();
     vi.mocked(missing.getRestaurant).mockResolvedValue(null);
-    expect(await loadCheckout({ user: customer, cart: buildCart(), catalog: missing })).toEqual({ kind: "restaurant-missing" });
+    expect(await loadCheckout({ user: customer, cart: buildCart(), catalog: missing })).toEqual({
+      kind: "restaurant-missing",
+    });
     vi.mocked(missing.getRestaurant).mockRejectedValue(new Error("offline"));
     expect(await loadCheckout({ user: customer, cart: buildCart(), catalog: missing })).toEqual({
       kind: "error",

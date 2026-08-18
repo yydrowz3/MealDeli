@@ -14,12 +14,7 @@ export type CartDishCustomizerProps = {
   uuid?: () => string;
 };
 
-export function CartDishCustomizer({
-  dish,
-  restaurant,
-  onAdded,
-  uuid,
-}: CartDishCustomizerProps) {
+export function CartDishCustomizer({ dish, restaurant, onAdded, uuid }: CartDishCustomizerProps) {
   const store = useStore();
   const [pending, setPending] = useState<CartLine | null>(null);
   const [currentRestaurantName, setCurrentRestaurantName] = useState("");
@@ -40,7 +35,9 @@ export function CartDishCustomizer({
       <Modal
         footer={
           <div className="checkout-dialog-actions">
-            <Button onClick={() => setPending(null)} variant="secondary">Keep current cart</Button>
+            <Button onClick={() => setPending(null)} variant="secondary">
+              Keep current cart
+            </Button>
             <Button
               onClick={() => {
                 if (!pending) return;

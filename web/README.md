@@ -100,34 +100,34 @@ The API's `FRONTEND_URL` must match the browser origin exactly. A mismatch preve
 
 The application validates all runtime variables with Zod before it creates Apollo or renders the router. Invalid or missing configuration displays a dedicated startup error page rather than running a partially configured application.
 
-| Variable | Validation | Purpose |
-| --- | --- | --- |
-| `VITE_API_HTTP_URL` | Absolute `http://` or `https://` URL | GraphQL queries and mutations |
-| `VITE_API_WS_URL` | Absolute `ws://` or `wss://` URL | GraphQL subscriptions |
-| `VITE_APP_ORIGIN` | HTTP(S) origin with no application path | Current web application origin |
+| Variable            | Validation                              | Purpose                        |
+| ------------------- | --------------------------------------- | ------------------------------ |
+| `VITE_API_HTTP_URL` | Absolute `http://` or `https://` URL    | GraphQL queries and mutations  |
+| `VITE_API_WS_URL`   | Absolute `ws://` or `wss://` URL        | GraphQL subscriptions          |
+| `VITE_APP_ORIGIN`   | HTTP(S) origin with no application path | Current web application origin |
 
 Use paired `https://` and `wss://` endpoints in production.
 
 ## Routes and access
 
-| Route | Purpose | Access |
-| --- | --- | --- |
-| `/` | Product landing page | Public |
-| `/login` | Sign in | Public; authenticated users are redirected |
-| `/signup?role=...` | Registration with optional role preselection | Public |
-| `/verify-email` | Verification and resend flow | Authenticated users |
-| `/profile` | User profile | Authenticated users |
-| `/restaurants/` | Customer discovery or owner restaurant list | Customer, owner |
-| `/restaurants/:restaurantId` | Customer menu or owner overview | Customer, owner |
-| `/checkout` | Delivery address and order submission | Verified customer |
-| `/orders/` | Role-specific order list | Authenticated users |
-| `/orders/:orderId` | Order detail and permitted state actions | Related order participants |
-| `/restaurants/new` | Create a restaurant | Verified owner |
-| `/restaurants/:id/menu` | Manage dishes and options | Verified owner |
-| `/restaurants/:id/settings` | Edit restaurant details | Verified owner |
-| `/restaurants/:id/promotion` | Promotion purchase and history | Verified owner |
-| `/dashboard` | Owner analytics or courier dispatch | Verified owner or courier |
-| `/deliveries/:orderId` | Active delivery and map | Verified courier |
+| Route                        | Purpose                                      | Access                                     |
+| ---------------------------- | -------------------------------------------- | ------------------------------------------ |
+| `/`                          | Product landing page                         | Public                                     |
+| `/login`                     | Sign in                                      | Public; authenticated users are redirected |
+| `/signup?role=...`           | Registration with optional role preselection | Public                                     |
+| `/verify-email`              | Verification and resend flow                 | Authenticated users                        |
+| `/profile`                   | User profile                                 | Authenticated users                        |
+| `/restaurants/`              | Customer discovery or owner restaurant list  | Customer, owner                            |
+| `/restaurants/:restaurantId` | Customer menu or owner overview              | Customer, owner                            |
+| `/checkout`                  | Delivery address and order submission        | Verified customer                          |
+| `/orders/`                   | Role-specific order list                     | Authenticated users                        |
+| `/orders/:orderId`           | Order detail and permitted state actions     | Related order participants                 |
+| `/restaurants/new`           | Create a restaurant                          | Verified owner                             |
+| `/restaurants/:id/menu`      | Manage dishes and options                    | Verified owner                             |
+| `/restaurants/:id/settings`  | Edit restaurant details                      | Verified owner                             |
+| `/restaurants/:id/promotion` | Promotion purchase and history               | Verified owner                             |
+| `/dashboard`                 | Owner analytics or courier dispatch          | Verified owner or courier                  |
+| `/deliveries/:orderId`       | Active delivery and map                      | Verified courier                           |
 
 `PrivateContentGate` centralizes authentication, email-verification, and role checks. These client-side checks improve navigation and feedback; the API remains the security boundary.
 
@@ -203,16 +203,16 @@ The returned public URL can be saved as a user, restaurant, or dish image.
 
 ## Scripts
 
-| Command | Description |
-| --- | --- |
-| `pnpm dev` | Start the Vite development server |
-| `pnpm build` | Type-check and create a production build |
-| `pnpm preview` | Preview the production build locally |
-| `pnpm lint` | Run Oxlint |
-| `pnpm test` | Run Vitest once |
-| `pnpm test:watch` | Run Vitest in watch mode |
-| `pnpm test:coverage` | Generate V8 coverage reports |
-| `pnpm codegen` | Generate typed GraphQL client artifacts |
+| Command              | Description                              |
+| -------------------- | ---------------------------------------- |
+| `pnpm dev`           | Start the Vite development server        |
+| `pnpm build`         | Type-check and create a production build |
+| `pnpm preview`       | Preview the production build locally     |
+| `pnpm lint`          | Run Oxlint                               |
+| `pnpm test`          | Run Vitest once                          |
+| `pnpm test:watch`    | Run Vitest in watch mode                 |
+| `pnpm test:coverage` | Generate V8 coverage reports             |
+| `pnpm codegen`       | Generate typed GraphQL client artifacts  |
 
 ## Testing and quality
 

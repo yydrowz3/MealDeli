@@ -117,7 +117,10 @@ export function PasswordInput({
   );
 }
 
-export type TextareaProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "aria-describedby"> & {
+export type TextareaProps = Omit<
+  TextareaHTMLAttributes<HTMLTextAreaElement>,
+  "aria-describedby"
+> & {
   label: string;
   description?: string;
   error?: string;
@@ -148,7 +151,15 @@ export type SelectProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, "aria-de
   error?: string;
 };
 
-export function Select({ label, description, error, id, className, children, ...props }: SelectProps) {
+export function Select({
+  label,
+  description,
+  error,
+  id,
+  className,
+  children,
+  ...props
+}: SelectProps) {
   const generatedId = useId();
   const controlId = id ?? generatedId;
 

@@ -32,22 +32,21 @@ export function AvailableOrderCard({
         </div>
         <div>
           <dt>Order total</dt>
-          <dd><Money minor={order.totalMinor} /></dd>
+          <dd>
+            <Money minor={order.totalMinor} />
+          </dd>
         </div>
         <div>
           <dt>Created</dt>
-          <dd><DateTime value={order.createdAt} /></dd>
+          <dd>
+            <DateTime value={order.createdAt} />
+          </dd>
         </div>
       </dl>
-      <Button
-        disabled={disabled || accepting}
-        loading={accepting}
-        onClick={() => onAccept(order)}
-      >
+      <Button disabled={disabled || accepting} loading={accepting} onClick={() => onAccept(order)}>
         Accept order
       </Button>
       {disabledReason ? <p className="courier-help">{disabledReason}</p> : null}
     </Card>
   );
 }
-

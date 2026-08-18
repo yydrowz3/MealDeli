@@ -23,4 +23,3 @@ describe("DeliveryMap", () => {
     expect(onSkipMap).toHaveBeenCalledOnce();
   });
 });
-

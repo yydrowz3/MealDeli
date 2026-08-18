@@ -28,21 +28,38 @@ afterEach(() => testServer.resetHandlers());
 describe("promotion repository", () => {
   it("loads the owned restaurant and demo history through MSW", async () => {
     testServer.use(...createOwnerInsightsHandlers());
-    const result = await createPromotionRepository(transport).refresh("00000000-0000-7000-8000-000000000001");
+    const result = await createPromotionRepository(transport).refresh(
+      "00000000-0000-7000-8000-000000000001",
+    );
     expect(result?.restaurant.name).toBe("Jade Kitchen");
-    expect(result?.payments[0]).toMatchObject({ restaurantName: "Jade Kitchen", transactionId: expect.stringMatching(/^demo_/) });
+    expect(result?.payments[0]).toMatchObject({
+      restaurantName: "Jade Kitchen",
+      transactionId: expect.stringMatching(/^demo_/),
+    });
   });
 
   it("maps duplicate business errors for refetch coordination", async () => {
-    testServer.use(...createOwnerInsightsHandlers({ createError: "This transaction has already been processed." }));
-    await expect(createPromotionRepository(transport).create("00000000-0000-7000-8000-000000000001", "demo_uuid"))
-      .resolves.toEqual({ kind: "duplicate" });
+    testServer.use(
+      ...createOwnerInsightsHandlers({
+        createError: "This transaction has already been processed.",
+      }),
+    );
+    await expect(
+      createPromotionRepository(transport).create(
+        "00000000-0000-7000-8000-000000000001",
+        "demo_uuid",
+      ),
+    ).resolves.toEqual({ kind: "duplicate" });
   });
 
   it("surfaces a network failure as a repository error", async () => {
     testServer.use(...createOwnerInsightsHandlers({ networkError: true }));
-    await expect(createPromotionRepository(transport).create("00000000-0000-7000-8000-000000000001", "demo_uuid"))
-      .rejects.toBeInstanceOf(PromotionRepositoryError);
+    await expect(
+      createPromotionRepository(transport).create(
+        "00000000-0000-7000-8000-000000000001",
+        "demo_uuid",
+      ),
+    ).rejects.toBeInstanceOf(PromotionRepositoryError);
   });
 
   it("returns not-found only for safe ownership and missing restaurant errors", async () => {

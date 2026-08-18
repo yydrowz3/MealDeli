@@ -9,10 +9,12 @@ describe("HTTP transport", () => {
     const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
       void input;
       void init;
-      return Promise.resolve(new Response(
-        JSON.stringify({ data: { health: "ok" } }),
-        { status: 200, headers: { "content-type": "application/json" } },
-      ));
+      return Promise.resolve(
+        new Response(JSON.stringify({ data: { health: "ok" } }), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        }),
+      );
     });
     vi.stubGlobal("fetch", fetchMock);
     const services = createApolloClient({
@@ -28,7 +30,13 @@ describe("HTTP transport", () => {
       },
     });
 
-    await services.apolloClient.query({ query: gql`query PlatformHealth { health }` });
+    await services.apolloClient.query({
+      query: gql`
+        query PlatformHealth {
+          health
+        }
+      `,
+    });
     const request = fetchMock.mock.calls[0];
     expect(request[0]).toBe("https://api.mealdeli.test/graphql");
     expect(request[1]).toMatchObject({ credentials: "include" });

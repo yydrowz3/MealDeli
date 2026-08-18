@@ -32,7 +32,9 @@ export function OrderCard({ order, action, onView, viewLabel = "View order" }: O
       <dl className="orders-card__facts">
         <div>
           <dt>Placed</dt>
-          <dd><DateTime value={order.createdAt} /></dd>
+          <dd>
+            <DateTime value={order.createdAt} />
+          </dd>
         </div>
         <div>
           <dt>Items</dt>
@@ -40,10 +42,17 @@ export function OrderCard({ order, action, onView, viewLabel = "View order" }: O
         </div>
         <div>
           <dt>Total</dt>
-          <dd><Money minor={order.totalMinor} /></dd>
+          <dd>
+            <Money minor={order.totalMinor} />
+          </dd>
         </div>
       </dl>
-      {action ?? (onView ? <Button onClick={() => onView(order)} variant="secondary">{viewLabel}</Button> : null)}
+      {action ??
+        (onView ? (
+          <Button onClick={() => onView(order)} variant="secondary">
+            {viewLabel}
+          </Button>
+        ) : null)}
     </Card>
   );
 }

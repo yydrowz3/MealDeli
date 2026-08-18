@@ -1,10 +1,4 @@
-export const ORDER_STATUSES = [
-  "PENDING",
-  "COOKING",
-  "WAITING",
-  "PICKED",
-  "DELIVERED",
-] as const;
+export const ORDER_STATUSES = ["PENDING", "COOKING", "WAITING", "PICKED", "DELIVERED"] as const;
 
 export type OrderStatus = (typeof ORDER_STATUSES)[number];
 export type OrderRole = "CUSTOMER" | "OWNER" | "COURIER";

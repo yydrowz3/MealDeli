@@ -28,7 +28,9 @@ describe("Platform rendered states", () => {
     ];
     render(
       <>
-        <GuestLayout><span>guest content</span></GuestLayout>
+        <GuestLayout>
+          <span>guest content</span>
+        </GuestLayout>
         <CustomerLayout cartCount={3} navigation={navigation} onCartOpen={onCartOpen}>
           customer content
         </CustomerLayout>
@@ -64,7 +66,9 @@ describe("Platform rendered states", () => {
         <StartupErrorPage />
         <OfflinePage />
         <ChunkLoadErrorPage />
-        <AppErrorBoundary><Broken /></AppErrorBoundary>
+        <AppErrorBoundary>
+          <Broken />
+        </AppErrorBoundary>
       </>,
     );
     expect(screen.getByText("MealDeli isn’t configured correctly.")).toBeInTheDocument();
@@ -76,7 +80,11 @@ describe("Platform rendered states", () => {
 
   it("switches OnlineRequired without losing its shell state", () => {
     Object.defineProperty(navigator, "onLine", { configurable: true, value: true });
-    render(<OnlineRequired><div>online content</div></OnlineRequired>);
+    render(
+      <OnlineRequired>
+        <div>online content</div>
+      </OnlineRequired>,
+    );
     expect(screen.getByText("online content")).toBeInTheDocument();
     act(() => window.dispatchEvent(new Event("offline")));
     expect(screen.getByText("You’re offline. Connect to continue.")).toBeInTheDocument();
@@ -142,7 +150,9 @@ describe("Platform rendered states", () => {
     });
     render(
       <Provider store={store}>
-        <RequireAccess route={{ requiresAuth: true, requiresVerification: true, allowedRoles: ["CUSTOMER"] }}>
+        <RequireAccess
+          route={{ requiresAuth: true, requiresVerification: true, allowedRoles: ["CUSTOMER"] }}
+        >
           gated content
         </RequireAccess>
       </Provider>,
@@ -162,7 +172,11 @@ describe("Platform rendered states", () => {
       },
       dispose: vi.fn(),
     };
-    render(<AppProviders services={services}><span>provider content</span></AppProviders>);
+    render(
+      <AppProviders services={services}>
+        <span>provider content</span>
+      </AppProviders>,
+    );
     expect(screen.getByText("provider content")).toBeInTheDocument();
   });
 });

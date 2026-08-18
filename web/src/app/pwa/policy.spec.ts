@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { PWA_MAP_TILE_PATTERN, PWA_RUNTIME_CACHING, PWA_SENSITIVE_REQUEST_PATTERN, PWA_UPDATE_BEHAVIOR } from "./policy";
+import {
+  PWA_MAP_TILE_PATTERN,
+  PWA_RUNTIME_CACHING,
+  PWA_SENSITIVE_REQUEST_PATTERN,
+  PWA_UPDATE_BEHAVIOR,
+} from "./policy";
 
 describe("PWA policy contract", () => {
   it.each([
@@ -8,7 +13,11 @@ describe("PWA policy contract", () => {
     "https://api.mealdeli.test/auth/resend-verification",
   ])("keeps sensitive request %s NetworkOnly", (url) => {
     expect(PWA_SENSITIVE_REQUEST_PATTERN.test(url)).toBe(true);
-    expect(PWA_RUNTIME_CACHING.filter(({ urlPattern }) => urlPattern.test(url)).every(({ handler }) => handler === "NetworkOnly")).toBe(true);
+    expect(
+      PWA_RUNTIME_CACHING.filter(({ urlPattern }) => urlPattern.test(url)).every(
+        ({ handler }) => handler === "NetworkOnly",
+      ),
+    ).toBe(true);
   });
 
   it("never caches OpenStreetMap tiles", () => {

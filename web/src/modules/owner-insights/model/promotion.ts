@@ -73,13 +73,15 @@ export interface PromotionCoordinator {
   getPendingTransactionId(): string | null;
 }
 
-export function createPromotionCoordinator(input: Readonly<{
-  restaurantId: string;
-  repository: PromotionRepository;
-  uuid: () => string;
-  clock: () => Date;
-  diagnostic?: PromotionDiagnostic;
-}>): PromotionCoordinator {
+export function createPromotionCoordinator(
+  input: Readonly<{
+    restaurantId: string;
+    repository: PromotionRepository;
+    uuid: () => string;
+    clock: () => Date;
+    diagnostic?: PromotionDiagnostic;
+  }>,
+): PromotionCoordinator {
   let transactionId: string | null = null;
   return {
     getPendingTransactionId: () => transactionId,
@@ -97,7 +99,8 @@ export function createPromotionCoordinator(input: Readonly<{
         const data = await input.repository.refresh(input.restaurantId);
         if (
           data &&
-          getPromotionState(data.restaurant.promotedUntil, input.clock(), input.diagnostic) === "active"
+          getPromotionState(data.restaurant.promotedUntil, input.clock(), input.diagnostic) ===
+            "active"
         ) {
           transactionId = null;
           return { kind: "activated", data, transactionId: attemptedTransactionId };

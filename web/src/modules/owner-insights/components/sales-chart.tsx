@@ -9,8 +9,10 @@ export type SalesChartProps = Readonly<{
 }>;
 
 function formatDay(date: string, weekday?: "short" | "long"): string {
-  return new Intl.DateTimeFormat("en-US", weekday ? { weekday } : { month: "short", day: "numeric" })
-    .format(localDateFromKey(date));
+  return new Intl.DateTimeFormat(
+    "en-US",
+    weekday ? { weekday } : { month: "short", day: "numeric" },
+  ).format(localDateFromKey(date));
 }
 
 function getSalesSummary(dailySales: readonly DailySales[]): string {

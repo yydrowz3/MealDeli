@@ -36,7 +36,10 @@ describe("OrdersPage", () => {
     render(
       <OrdersPage
         renderAction={(order) => <Button>Handle {order.id}</Button>}
-        restaurants={[{ id: "a", name: "Jade Kitchen" }, { id: "b", name: "Green Table" }]}
+        restaurants={[
+          { id: "a", name: "Jade Kitchen" },
+          { id: "b", name: "Green Table" },
+        ]}
         role="OWNER"
         state={{ kind: "ready", orders: [first, second] }}
       />,
@@ -84,10 +87,7 @@ describe("OrdersPage", () => {
 describe("OrderDetailPage", () => {
   it.each(ORDER_STATUSES)("renders the shared five-stage timeline at %s", (status) => {
     render(
-      <OrderDetailPage
-        role="CUSTOMER"
-        state={{ kind: "ready", order: buildOrder({ status }) }}
-      />,
+      <OrderDetailPage role="CUSTOMER" state={{ kind: "ready", order: buildOrder({ status }) }} />,
     );
     const timeline = screen.getByRole("list", { name: "Order progress" });
     expect(within(timeline).getAllByRole("listitem")).toHaveLength(5);

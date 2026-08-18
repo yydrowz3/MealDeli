@@ -16,7 +16,9 @@ export function CourierHistoryPage({
       onViewOrder={onViewOrder}
       renderAction={(order) =>
         order.status === "PICKED" ? (
-          <button onClick={() => onContinueDelivery(order)} type="button">Continue delivery</button>
+          <button onClick={() => onContinueDelivery(order)} type="button">
+            Continue delivery
+          </button>
         ) : null
       }
       role="COURIER"
@@ -45,4 +47,3 @@ export function CourierCompletedDeliveryPage({
     />
   );
 }
-

@@ -29,14 +29,12 @@ export class RestartableSubscriptionLink extends ApolloLink {
   private generation = 0;
   private readonly unsubscribeToken?: () => void;
 
-  constructor(
-    options: {
-      url: string;
-      getAccessToken: () => string | null;
-      subscribeAccessToken?: (listener: () => void) => () => void;
-      createClient?: ClientFactory;
-    },
-  ) {
+  constructor(options: {
+    url: string;
+    getAccessToken: () => string | null;
+    subscribeAccessToken?: (listener: () => void) => () => void;
+    createClient?: ClientFactory;
+  }) {
     super();
     this.options = options;
     this.client = this.makeClient();

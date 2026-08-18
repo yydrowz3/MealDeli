@@ -41,13 +41,7 @@ export function buildOrder(overrides: Partial<Order> = {}): Order {
 }
 
 export function buildOrdersByStatus(): readonly Order[] {
-  const statuses: readonly OrderStatus[] = [
-    "PENDING",
-    "COOKING",
-    "WAITING",
-    "PICKED",
-    "DELIVERED",
-  ];
+  const statuses: readonly OrderStatus[] = ["PENDING", "COOKING", "WAITING", "PICKED", "DELIVERED"];
   return statuses.map((status, index) =>
     buildOrder({
       id: `order-0000000${index + 1}`,

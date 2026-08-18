@@ -25,10 +25,7 @@ export function RequireAccess({
     search: window.location.search,
   });
   return (
-    <PrivateContentGate
-      decision={decision}
-      onRedirect={(to) => window.location.assign(to)}
-    >
+    <PrivateContentGate decision={decision} onRedirect={(to) => window.location.assign(to)}>
       {children}
     </PrivateContentGate>
   );

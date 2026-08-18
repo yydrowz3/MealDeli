@@ -11,9 +11,7 @@ export type {
   OrderStatus,
   RestaurantSummary,
 } from "./model/types";
-export {
-  ORDER_STATUSES,
-} from "./model/types";
+export { ORDER_STATUSES } from "./model/types";
 export {
   ORDER_STATUS_DESCRIPTIONS,
   ORDER_STATUS_LABELS,
@@ -29,21 +27,14 @@ export { createCustomerOrderStatusNotifier } from "./model/customer-notifier";
 export type { CustomerOrderNotification } from "./model/customer-notifier";
 
 export { createOrderRepository, OrderRepositoryError } from "./api/order-repository";
-export type {
-  OrderGraphqlTransport,
-  OrderRepository,
-} from "./api/order-repository";
+export type { OrderGraphqlTransport, OrderRepository } from "./api/order-repository";
 export {
   mergeApolloOrderEvent,
   mergeOrderEvent,
   mergeOrderEventIntoList,
   replaceApolloOrderAuthoritatively,
 } from "./api/cache-updates";
-export type {
-  ApolloOrderCachePort,
-  OrderMergeReason,
-  OrderMergeResult,
-} from "./api/cache-updates";
+export type { ApolloOrderCachePort, OrderMergeReason, OrderMergeResult } from "./api/cache-updates";
 export {
   createOrderRealtimeAdapter,
   createOrderSubscriptionPort,
@@ -68,7 +59,4 @@ export type { OrderTableProps } from "./components/order-table";
 export { OrdersPage } from "./pages/orders-page";
 export type { OrdersPageProps, OrdersPageState } from "./pages/orders-page";
 export { OrderDetailPage } from "./pages/order-detail-page";
-export type {
-  OrderDetailPageProps,
-  OrderDetailPageState,
-} from "./pages/order-detail-page";
+export type { OrderDetailPageProps, OrderDetailPageState } from "./pages/order-detail-page";

@@ -32,7 +32,8 @@ function validateLine(line: CartLine, restaurant: RestaurantDetail): InvalidCart
     }
   }
   for (const option of dish.options) {
-    const count = line.options.find((snapshot) => snapshot.optionId === option.id)?.choices.length ?? 0;
+    const count =
+      line.options.find((snapshot) => snapshot.optionId === option.id)?.choices.length ?? 0;
     if (count < option.minSelections || count > option.maxSelections) {
       return { lineId: line.lineId, reason: "INVALID_SELECTION" };
     }

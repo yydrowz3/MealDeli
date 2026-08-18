@@ -2,11 +2,7 @@ import { getOrderStatusRank } from "../model/status-machine";
 import { sortOrdersNewestFirst } from "../model/role-projection";
 import type { Order, OrderRealtimeEvent, OrdersDiagnostic } from "../model/types";
 
-export type OrderMergeReason =
-  | "applied"
-  | "different-order"
-  | "older-status"
-  | "stale-event";
+export type OrderMergeReason = "applied" | "different-order" | "older-status" | "stale-event";
 
 export type OrderMergeResult = Readonly<{
   applied: boolean;
@@ -122,10 +118,7 @@ export function mergeApolloOrderEvent(
   return true;
 }
 
-export function replaceApolloOrderAuthoritatively(
-  cache: ApolloOrderCachePort,
-  order: Order,
-): void {
+export function replaceApolloOrderAuthoritatively(cache: ApolloOrderCachePort, order: Order): void {
   cache.writeOrder(order);
   const existing = cache.readOrderList();
   const withoutCurrent = existing.filter((candidate) => candidate.id !== order.id);

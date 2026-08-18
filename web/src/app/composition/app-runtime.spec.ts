@@ -98,7 +98,9 @@ describe("MealDeli runtime", () => {
       ),
     );
     const runtime = createMealDeliRuntime(config);
-    await waitFor(() => expect(runtime.services.jotaiStore.get(identityAtom).status).toBe("anonymous"));
+    await waitFor(() =>
+      expect(runtime.services.jotaiStore.get(identityAtom).status).toBe("anonymous"),
+    );
     expect(() => runtime.clearPrivateState()).not.toThrow();
     expect(() => runtime.dispose()).not.toThrow();
   });

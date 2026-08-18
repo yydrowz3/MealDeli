@@ -12,9 +12,9 @@ describe("PromotionPage", () => {
   it("clearly labels the inactive offer as a demo and does not claim history stored the price", async () => {
     const repository: PromotionRepository = {
       create: vi.fn(),
-      refresh: vi.fn().mockResolvedValue(
-        buildPromotionData({ payments: [buildPromotionPayment()] }),
-      ),
+      refresh: vi
+        .fn()
+        .mockResolvedValue(buildPromotionData({ payments: [buildPromotionPayment()] })),
     };
     render(
       <PromotionPage
@@ -35,7 +35,10 @@ describe("PromotionPage", () => {
   it("locks confirmation while submitting and activates from the server refetch", async () => {
     let finishCreate!: (value: { kind: "created" }) => void;
     const create = vi.fn(
-      () => new Promise<{ kind: "created" }>((resolve) => { finishCreate = resolve; }),
+      () =>
+        new Promise<{ kind: "created" }>((resolve) => {
+          finishCreate = resolve;
+        }),
     );
     const repository: PromotionRepository = {
       create,
@@ -44,7 +47,10 @@ describe("PromotionPage", () => {
         .mockResolvedValueOnce(buildPromotionData())
         .mockResolvedValueOnce(
           buildPromotionData({
-            restaurant: { ...buildPromotionData().restaurant, promotedUntil: "2026-08-24T12:00:00.000Z" },
+            restaurant: {
+              ...buildPromotionData().restaurant,
+              promotedUntil: "2026-08-24T12:00:00.000Z",
+            },
           }),
         ),
     };
@@ -73,17 +79,14 @@ describe("PromotionPage", () => {
       create: vi.fn(),
       refresh: vi.fn().mockResolvedValue(
         buildPromotionData({
-          restaurant: { ...buildPromotionData().restaurant, promotedUntil: "2026-08-24T12:00:00.000Z" },
+          restaurant: {
+            ...buildPromotionData().restaurant,
+            promotedUntil: "2026-08-24T12:00:00.000Z",
+          },
         }),
       ),
     };
-    render(
-      <PromotionPage
-        clock={() => NOW}
-        repository={repository}
-        restaurantId="restaurant-1"
-      />,
-    );
+    render(<PromotionPage clock={() => NOW} repository={repository} restaurantId="restaurant-1" />);
     expect(await screen.findByText("Promotion active")).toBeVisible();
     expect(screen.queryByRole("button", { name: "Promote for $9.99" })).not.toBeInTheDocument();
     expect(repository.create).not.toHaveBeenCalled();

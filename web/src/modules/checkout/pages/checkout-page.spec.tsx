@@ -38,7 +38,11 @@ function identityRepository(refreshed: SessionUser = customer): IdentityReposito
 
 describe("CheckoutPage", () => {
   it("shows a dedicated empty cart state", () => {
-    const store = createIdentityTestStore({ status: "authenticated", accessToken: "access-token", user: customer });
+    const store = createIdentityTestStore({
+      status: "authenticated",
+      accessToken: "access-token",
+      user: customer,
+    });
     render(
       <Provider store={store}>
         <CheckoutPage
@@ -60,7 +64,11 @@ describe("CheckoutPage", () => {
     const user = userEvent.setup();
     const refreshed = { ...customer, address: "10 Main Street" };
     const repository = identityRepository(refreshed);
-    const store = createIdentityTestStore({ status: "authenticated", accessToken: "access-token", user: customer });
+    const store = createIdentityTestStore({
+      status: "authenticated",
+      accessToken: "access-token",
+      user: customer,
+    });
     store.set(cartStorageAtom, buildCart());
     render(
       <Provider store={store}>
@@ -77,8 +85,13 @@ describe("CheckoutPage", () => {
     );
     expect(screen.getByRole("button", { name: "Pay & place order" })).toBeDisabled();
     await user.click(screen.getByRole("button", { name: "Save address" }));
-    expect((await screen.findAllByText("Add a delivery address to continue.")).length).toBeGreaterThan(0);
-    await user.type(screen.getByRole("textbox", { name: "Delivery address" }), "  10 Main Street  ");
+    expect(
+      (await screen.findAllByText("Add a delivery address to continue.")).length,
+    ).toBeGreaterThan(0);
+    await user.type(
+      screen.getByRole("textbox", { name: "Delivery address" }),
+      "  10 Main Street  ",
+    );
     await user.click(screen.getByRole("button", { name: "Save address" }));
     await waitFor(() => expect(repository.editProfile).toHaveBeenCalledTimes(1));
     expect(repository.editProfile).toHaveBeenCalledWith(
@@ -93,7 +106,11 @@ describe("CheckoutPage", () => {
     const user = userEvent.setup();
     const addressed = { ...customer, address: "10 Main Street" };
     const create = vi.fn();
-    const store = createIdentityTestStore({ status: "authenticated", accessToken: "access-token", user: addressed });
+    const store = createIdentityTestStore({
+      status: "authenticated",
+      accessToken: "access-token",
+      user: addressed,
+    });
     const cart = buildCart();
     store.set(cartStorageAtom, cart);
     render(
@@ -125,9 +142,16 @@ describe("CheckoutPage", () => {
     [{ kind: "forbidden" as const }, "Customer access is required."],
     [{ kind: "verification-required" as const }, "Verify your email before placing an order."],
     [{ kind: "restaurant-missing" as const }, "This restaurant is no longer available."],
-    [{ kind: "error" as const, message: "We couldn’t load checkout. Try again." }, "We couldn’t load checkout. Try again."],
+    [
+      { kind: "error" as const, message: "We couldn’t load checkout. Try again." },
+      "We couldn’t load checkout. Try again.",
+    ],
   ])("renders loader state $state.kind", (state, expected) => {
-    const store = createIdentityTestStore({ status: "authenticated", accessToken: "access-token", user: customer });
+    const store = createIdentityTestStore({
+      status: "authenticated",
+      accessToken: "access-token",
+      user: customer,
+    });
     store.set(cartStorageAtom, buildCart());
     render(
       <Provider store={store}>
@@ -148,7 +172,11 @@ describe("CheckoutPage", () => {
   it("allows editing an existing address", async () => {
     const user = userEvent.setup();
     const addressed = { ...customer, address: "10 Main Street" };
-    const store = createIdentityTestStore({ status: "authenticated", accessToken: "access-token", user: addressed });
+    const store = createIdentityTestStore({
+      status: "authenticated",
+      accessToken: "access-token",
+      user: addressed,
+    });
     store.set(cartStorageAtom, buildCart());
     render(
       <Provider store={store}>
@@ -158,7 +186,12 @@ describe("CheckoutPage", () => {
           onOrderCreated={vi.fn()}
           orderRepository={{ create: vi.fn() }}
           reconcileOrder={vi.fn()}
-          state={{ kind: "ready", restaurant: null as never, address: addressed.address, invalidLines: [] }}
+          state={{
+            kind: "ready",
+            restaurant: null as never,
+            address: addressed.address,
+            invalidLines: [],
+          }}
           store={store}
         />
       </Provider>,
@@ -182,7 +215,11 @@ describe("CheckoutPage", () => {
   ])("preserves the cart for $result.kind", async (result, reconciledOrderId, expected) => {
     const user = userEvent.setup();
     const addressed = { ...customer, address: "10 Main Street" };
-    const store = createIdentityTestStore({ status: "authenticated", accessToken: "access-token", user: addressed });
+    const store = createIdentityTestStore({
+      status: "authenticated",
+      accessToken: "access-token",
+      user: addressed,
+    });
     store.set(cartStorageAtom, buildCart());
     const create = vi.fn().mockResolvedValue(result);
     render(
@@ -193,7 +230,12 @@ describe("CheckoutPage", () => {
           onOrderCreated={vi.fn()}
           orderRepository={{ create }}
           reconcileOrder={vi.fn().mockResolvedValue(reconciledOrderId)}
-          state={{ kind: "ready", restaurant: null as never, address: addressed.address, invalidLines: [] }}
+          state={{
+            kind: "ready",
+            restaurant: null as never,
+            address: addressed.address,
+            invalidLines: [],
+          }}
           store={store}
         />
       </Provider>,
@@ -207,7 +249,11 @@ describe("CheckoutPage", () => {
   it("clears and hands off the order after success", async () => {
     const user = userEvent.setup();
     const addressed = { ...customer, address: "10 Main Street" };
-    const store = createIdentityTestStore({ status: "authenticated", accessToken: "access-token", user: addressed });
+    const store = createIdentityTestStore({
+      status: "authenticated",
+      accessToken: "access-token",
+      user: addressed,
+    });
     store.set(cartStorageAtom, buildCart());
     const onOrderCreated = vi.fn();
     render(
@@ -216,9 +262,16 @@ describe("CheckoutPage", () => {
           identityRepository={identityRepository(addressed)}
           onBrowseRestaurants={vi.fn()}
           onOrderCreated={onOrderCreated}
-          orderRepository={{ create: vi.fn().mockResolvedValue({ kind: "success", orderId: "order-1" }) }}
+          orderRepository={{
+            create: vi.fn().mockResolvedValue({ kind: "success", orderId: "order-1" }),
+          }}
           reconcileOrder={vi.fn()}
-          state={{ kind: "ready", restaurant: null as never, address: addressed.address, invalidLines: [] }}
+          state={{
+            kind: "ready",
+            restaurant: null as never,
+            address: addressed.address,
+            invalidLines: [],
+          }}
           store={store}
         />
       </Provider>,

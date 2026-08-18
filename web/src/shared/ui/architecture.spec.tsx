@@ -27,6 +27,8 @@ describe("Design System isolation", () => {
     const source = sources.join("\n");
 
     expect(source).not.toMatch(/from\s+["'][^"']*(?:\/modules\/|\/app\/|\/routes\/)/);
-    expect(source).not.toMatch(/@apollo|\bjotai\b|@tanstack\/react-form|@tanstack\/react-router|\bgraphql\b/);
+    expect(source).not.toMatch(
+      /@apollo|\bjotai\b|@tanstack\/react-form|@tanstack\/react-router|\bgraphql\b/,
+    );
   });
 });
