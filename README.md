@@ -3,17 +3,17 @@
 </p>
 
 <p align="center">
-  A **full-stack**, real-time meal delivery platform for customers, restaurant owners, and couriers.
+  A <strong>full-stack</strong>, real-time meal delivery platform for customers, restaurant owners, and couriers.
 </p>
 
 <p align="center">
+  English
+  ·
+  <a href="./README.zh-CN.md">中文</a>
+  ·
   <a href="./api/README.md">API documentation</a>
   ·
   <a href="./web/README.md">Web documentation</a>
-  <!-- ·
-  <a href="./docs/detailed-designs/00-architecture.md">Architecture</a>
-  ·
-  <a href="./docs/tasks/progress.md">Implementation status</a> -->
 </p>
 
 <p align="center">
@@ -42,10 +42,13 @@
 <img alt="Neon" src="https://img.shields.io/badge/-Neon-34D59A?style=flat-square&logo=neon&logoColor=white" />
 <img alt="Resend" src="https://img.shields.io/badge/-Resend-025E8C?style=flat-square&logo=resend&logoColor=white" />
 <img alt="Oxc" src="https://img.shields.io/badge/-Oxc-00F7F1?style=flat-square&logo=oxc&logoColor=white" />
-
 </p>
 
-## Overview
+<p align="center">
+<img alt="banner" src="./public/banner.png" />
+</p>
+
+## 👋 Overview
 
 MealDeli is a role-based full-stack meal delivery application built as two separate backend & frontend node projects.
 
@@ -55,7 +58,9 @@ MealDeli is a role-based full-stack meal delivery application built as two separ
 
 The project includes the complete delivery lifecycle—from restaurant discovery and checkout to kitchen preparation, courier assignment, and final delivery.
 
-## Highlights
+![demo videos](./public/videos/demo.mp4)
+
+## ✨ Highlights
 
 - Three purpose-built experiences for **customers**, restaurant **owners**, and **couriers**
 - JWT access tokens with rotating server-side **refresh** sessions
@@ -68,7 +73,24 @@ The project includes the complete delivery lifecycle—from restaurant discovery
 - Typed **GraphQL** operations generated from the backend schema
 - Unit, integration, and end-to-end test coverage across both applications
 
-## Product experiences
+<details>
+  <summary><kbd>Screenshots</kbd></summary>
+
+- **Customer**
+
+  <img alt="screenshot customer" src="./public/screenshots/shot-1-customer.png" />
+
+- **Restaurant Owner Dashboard**
+
+  <img alt="screenshot owner" src="./public/screenshots/shot-2-owner.png" />
+
+- **Courier Panel**
+
+  <img alt="screenshot owner" src="./public/screenshots/shot-3-courier.png" />
+
+</details>
+
+## 👥 Product experiences
 
 | Role     | Capabilities                                                                                                                                  |
 | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -76,7 +98,7 @@ The project includes the complete delivery lifecycle—from restaurant discovery
 | Owner    | Create restaurants, manage menus, receive incoming orders, advance kitchen states, review activity, and purchase restaurant promotion periods |
 | Courier  | Browse available deliveries, claim an order, follow the delivery route, advance delivery states, and review delivery history                  |
 
-## Tech stack
+## 🛠️ Tech stack
 
 | Area          | Technologies                                                                            |
 | ------------- | --------------------------------------------------------------------------------------- |
@@ -87,7 +109,7 @@ The project includes the complete delivery lifecycle—from restaurant discovery
 | Integrations  | Resend, S3-compatible object storage                                                    |
 | Testing       | Jest, Supertest, Vitest, Testing Library, MSW                                           |
 
-## Architecture
+## 🏗️ Architecture
 
 ```text
 Browser / installed PWA
@@ -106,7 +128,7 @@ NestJS API
 
 Authentication uses a short-lived access token in the Authorization header and a refresh token in an HttpOnly cookie. The refresh token is hashed in a server-side session, allowing logout and session revocation without storing raw refresh credentials.
 
-## Repository layout
+## 📁 Repository layout
 
 ```text
 MealDeli/
@@ -125,9 +147,9 @@ MealDeli/
 
 The repository does not have a root `package.json`. Install dependencies and run commands inside `api/` and `web/` independently.
 
-## Getting started
+## 🚀 Getting started
 
-### Prerequisites
+### 📋 Prerequisites
 
 - Node.js
 - pnpm
@@ -135,7 +157,7 @@ The repository does not have a root `package.json`. Install dependencies and run
 - S3-compatible object storage, such as AWS S3 or MinIO
 - A Resend API key if verification emails should be delivered
 
-### 1. Configure the API
+### ⚙️ 1. Configure the API
 
 ```bash
 cd api
@@ -183,7 +205,7 @@ The API is now available at:
 
 See the [API guide](./api/README.md) for the complete environment reference, data model, and endpoint documentation.
 
-### 2. Configure the web app
+### 🌐 2. Configure the web app
 
 Open another terminal:
 
@@ -208,20 +230,19 @@ pnpm dev
 
 Open `http://localhost:5173`. See the [web guide](./web/README.md) for route permissions, application architecture, PWA behavior, and troubleshooting.
 
-## Demo accounts
+## 🧪 Demo accounts
 
 Running `pnpm exec ts-node prisma/seed.ts` inside `api/` creates the following verified development accounts:
 
-| Role                    | Email                     | Password           |
-| ----------------------- | ------------------------- | ------------------ |
-| Customer                | `customer@mealdeli.com`   | `passwordcustomer` |
-| Owner                   | `owner@mealdeli.com`      | `passwordowner`    |
-| Courier                 | `courier@mealdeli.com`    | `passwordcourier`  |
-| Sample restaurant owner | `test_owner@mealdeli.com` | `test_owner`       |
+| Role     | Email                   | Password           |
+| -------- | ----------------------- | ------------------ |
+| Customer | `customer@mealdeli.com` | `passwordcustomer` |
+| Owner    | `owner@mealdeli.com`    | `passwordowner`    |
+| Courier  | `courier@mealdeli.com`  | `passwordcourier`  |
 
 These credentials are for local development only. Never reuse them in a public or production environment.
 
-## Order lifecycle
+## 🔄 Order lifecycle
 
 Orders follow a strictly adjacent state machine. The API rejects skipped states and transitions attempted by the wrong role.
 
@@ -231,7 +252,7 @@ PENDING ──Owner──▶ COOKING ──Owner──▶ WAITING ──Courier�
 
 Order items preserve dish names, prices, selected options, and totals as snapshots. Later menu edits therefore do not alter historical orders.
 
-## Development commands
+## 💻 Development commands
 
 Run each command from the relevant project directory.
 
@@ -254,7 +275,7 @@ pnpm codegen
 
 Do not manually edit `api/src/generated/prisma/`, `web/src/gql/`, or `web/src/routeTree.gen.ts`.
 
-## Verification before review
+## ✅ Verification before review
 
 ```bash
 cd api
@@ -271,7 +292,7 @@ pnpm build
 
 For database changes, inspect the generated migration SQL before committing it. For UI changes, include screenshots in the pull request; for API changes, include representative GraphQL operations.
 
-## Production notes
+## 🔒 Production notes
 
 - Use HTTPS and WSS everywhere, with separate high-entropy access and refresh secrets.
 - Set `NODE_ENV=production` so refresh cookies receive the Secure attribute.
@@ -281,14 +302,14 @@ For database changes, inspect the generated migration SQL before committing it. 
 - `POST /payments` is currently a provider webhook placeholder. Add signature verification, idempotency, and audited event handling before production use.
 - Never commit `.env` files, credentials, production data, generated build output, or coverage reports.
 
-## Documentation
+## 📚 Documentation
 
 - [API reference and development guide](./api/README.md)
 - [Web architecture and development guide](./web/README.md)
 - [System architecture](./docs/detailed-designs/00-architecture.md)
 - [Feature implementation status](./docs/tasks/progress.md)
 
-## License
+## 📄 License
 
 This Project is licensed as `MIT License`, refer to `LICENSE.md` for more information.
 
