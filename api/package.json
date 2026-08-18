@@ -1,9 +1,9 @@
 {
   "name": "meal-deli-api",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "author": "github.com/yydrowz3",
   "scripts": {
     "build": "nest build",

@@ -1,9 +1,10 @@
 {
   "name": "meal-deli-web",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "author": "github.com/yydrowz3",
   "type": "module",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
