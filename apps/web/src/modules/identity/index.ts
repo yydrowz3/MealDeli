@@ -1,5 +1,3 @@
-import "./identity.css";
-
 export { createIdentityRepository, adaptIdentitySessionUser } from "./api/identity-repository";
 export type { IdentityGraphqlClient } from "./api/identity-repository";
 export { LoginForm } from "./components/login-form";

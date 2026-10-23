@@ -69,7 +69,7 @@ function OwnerDashboardRouteContent() {
   }, [runtime]);
 
   if (error) return <ErrorState title="We couldn’t load your dashboard." />;
-  if (!data) return <Skeleton aria-label="Loading owner dashboard" style={{ height: "32rem" }} />;
+  if (!data) return <Skeleton aria-label="Loading owner dashboard" className="h-128" />;
   return (
     <>
       <NewOrderNotifier

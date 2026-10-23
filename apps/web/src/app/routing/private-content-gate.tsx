@@ -9,7 +9,10 @@ export function PrivateContentGate(props: {
 }) {
   if (props.decision.kind === "checking") {
     return (
-      <main aria-label="Checking your session" className="app-session-skeleton">
+      <main
+        aria-label="Checking your session"
+        className="mx-auto my-[15vh] grid max-w-[40rem] gap-4 p-6"
+      >
         <Skeleton className="min-h-12! w-[55%]" />
         <Skeleton className="min-h-28!" />
         <Skeleton className="min-h-48!" />
@@ -20,10 +23,12 @@ export function PrivateContentGate(props: {
     const decision = props.decision;
     if (decision.reason === "role") {
       return (
-        <main className="app-state" role="alert">
-          <h1>You don’t have access to this page.</h1>
+        <main className="mx-auto my-[15vh] grid max-w-[40rem] gap-4 p-6" role="alert">
+          <h1 className="m-0 text-[length:var(--font-size-page)]">
+            You don’t have access to this page.
+          </h1>
           <button
-            className="app-text-link"
+            className="cursor-pointer [justify-self:start] border-0 border-none bg-transparent text-jade-dark underline"
             onClick={() => props.onRedirect(decision.to)}
             type="button"
           >

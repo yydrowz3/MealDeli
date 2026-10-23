@@ -23,7 +23,7 @@ export function NavigationLinks({ items }: { items: readonly NavigationItem[] })
       {items.map((item) => (
         <a
           aria-current={item.current ? "page" : undefined}
-          className="app-nav-link"
+          className="inline-flex items-center gap-2"
           href={item.href}
           key={item.href}
         >

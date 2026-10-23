@@ -6,15 +6,18 @@ import type { LayoutProps } from "./layout-types";
 
 export function CustomerLayout(props: LayoutProps & { cartCount: number; onCartOpen: () => void }) {
   return (
-    <div className="app-shell">
-      <header className="app-header">
+    <div className="min-h-screen">
+      <header className="sticky top-0 z-20 flex items-center justify-between gap-6 border-b border-solid border-b-border bg-[color-mix(in_srgb,var(--color-warm-white)_94%,transparent)] py-3 px-[max(var(--space-4),calc((100vw-var(--content-max-width))/2))] min-h-18 [@media(max-width:39.999rem)]:min-h-16">
         <BrandLink />
-        <nav aria-label="Customer navigation" className="app-desktop-nav">
+        <nav
+          aria-label="Customer navigation"
+          className="flex items-center gap-6 [&_a]:font-[650] [&_a]:no-underline [@media(max-width:39.999rem)]:hidden"
+        >
           <NavigationLinks items={props.navigation} />
         </nav>
         <button
           aria-label={`Cart, ${props.cartCount} items`}
-          className="app-cart-button"
+          className="inline-flex cursor-pointer items-center justify-center gap-2 border-0 border-none bg-transparent p-2 text-inherit hover:text-jade-dark"
           onClick={props.onCartOpen}
           type="button"
         >
@@ -22,8 +25,11 @@ export function CustomerLayout(props: LayoutProps & { cartCount: number; onCartO
           {props.cartCount > 0 ? <span>{props.cartCount}</span> : null}
         </button>
       </header>
-      <main className="app-main">{props.children}</main>
-      <nav aria-label="Customer mobile navigation" className="app-bottom-nav">
+      <main className="mx-auto max-w-content px-4 pt-8 pb-24">{props.children}</main>
+      <nav
+        aria-label="Customer mobile navigation"
+        className="fixed inset-x-0 bottom-0 z-25 hidden justify-around border-t border-solid border-t-border bg-surface py-2 px-[max(var(--space-3),env(safe-area-inset-bottom))] [@media(max-width:63.999rem)]:flex [&_a]:flex [&_a]:min-h-11 [&_a]:items-center [&_a]:gap-2 [&_a]:p-2 [&_a]:no-underline"
+      >
         <NavigationLinks items={props.navigation} />
       </nav>
     </div>

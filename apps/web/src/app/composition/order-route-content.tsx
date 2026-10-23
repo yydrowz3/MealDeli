@@ -193,7 +193,7 @@ export function CheckoutRouteContent() {
     };
   }, [cart, runtime, user]);
 
-  if (!state) return <Skeleton style={{ height: "28rem" }} />;
+  if (!state) return <Skeleton className="h-112" />;
   return (
     <CheckoutPage
       identityRepository={runtime.identityRepository}

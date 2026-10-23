@@ -23,9 +23,9 @@ export function ProfilePage({
   const contextStore = useStore();
   const store = injectedStore ?? contextStore;
   return (
-    <main className="identity-page">
-      <Card className="identity-card border! border-solid! border-border!">
-        <h1>Profile</h1>
+    <main className="flex min-h-dvh items-center justify-center bg-warm-white px-4 py-6 [@media(max-width:639px)]:[align-items:start] [@media(max-width:639px)]:pt-8">
+      <Card className="w-full max-w-[440px] border! border-solid! border-border! [@media(max-width:639px)]:[box-shadow:none]">
+        <h1 className="mt-0 mb-2">Profile</h1>
         <ProfileForm
           onVerificationRequired={() => navigate("/login")}
           repository={repository}

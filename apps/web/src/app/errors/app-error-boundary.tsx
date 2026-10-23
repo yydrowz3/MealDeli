@@ -19,10 +19,14 @@ export class AppErrorBoundary extends Component<Props, State> {
   override render() {
     if (!this.state.error) return this.props.children;
     return (
-      <main className="app-state" role="alert">
-        <p className="landing-eyebrow">Something went wrong</p>
-        <h1>MealDeli couldn’t open this page.</h1>
-        <p>Reload the app to try again.</p>
+      <main className="mx-auto my-[15vh] grid max-w-[40rem] gap-4 p-6" role="alert">
+        <p className="m-0 text-[0.8125rem] font-[800] tracking-[0.12em] uppercase text-muted">
+          Something went wrong
+        </p>
+        <h1 className="m-0 text-[length:var(--font-size-page)]">
+          MealDeli couldn’t open this page.
+        </h1>
+        <p className="m-0 text-muted">Reload the app to try again.</p>
         <Button onClick={() => window.location.reload()}>Reload MealDeli</Button>
       </main>
     );

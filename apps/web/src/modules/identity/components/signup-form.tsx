@@ -35,14 +35,14 @@ export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
 
   return (
     <form
-      className="identity-form"
+      className="mt-6 grid gap-4"
       onSubmit={(event) => {
         event.preventDefault();
         void form.handleSubmit();
       }}
     >
       {formError ? (
-        <p className="identity-form__error" role="alert">
+        <p className="text-danger" role="alert">
           {formError}
         </p>
       ) : null}
@@ -106,8 +106,8 @@ export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
         {(field) => {
           const error = firstFieldError(field.state.meta.errors);
           return (
-            <div className="identity-checkbox-field">
-              <label className="identity-checkbox">
+            <div>
+              <label className="grid grid-cols-[auto_1fr] [align-items:start] gap-2">
                 <input
                   aria-describedby={error ? "demo-acknowledged-error" : undefined}
                   checked={field.state.value}
@@ -118,7 +118,10 @@ export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
                 <span>I understand this is a MealDeli demo account.</span>
               </label>
               {error ? (
-                <span className="identity-field-error" id="demo-acknowledged-error">
+                <span
+                  className="ml-7 block text-[0.875rem] text-danger"
+                  id="demo-acknowledged-error"
+                >
                   {error}
                 </span>
               ) : null}

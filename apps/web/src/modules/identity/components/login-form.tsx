@@ -55,14 +55,14 @@ export function LoginForm({
 
   return (
     <form
-      className="identity-form"
+      className="mt-6 grid gap-4"
       onSubmit={(event) => {
         event.preventDefault();
         void form.handleSubmit();
       }}
     >
       {formError ? (
-        <p className="identity-form__error" role="alert">
+        <p className="text-danger" role="alert">
           {formError}
         </p>
       ) : null}

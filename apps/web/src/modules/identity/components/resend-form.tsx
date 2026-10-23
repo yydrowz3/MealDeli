@@ -39,7 +39,7 @@ export function ResendForm({ repository, email = "", cooldownSeconds = 30 }: Res
 
   return (
     <form
-      className="identity-form identity-form--compact"
+      className="mt-4 grid gap-4"
       onSubmit={(event) => {
         event.preventDefault();
         void form.handleSubmit();

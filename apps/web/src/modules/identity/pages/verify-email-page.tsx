@@ -69,17 +69,19 @@ export function VerifyEmailPage({
   };
 
   return (
-    <main className="identity-page">
-      <Card className="identity-card border! border-solid! border-border!">
+    <main className="flex min-h-dvh items-center justify-center bg-warm-white px-4 py-6 [@media(max-width:639px)]:[align-items:start] [@media(max-width:639px)]:pt-8">
+      <Card className="w-full max-w-[440px] border! border-solid! border-border! [@media(max-width:639px)]:[box-shadow:none]">
         {state === "loading" ? (
           <>
-            <h1>Verifying your email…</h1>
+            <h1 className="mt-0 mb-2">Verifying your email…</h1>
             <p role="status">Please wait.</p>
           </>
         ) : null}
         {state === "success" ? (
           <>
-            <h1 tabIndex={-1}>Email verified</h1>
+            <h1 className="mt-0 mb-2" tabIndex={-1}>
+              Email verified
+            </h1>
             <p>Your MealDeli account is ready.</p>
             <Button onClick={() => navigate(verifiedRole ? getRoleHome(verifiedRole) : "/login")}>
               {verifiedRole ? "Continue to MealDeli" : "Continue to log in"}
@@ -88,7 +90,9 @@ export function VerifyEmailPage({
         ) : null}
         {state === "invalid" ? (
           <>
-            <h1 tabIndex={-1}>This verification link is no longer valid</h1>
+            <h1 className="mt-0 mb-2" tabIndex={-1}>
+              This verification link is no longer valid
+            </h1>
             <p>Request a new email to verify your account.</p>
             <ResendForm repository={repository} />
             <Button onClick={() => navigate("/login")} variant="tertiary">
@@ -98,7 +102,9 @@ export function VerifyEmailPage({
         ) : null}
         {state === "network" ? (
           <>
-            <h1 tabIndex={-1}>We couldn’t verify your email</h1>
+            <h1 className="mt-0 mb-2" tabIndex={-1}>
+              We couldn’t verify your email
+            </h1>
             <p>Check your connection and try again.</p>
             <Button onClick={retry}>Try again</Button>
           </>

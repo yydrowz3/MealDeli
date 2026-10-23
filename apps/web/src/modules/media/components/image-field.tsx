@@ -4,7 +4,6 @@ import { Button } from "../../../shared/ui";
 import type { MediaUploader, UploadProgress } from "../model/types";
 import { validateImageFile } from "../model/file-validation";
 import { ImagePreview } from "./image-preview";
-import "./image-field.css";
 
 export type ImageFieldProps = {
   label: string;
@@ -134,11 +133,11 @@ export function ImageField({
   const error = progress.status === "error" ? progress.message : null;
 
   return (
-    <div className="media-image-field">
-      <label className="media-image-field__label" htmlFor={inputId}>
+    <div className="grid gap-3 font-sans">
+      <label className="text-charcoal font-[650]" htmlFor={inputId}>
         {label}
       </label>
-      <p className="media-image-field__description" id={`${inputId}-description`}>
+      <p className="m-0 text-small text-muted" id={`${inputId}-description`}>
         JPEG, PNG, or WebP, up to 5 MB. Uploaded images are public.
       </p>
       {displayedImage ? <ImagePreview label={label} src={displayedImage} /> : null}
@@ -148,7 +147,7 @@ export function ImageField({
           .filter(Boolean)
           .join(" ")}
         aria-invalid={error ? true : undefined}
-        className="media-image-field__input"
+        className="absolute h-px w-px overflow-hidden whitespace-nowrap [clip:rect(0,0,0,0)] [clip-path:inset(50%)]"
         id={inputId}
         onChange={(event) => {
           handleFile(event.currentTarget.files?.[0]);
@@ -156,9 +155,9 @@ export function ImageField({
         }}
         type="file"
       />
-      <div className="media-image-field__actions">
+      <div className="flex flex-wrap gap-2">
         <label
-          className="relative inline-flex items-center justify-center gap-2 rounded-control border border-solid font-sans font-[650] cursor-pointer transition-[background-color,border-color,color] duration-150 ease-[ease] focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-info focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-[0.62] min-h-control-md border-border bg-surface px-4 py-0 text-body leading-none text-charcoal [&:hover:not(:disabled)]:bg-neutral-soft media-image-field__choose"
+          className="relative inline-flex items-center justify-center gap-2 rounded-control border border-solid font-sans font-[650] cursor-pointer transition-[background-color,border-color,color] duration-150 ease-[ease] focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-info focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-[0.62] min-h-control-md border-border bg-surface px-4 py-0 text-body leading-none text-charcoal [&:hover:not(:disabled)]:bg-neutral-soft"
           htmlFor={inputId}
         >
           {displayedImage ? "Choose a different image" : "Choose image"}
@@ -185,12 +184,12 @@ export function ImageField({
         ) : null}
       </div>
       {progress.status === "uploading" ? (
-        <p aria-live="polite" className="media-image-field__status">
+        <p aria-live="polite" className="m-0 text-small text-muted">
           Uploading image…
         </p>
       ) : null}
       {error ? (
-        <p className="media-image-field__error" id={`${inputId}-error`} role="alert">
+        <p className="m-0 text-small text-danger-dark" id={`${inputId}-error`} role="alert">
           {error}
         </p>
       ) : null}

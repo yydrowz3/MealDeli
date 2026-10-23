@@ -25,34 +25,53 @@ const roles = [
 export function LandingPage() {
   return (
     <main>
-      <section className="landing-hero">
-        <div className="landing-hero__copy">
-          <p className="landing-eyebrow">Meal delivery for everyone</p>
-          <h1>Good meals, delivered simply.</h1>
-          <p>Order from local restaurants, run your kitchen, or deliver with us.</p>
-          <a className="app-link-button landing-primary-cta" href="#choose-role">
+      <section className="mx-auto max-w-content px-4 py-[clamp(3rem,8vw,7rem)] grid items-center gap-[clamp(2rem,5vw,5rem)] grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)] min-h-[min(48rem,calc(100vh-4.5rem))] [@media(max-width:39.999rem)]:grid-cols-[1fr] [@media(max-width:39.999rem)]:pt-12">
+        <div>
+          <p className="m-0 text-[0.8125rem] font-[800] tracking-[0.12em] uppercase text-jade-text">
+            Meal delivery for everyone
+          </p>
+          <h1 className="mx-0 mt-3 mb-6 max-w-[12ch] text-[clamp(2.5rem,6vw,4.75rem)] leading-[0.98] tracking-[-0.045em]">
+            Good meals, delivered simply.
+          </h1>
+          <p className="max-w-[34rem] text-[1.125rem] text-muted">
+            Order from local restaurants, run your kitchen, or deliver with us.
+          </p>
+          <a
+            className="inline-flex min-h-control-lg items-center justify-center gap-2 rounded-control border border-solid border-transparent bg-jade px-6 py-0 text-charcoal no-underline hover:bg-jade-dark hover:text-surface mt-6 font-[700]"
+            href="#choose-role"
+          >
             Get started <ArrowRightIcon aria-hidden="true" />
           </a>
         </div>
         <img
           alt="A fresh MealDeli order ready for delivery"
-          className="landing-hero__image"
+          className="aspect-[4/5] w-full rounded-[2rem] object-cover [@media(max-width:39.999rem)]:aspect-[16/10]"
           src={heroImage}
         />
       </section>
 
-      <section className="landing-section" id="choose-role">
-        <div className="landing-section__heading">
-          <p className="landing-eyebrow">One platform, three paths</p>
-          <h2>Choose how you use MealDeli</h2>
+      <section className="mx-auto max-w-content px-4 py-[clamp(3rem,8vw,7rem)]" id="choose-role">
+        <div className="max-w-[40rem]">
+          <p className="m-0 text-[0.8125rem] font-[800] tracking-[0.12em] uppercase text-jade-text">
+            One platform, three paths
+          </p>
+          <h2 className="mx-0 mt-2 mb-8 text-[length:var(--font-size-page)]">
+            Choose how you use MealDeli
+          </h2>
         </div>
-        <div className="landing-role-grid">
+        <div className="grid grid-cols-3 gap-4 [@media(39.999rem<width<=63.999rem)]:grid-cols-[repeat(2,1fr)] [@media(max-width:39.999rem)]:grid-cols-[1fr]">
           {roles.map(({ title, description, href, icon: Icon }) => (
-            <a className="landing-role-card" href={href} key={href}>
+            <a
+              className="grid gap-3 rounded-card border border-solid border-border bg-surface p-[clamp(1.5rem,3vw,2.5rem)] no-underline"
+              href={href}
+              key={href}
+            >
               <Icon aria-hidden="true" size={28} />
-              <h3>{title}</h3>
-              <p>{description}</p>
-              <span className="landing-role-card__cta">
+              <h3 className="m-0">{title}</h3>
+              <p className="m-0 min-h-12 text-muted [@media(max-width:39.999rem)]:min-h-auto">
+                {description}
+              </p>
+              <span className="mt-3 inline-flex items-center gap-2 text-jade-text font-[700]">
                 {title} <ArrowRightIcon aria-hidden="true" />
               </span>
             </a>
@@ -60,39 +79,60 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section className="landing-section landing-how">
-        <div className="landing-section__heading">
-          <p className="landing-eyebrow">How it works</p>
-          <h2>Start in three simple steps</h2>
+      <section className="mx-auto max-w-content px-4 py-[clamp(3rem,8vw,7rem)]">
+        <div className="max-w-[40rem]">
+          <p className="m-0 text-[0.8125rem] font-[800] tracking-[0.12em] uppercase text-jade-text">
+            How it works
+          </p>
+          <h2 className="mx-0 mt-2 mb-8 text-[length:var(--font-size-page)]">
+            Start in three simple steps
+          </h2>
         </div>
-        <ol>
-          <li>
-            <span>1</span>
+        <ol className="m-0 grid grid-cols-[repeat(3,1fr)] gap-4 list-none p-0 [@media(max-width:39.999rem)]:grid-cols-[1fr]">
+          <li className="flex items-center gap-3 border-t border-solid border-t-border pt-4">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-[50%] bg-jade-soft">
+              1
+            </span>
             <strong>Choose your role</strong>
           </li>
-          <li>
-            <span>2</span>
+          <li className="flex items-center gap-3 border-t border-solid border-t-border pt-4">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-[50%] bg-jade-soft">
+              2
+            </span>
             <strong>Create your account</strong>
           </li>
-          <li>
-            <span>3</span>
+          <li className="flex items-center gap-3 border-t border-solid border-t-border pt-4">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-[50%] bg-jade-soft">
+              3
+            </span>
             <strong>Start with MealDeli</strong>
           </li>
         </ol>
       </section>
 
-      <footer className="landing-footer">
+      <footer className="mx-auto grid max-w-content grid-cols-[1fr_auto] [align-items:end] gap-6 border-t border-solid border-t-border px-4 py-8 [@media(max-width:39.999rem)]:[align-items:start] [@media(max-width:39.999rem)]:grid-cols-[1fr]">
         <div>
           <strong>MealDeli</strong>
-          <p>Meal delivery for everyone.</p>
+          <p className="mx-0 mt-1 mb-0 text-muted">Meal delivery for everyone.</p>
         </div>
-        <nav aria-label="Footer navigation">
-          <a href="/login">Log in</a>
-          <a href="/signup">Sign up</a>
-          <a href="/signup?role=OWNER">For restaurants</a>
-          <a href="/signup?role=COURIER">For couriers</a>
+        <nav
+          aria-label="Footer navigation"
+          className="flex items-center gap-6 [@media(max-width:39.999rem)]:[align-items:start] [@media(max-width:39.999rem)]:flex-col [@media(max-width:39.999rem)]:gap-3"
+        >
+          <a className="font-[650] no-underline" href="/login">
+            Log in
+          </a>
+          <a className="font-[650] no-underline" href="/signup">
+            Sign up
+          </a>
+          <a className="font-[650] no-underline" href="/signup?role=OWNER">
+            For restaurants
+          </a>
+          <a className="font-[650] no-underline" href="/signup?role=COURIER">
+            For couriers
+          </a>
         </nav>
-        <small>© 2026 MealDeli</small>
+        <small className="text-muted">© 2026 MealDeli</small>
       </footer>
     </main>
   );
