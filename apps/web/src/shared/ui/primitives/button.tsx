@@ -8,6 +8,22 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   iconOnly?: boolean;
 };
 
+const variantClasses = {
+  primary:
+    "border-transparent bg-jade text-charcoal [&:hover:not(:disabled)]:bg-jade-dark [&:hover:not(:disabled)]:text-surface",
+  secondary: "border-border bg-surface text-charcoal [&:hover:not(:disabled)]:bg-neutral-soft",
+  tertiary:
+    "border-transparent bg-transparent text-jade-dark [&:hover:not(:disabled)]:bg-neutral-soft",
+  danger: "border-transparent bg-danger text-surface [&:hover:not(:disabled)]:bg-danger-dark",
+};
+
+const sizeClasses = {
+  sm: "min-h-control-sm text-small leading-none",
+  md: "min-h-control-md text-body leading-none",
+  lg: "min-h-control-lg text-body leading-none",
+};
+const paddingClasses = { sm: "px-3", md: "px-4", lg: "px-6" };
+
 export function Button({
   variant = "primary",
   size = "md",
@@ -24,10 +40,10 @@ export function Button({
   }
 
   const classes = [
-    "ui-button",
-    `ui-button--${variant}`,
-    `ui-button--${size}`,
-    iconOnly ? "ui-button--icon" : "",
+    "relative inline-flex items-center justify-center gap-2 rounded-control border border-solid font-sans font-[650] cursor-pointer transition-[background-color,border-color,color] duration-150 ease-[ease] focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-info focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-[0.62] py-0",
+    variantClasses[variant],
+    sizeClasses[size],
+    iconOnly ? "px-3" : paddingClasses[size],
     className ?? "",
   ]
     .filter(Boolean)
@@ -41,8 +57,10 @@ export function Button({
       disabled={disabled || loading}
       type={type}
     >
-      <span className={loading ? "ui-button__content--loading" : undefined}>{children}</span>
-      {loading ? <CircleNotch aria-hidden="true" className="ui-button__spinner" size={20} /> : null}
+      <span className={loading ? "invisible" : undefined}>{children}</span>
+      {loading ? (
+        <CircleNotch aria-hidden="true" className="absolute animate-ui-spin" size={20} />
+      ) : null}
     </button>
   );
 }

@@ -68,9 +68,9 @@ export function OrdersPage({
 
       {state.kind === "loading" ? (
         <div aria-label="Loading orders" className="orders-loading">
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
+          <Skeleton className="min-h-40!" />
+          <Skeleton className="min-h-40!" />
+          <Skeleton className="min-h-40!" />
         </div>
       ) : null}
 

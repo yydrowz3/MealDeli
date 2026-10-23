@@ -27,7 +27,11 @@ export type RestaurantMenuPageProps = {
 
 function MenuSkeleton() {
   return (
-    <main aria-label="Loading restaurant menu" className="catalog-page" role="status">
+    <main
+      aria-label="Loading restaurant menu"
+      className="catalog-page [&_[data-state]_h2]:mb-0!"
+      role="status"
+    >
       <Skeleton className="catalog-menu-hero" />
       <Skeleton className="catalog-skeleton-title" />
       <div className="catalog-dish-grid">
@@ -72,7 +76,7 @@ export function RestaurantMenuPage({
 
   if (error) {
     return (
-      <main className="catalog-page">
+      <main className="catalog-page [&_[data-state]_h2]:mb-0!">
         <Button className="catalog-back-button" onClick={onBack} variant="tertiary">
           <ArrowLeftIcon aria-hidden="true" size={18} />
           Back to restaurants
@@ -90,7 +94,7 @@ export function RestaurantMenuPage({
 
   if (!restaurant) {
     return (
-      <main className="catalog-page">
+      <main className="catalog-page [&_[data-state]_h2]:mb-0!">
         <ErrorState
           action={{ label: "Back to restaurants", onClick: onBack }}
           title="Restaurant not found"
@@ -100,7 +104,7 @@ export function RestaurantMenuPage({
   }
 
   return (
-    <main className="catalog-page">
+    <main className="catalog-page [&_[data-state]_h2]:mb-0!">
       <Button className="catalog-back-button" onClick={onBack} variant="tertiary">
         <ArrowLeftIcon aria-hidden="true" size={18} />
         Back to restaurants

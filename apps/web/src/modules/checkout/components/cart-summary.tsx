@@ -71,7 +71,7 @@ export function CartSummary({
               {onRemove ? (
                 <Button
                   aria-label={`Remove ${line.dishName}`}
-                  className="checkout-remove-button"
+                  className="checkout-remove-button text-jade-dark!"
                   disabled={disabled}
                   onClick={() => onRemove(line.lineId)}
                   size="sm"

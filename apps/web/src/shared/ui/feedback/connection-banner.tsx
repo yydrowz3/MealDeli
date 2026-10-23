@@ -12,7 +12,12 @@ export function ConnectionBanner({
   return (
     <div
       {...props}
-      className={["ui-connection-banner", className].filter(Boolean).join(" ")}
+      className={[
+        "rounded-control border border-solid border-info bg-info-soft px-4 py-3 font-sans text-info-dark",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       role="status"
     >
       {message}

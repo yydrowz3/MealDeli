@@ -8,7 +8,7 @@ export type MoneyProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> & {
 
 export function Money({ minor, className, ...props }: MoneyProps) {
   return (
-    <span {...props} className={["ui-money", className].filter(Boolean).join(" ")}>
+    <span {...props} className={["tabular-nums", className].filter(Boolean).join(" ")}>
       {formatUsd(minor)}
     </span>
   );

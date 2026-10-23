@@ -33,7 +33,7 @@ export function SignupPage({ repository, role, navigate }: SignupPageProps) {
 
   return (
     <main className="identity-page">
-      <Card className="identity-card">
+      <Card className="identity-card border! border-solid! border-border!">
         <h1>{role ? titles[role] : "Choose how you want to use MealDeli"}</h1>
         <SignupForm onSuccess={setRegisteredEmail} repository={repository} role={role} />
         {role ? (

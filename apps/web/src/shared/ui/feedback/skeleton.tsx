@@ -7,7 +7,9 @@ export function Skeleton({ className, ...props }: SkeletonProps) {
     <div
       {...props}
       aria-hidden="true"
-      className={["ui-skeleton", className].filter(Boolean).join(" ")}
+      className={["min-h-4 animate-ui-pulse rounded-control bg-neutral-soft", className]
+        .filter(Boolean)
+        .join(" ")}
     />
   );
 }

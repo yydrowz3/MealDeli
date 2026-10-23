@@ -7,6 +7,9 @@ import type {
   TextareaHTMLAttributes,
 } from "react";
 
+const controlClasses =
+  "w-full rounded-control border border-solid border-border bg-surface p-3 font-sans text-body font-normal text-charcoal focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-info focus-visible:outline-offset-2 aria-invalid:border-danger";
+
 type FieldShellProps = {
   controlId: string;
   label: string;
@@ -21,18 +24,18 @@ function FieldShell({ controlId, label, description, error, children }: FieldShe
   const describedBy = [descriptionId, errorId].filter(Boolean).join(" ") || undefined;
 
   return (
-    <div className="ui-field">
-      <label className="ui-field__label" htmlFor={controlId}>
+    <div className="grid gap-2 font-sans">
+      <label className="text-charcoal font-[650]" htmlFor={controlId}>
         {label}
       </label>
       {description ? (
-        <p className="ui-field__description" id={descriptionId}>
+        <p className="m-0 text-small text-muted" id={descriptionId}>
           {description}
         </p>
       ) : null}
       {children(describedBy)}
       {error ? (
-        <p className="ui-field__error" id={errorId}>
+        <p className="m-0 text-small text-danger-dark" id={errorId}>
           {error}
         </p>
       ) : null}
@@ -57,7 +60,7 @@ export function Input({ label, description, error, id, className, ...props }: In
           {...props}
           aria-describedby={describedBy}
           aria-invalid={error ? true : undefined}
-          className={["ui-control", className].filter(Boolean).join(" ")}
+          className={[controlClasses, "min-h-control-md", className].filter(Boolean).join(" ")}
           id={controlId}
         />
       )}
@@ -89,19 +92,25 @@ export function PasswordInput({
   return (
     <FieldShell controlId={controlId} description={description} error={error} label={label}>
       {(describedBy) => (
-        <div className="ui-password-control">
+        <div className="relative">
           <input
             {...props}
             aria-describedby={describedBy}
             aria-invalid={error ? true : undefined}
-            className={["ui-control", className].filter(Boolean).join(" ")}
+            className={[
+              controlClasses,
+              "min-h-control-md pr-[calc(var(--space-3)+2.75rem)]",
+              className,
+            ]
+              .filter(Boolean)
+              .join(" ")}
             id={controlId}
             type={showPassword ? "text" : "password"}
           />
           <button
             aria-controls={controlId}
             aria-label={showPassword ? "Hide password" : "Show password"}
-            className="ui-password-toggle"
+            className="absolute right-0 top-0 flex h-full w-11 cursor-pointer items-center justify-center rounded-control border-0 bg-transparent p-0 text-muted hover:text-charcoal focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-info focus-visible:-outline-offset-3"
             onClick={() => setShowPassword((value) => !value)}
             type="button"
           >
@@ -137,7 +146,13 @@ export function Textarea({ label, description, error, id, className, ...props }:
           {...props}
           aria-describedby={describedBy}
           aria-invalid={error ? true : undefined}
-          className={["ui-control", className].filter(Boolean).join(" ")}
+          className={[
+            controlClasses,
+            "min-h-[calc(var(--control-height-md)*2)] resize-y",
+            className,
+          ]
+            .filter(Boolean)
+            .join(" ")}
           id={controlId}
         />
       )}
@@ -170,7 +185,7 @@ export function Select({
           {...props}
           aria-describedby={describedBy}
           aria-invalid={error ? true : undefined}
-          className={["ui-control", className].filter(Boolean).join(" ")}
+          className={[controlClasses, "min-h-control-md", className].filter(Boolean).join(" ")}
           id={controlId}
         >
           {children}
@@ -201,12 +216,22 @@ export function FormErrorSummary({
   if (errors.length === 0) return null;
 
   return (
-    <section aria-labelledby={titleId} className="ui-form-summary" role="alert">
-      <h2 id={titleId}>{title}</h2>
-      <ul>
+    <section
+      aria-labelledby={titleId}
+      className="rounded-control border border-solid border-danger bg-danger-soft p-4 text-charcoal"
+      role="alert"
+    >
+      <h2 className="mt-0 mr-0 mb-2 ml-0 text-body" id={titleId}>
+        {title}
+      </h2>
+      <ul className="m-0 pl-6">
         {errors.map((error) => (
           <li key={error.field}>
-            <button className="ui-summary-link" onClick={() => onFocus(error.field)} type="button">
+            <button
+              className="cursor-pointer border-0 bg-transparent p-1 text-danger-dark underline focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-info focus-visible:outline-offset-2"
+              onClick={() => onFocus(error.field)}
+              type="button"
+            >
               {error.label}: {error.message}
             </button>
           </li>

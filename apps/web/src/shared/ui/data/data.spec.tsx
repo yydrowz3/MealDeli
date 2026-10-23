@@ -27,9 +27,9 @@ describe("money presentation", () => {
     },
   );
 
-  it("renders money with tabular-number styling", () => {
+  it("renders formatted money and forwards custom classes", () => {
     render(<Money className="total" minor={2500} />);
-    expect(screen.getByText("$25.00")).toHaveClass("ui-money", "total");
+    expect(screen.getByText("$25.00")).toHaveClass("total");
   });
 });
 

@@ -16,7 +16,7 @@ import {
 } from "..";
 
 describe("feedback components", () => {
-  it("renders actionable empty and error states with the correct button priority", async () => {
+  it("renders actionable empty and error states without business providers", async () => {
     const user = userEvent.setup();
     const create = vi.fn();
     const retry = vi.fn();
@@ -37,10 +37,6 @@ describe("feedback components", () => {
 
     expect(screen.getByRole("heading", { name: "No restaurants yet" })).toBeInTheDocument();
     expect(screen.getByText("Create your first restaurant.")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Add restaurant" })).toHaveClass(
-      "ui-button--primary",
-    );
-    expect(screen.getByRole("button", { name: "Try again" })).toHaveClass("ui-button--secondary");
     await user.click(screen.getByRole("button", { name: "Add restaurant" }));
     await user.click(screen.getByRole("button", { name: "Try again" }));
     expect(create).toHaveBeenCalledOnce();
@@ -53,7 +49,7 @@ describe("feedback components", () => {
     expect(screen.getByRole("status")).not.toHaveFocus();
 
     rerender(<ConnectionBanner className="custom" message="Back online." />);
-    expect(screen.getByRole("status")).toHaveClass("ui-connection-banner", "custom");
+    expect(screen.getByRole("status")).toHaveClass("custom");
     expect(screen.getByRole("status")).toHaveTextContent("Back online.");
 
     rerender(<Skeleton data-testid="skeleton" />);
@@ -125,7 +121,9 @@ describe("ChartFrame", () => {
         ready
       </ChartFrame>,
     );
-    expect(document.querySelector(".ui-skeleton")).toHaveAttribute("aria-hidden", "true");
+    expect(
+      screen.getByRole("figure", { name: "Orders" }).querySelector("[aria-hidden='true']"),
+    ).toHaveAttribute("aria-hidden", "true");
     rerender(
       <ChartFrame state="empty" summary="Empty." title="Orders">
         ready
@@ -194,7 +192,9 @@ describe("MapFrame", () => {
         Map
       </MapFrame>,
     );
-    expect(document.querySelector(".ui-skeleton")).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "Route" }).querySelector("[aria-hidden='true']"),
+    ).toBeInTheDocument();
     rerender(
       <MapFrame onSkipMap={() => undefined} state="fallback" title="Route">
         Map

@@ -168,9 +168,6 @@
     display: grid;
     grid-template-columns: 1fr;
   }
-  .owner-page__header > .ui-button {
-    width: 100%;
-  }
   .owner-summary-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

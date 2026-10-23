@@ -98,11 +98,16 @@ export function OwnerRestaurantsPage({ repository, navigate }: OwnerRestaurantsP
           <p className="owner-page__eyebrow">Owner workspace</p>
           <h1>Restaurants</h1>
         </div>
-        <Button onClick={() => navigate("/restaurants/new")}>Create restaurant</Button>
+        <Button
+          className="[@media(max-width:47.99rem)]:w-full"
+          onClick={() => navigate("/restaurants/new")}
+        >
+          Create restaurant
+        </Button>
       </header>
       <div className="owner-restaurant-grid">
         {restaurants.map((restaurant) => (
-          <Card className="owner-restaurant-card" key={restaurant.id}>
+          <Card className="owner-restaurant-card p-6!" key={restaurant.id}>
             {restaurant.image ? (
               <img alt="" src={restaurant.image} />
             ) : (

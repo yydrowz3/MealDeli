@@ -84,18 +84,20 @@ export function OwnerDashboardPage({
           <p className="owner-insights-eyebrow">Last 7 calendar days</p>
           <h1>Dashboard</h1>
         </div>
-        <Select
-          label="Restaurant"
-          onChange={(event) => onRestaurantChange(event.target.value || null)}
-          value={selectedRestaurantId ?? ""}
-        >
-          <option value="">All restaurants</option>
-          {restaurants.map((restaurant) => (
-            <option key={restaurant.id} value={restaurant.id}>
-              {restaurant.name}
-            </option>
-          ))}
-        </Select>
+        <div className="min-w-60 [@media(max-width:47.99rem)]:min-w-0">
+          <Select
+            label="Restaurant"
+            onChange={(event) => onRestaurantChange(event.target.value || null)}
+            value={selectedRestaurantId ?? ""}
+          >
+            <option value="">All restaurants</option>
+            {restaurants.map((restaurant) => (
+              <option key={restaurant.id} value={restaurant.id}>
+                {restaurant.name}
+              </option>
+            ))}
+          </Select>
+        </div>
       </header>
 
       <section aria-label="Owner metrics" className="owner-insights-metrics">

@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
-@import "./shared/ui/styles.css";
 @plugin "daisyui";
 
 /* Keep every token available while legacy styles still reference it. */
@@ -55,6 +54,19 @@
   --text-section: 1.25rem;
   --text-page: clamp(1.75rem, 4vw, 2.25rem);
   --leading-heading: 1.2;
+  --animate-ui-spin: ui-spin 800ms linear infinite;
+  --animate-ui-pulse: ui-pulse 1.5s ease-in-out infinite;
+
+  @keyframes ui-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes ui-pulse {
+    50% {
+      opacity: 0.55;
+    }
+  }
 }
 
 :root {
@@ -278,16 +290,6 @@ a {
 .app-state p {
   color: var(--color-muted);
   margin: 0;
-}
-.app-session-skeleton .ui-skeleton:first-child {
-  min-height: 3rem;
-  width: 55%;
-}
-.app-session-skeleton .ui-skeleton:nth-child(2) {
-  min-height: 7rem;
-}
-.app-session-skeleton .ui-skeleton:nth-child(3) {
-  min-height: 12rem;
 }
 .app-text-link {
   background: none;

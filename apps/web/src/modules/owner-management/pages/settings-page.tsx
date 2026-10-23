@@ -82,7 +82,7 @@ export function OwnerRestaurantSettingsPage({
         restaurant={restaurant}
         uploader={uploader}
       />
-      <Card className="owner-danger-zone">
+      <Card className="owner-danger-zone border-border!">
         <h2>Danger zone</h2>
         <p>Deleting a restaurant permanently removes its menu. Past orders are not changed.</p>
         <Button onClick={() => setConfirmDelete(true)} variant="danger">

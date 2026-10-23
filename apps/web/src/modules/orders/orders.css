@@ -22,9 +22,6 @@
   display: grid;
   gap: var(--space-4);
 }
-.orders-loading .ui-skeleton {
-  min-height: 10rem;
-}
 .orders-grid {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
 }

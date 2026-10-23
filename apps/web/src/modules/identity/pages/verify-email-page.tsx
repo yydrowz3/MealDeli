@@ -70,7 +70,7 @@ export function VerifyEmailPage({
 
   return (
     <main className="identity-page">
-      <Card className="identity-card">
+      <Card className="identity-card border! border-solid! border-border!">
         {state === "loading" ? (
           <>
             <h1>Verifying your email…</h1>

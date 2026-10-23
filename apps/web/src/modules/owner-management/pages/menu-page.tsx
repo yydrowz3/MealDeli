@@ -72,7 +72,9 @@ export function OwnerMenuPage({ restaurantId, repository, uploader }: OwnerMenuP
           <p className="owner-page__eyebrow">{restaurant.name}</p>
           <h1>Menu</h1>
         </div>
-        <Button onClick={() => setEditor("new")}>Add dish</Button>
+        <Button className="[@media(max-width:47.99rem)]:w-full" onClick={() => setEditor("new")}>
+          Add dish
+        </Button>
       </header>
       {restaurant.dishes.length === 0 ? (
         <EmptyState

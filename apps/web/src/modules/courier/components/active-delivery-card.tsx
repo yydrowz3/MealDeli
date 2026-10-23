@@ -8,7 +8,7 @@ export type ActiveDeliveryCardProps = Readonly<{
 
 export function ActiveDeliveryCard({ order, onContinue }: ActiveDeliveryCardProps) {
   return (
-    <Card className="courier-active-card">
+    <Card className="courier-active-card border-border!">
       <div>
         <p className="courier-eyebrow">Active delivery</p>
         <h2>{order.restaurant?.name ?? "Restaurant unavailable"}</h2>

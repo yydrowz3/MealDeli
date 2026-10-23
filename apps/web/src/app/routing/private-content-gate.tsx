@@ -10,9 +10,9 @@ export function PrivateContentGate(props: {
   if (props.decision.kind === "checking") {
     return (
       <main aria-label="Checking your session" className="app-session-skeleton">
-        <Skeleton />
-        <Skeleton />
-        <Skeleton />
+        <Skeleton className="min-h-12! w-[55%]" />
+        <Skeleton className="min-h-28!" />
+        <Skeleton className="min-h-48!" />
       </main>
     );
   }

@@ -18,7 +18,7 @@ export function CheckEmail({
   gate = false,
 }: CheckEmailProps) {
   return (
-    <Card className="identity-card">
+    <Card className="identity-card border! border-solid! border-border!">
       <h1>{gate ? "Verify your email to continue." : "Check your email"}</h1>
       <p>{gate ? email : `We sent a verification link to ${email}. The link expires in 1 hour.`}</p>
       <ResendForm email={email} repository={repository} />

@@ -33,7 +33,11 @@ export type RestaurantDiscoveryPageProps = {
 
 function DiscoverySkeleton() {
   return (
-    <div aria-label="Loading restaurants" className="catalog-page" role="status">
+    <div
+      aria-label="Loading restaurants"
+      className="catalog-page [&_[data-state]_h2]:mb-0!"
+      role="status"
+    >
       <Skeleton className="catalog-skeleton-search" />
       <div className="catalog-skeleton-categories">
         {Array.from({ length: 5 }, (_, index) => (
@@ -161,7 +165,7 @@ export function RestaurantDiscoveryPage({
   const emptyDescription = search.query ? "Try a different restaurant name." : undefined;
 
   return (
-    <main className="catalog-page">
+    <main className="catalog-page [&_[data-state]_h2]:mb-0!">
       <header className="catalog-page__header">
         <div>
           <p className="catalog-eyebrow">MealDeli</p>

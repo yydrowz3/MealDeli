@@ -35,7 +35,7 @@ export function LoginPage(props: LoginPageProps) {
 
   return (
     <main className="identity-page">
-      <Card className="identity-card">
+      <Card className="identity-card border! border-solid! border-border!">
         <h1>Welcome back</h1>
         <p>Log in to continue to MealDeli.</p>
         <LoginForm {...props} store={store} />

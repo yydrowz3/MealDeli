@@ -158,7 +158,7 @@ export function ImageField({
       />
       <div className="media-image-field__actions">
         <label
-          className="ui-button ui-button--secondary ui-button--md media-image-field__choose"
+          className="relative inline-flex items-center justify-center gap-2 rounded-control border border-solid font-sans font-[650] cursor-pointer transition-[background-color,border-color,color] duration-150 ease-[ease] focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-info focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-[0.62] min-h-control-md border-border bg-surface px-4 py-0 text-body leading-none text-charcoal [&:hover:not(:disabled)]:bg-neutral-soft media-image-field__choose"
           htmlFor={inputId}
         >
           {displayedImage ? "Choose a different image" : "Choose image"}

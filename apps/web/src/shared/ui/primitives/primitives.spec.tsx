@@ -5,35 +5,39 @@ import { describe, expect, it, vi } from "vitest";
 import { Button, Card, FormErrorSummary, Input, Select, Textarea } from "..";
 
 describe("Button", () => {
-  it("supports every visual variant and size", () => {
-    const { container } = render(
-      <>
-        <Button variant="primary">Primary</Button>
-        <Button size="sm" variant="secondary">
-          Secondary
-        </Button>
-        <Button size="lg" variant="tertiary">
-          Tertiary
-        </Button>
-        <Button variant="danger">Danger</Button>
-      </>,
-    );
-
-    expect(screen.getByRole("button", { name: "Primary" })).toHaveClass(
-      "ui-button--primary",
-      "ui-button--md",
-    );
-    expect(screen.getByRole("button", { name: "Secondary" })).toHaveClass(
-      "ui-button--secondary",
-      "ui-button--sm",
-    );
-    expect(screen.getByRole("button", { name: "Tertiary" })).toHaveClass(
-      "ui-button--tertiary",
-      "ui-button--lg",
-    );
-    expect(screen.getByRole("button", { name: "Danger" })).toHaveClass("ui-button--danger");
-    expect(container.querySelectorAll("button")).toHaveLength(4);
-  });
+  it.each(["primary", "secondary", "tertiary", "danger"] as const)(
+    "preserves native props and actions for the %s variant at every size",
+    async (variant) => {
+      const user = userEvent.setup();
+      const onClick = vi.fn();
+      render(
+        <>
+          {(["sm", "md", "lg"] as const).map((size) => (
+            <Button
+              key={size}
+              variant={variant}
+              size={size}
+              className="custom"
+              name="action"
+              value={size}
+              onClick={onClick}
+            >
+              {size}
+            </Button>
+          ))}
+        </>,
+      );
+      for (const size of ["sm", "md", "lg"]) {
+        const button = screen.getByRole("button", { name: size });
+        expect(button).toHaveClass("custom");
+        expect(button).toHaveAttribute("type", "button");
+        expect(button).toHaveAttribute("name", "action");
+        expect(button).toHaveAttribute("value", size);
+        await user.click(button);
+      }
+      expect(onClick).toHaveBeenCalledTimes(3);
+    },
+  );
 
   it("activates with the keyboard and respects native disabled state", async () => {
     const user = userEvent.setup();
@@ -153,6 +157,6 @@ describe("form primitives", () => {
         Contents
       </Card>,
     );
-    expect(screen.getByLabelText("Order summary")).toHaveClass("ui-card", "custom");
+    expect(screen.getByLabelText("Order summary")).toHaveClass("custom");
   });
 });

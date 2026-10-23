@@ -33,14 +33,19 @@ export function MapFrame({
   if (state === "fallback") content = fallbackSlot ?? <p>The map is unavailable.</p>;
 
   return (
-    <section aria-labelledby={titleId} className="ui-frame">
+    <section
+      aria-labelledby={titleId}
+      className="grid gap-3 rounded-card border border-solid border-border bg-surface p-6 font-sans text-charcoal [&_h2]:m-0 [&_h2]:text-section [&_h2]:leading-heading [&_p]:m-0 [&_p]:text-muted"
+    >
       <h2 id={titleId}>{title}</h2>
       {description ? <p>{description}</p> : null}
-      <Button className="ui-map-skip" onClick={onSkipMap} variant="tertiary">
+      <Button className="[justify-self:start]" onClick={onSkipMap} variant="tertiary">
         {skipLabel}
       </Button>
-      <div className="ui-frame__content">{content}</div>
-      {attribution ? <footer className="ui-frame__attribution">{attribution}</footer> : null}
+      <div className="min-h-control-lg">{content}</div>
+      {attribution ? (
+        <footer className="text-[length:var(--font-size-small)] text-muted">{attribution}</footer>
+      ) : null}
     </section>
   );
 }

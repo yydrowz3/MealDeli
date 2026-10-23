@@ -24,7 +24,7 @@ export function ProfilePage({
   const store = injectedStore ?? contextStore;
   return (
     <main className="identity-page">
-      <Card className="identity-card">
+      <Card className="identity-card border! border-solid! border-border!">
         <h1>Profile</h1>
         <ProfileForm
           onVerificationRequired={() => navigate("/login")}

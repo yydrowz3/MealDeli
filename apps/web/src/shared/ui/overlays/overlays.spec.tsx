@@ -90,7 +90,7 @@ describe("Drawer", () => {
     );
 
     const drawer = screen.getByRole("dialog", { name: "Cart" });
-    expect(document.querySelector("[data-kind='drawer'] .ui-overlay--drawer")).toBe(drawer);
+    expect(drawer.parentElement).toHaveAttribute("data-kind", "drawer");
     expect(drawer).toHaveFocus();
     await user.tab();
     expect(drawer).toHaveFocus();

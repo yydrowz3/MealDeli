@@ -20,10 +20,6 @@
   justify-content: space-between;
 }
 
-.owner-insights-page__header .ui-field {
-  min-width: 15rem;
-}
-
 .owner-insights-eyebrow {
   color: var(--color-jade-text);
   font-size: var(--font-size-small);
@@ -98,10 +94,6 @@
   font-weight: 750;
 }
 
-.owner-insights-promotion-offer .ui-button {
-  justify-self: start;
-}
-
 .owner-insights-history ul {
   display: grid;
   gap: var(--space-3);
@@ -147,10 +139,6 @@
     display: grid;
   }
 
-  .owner-insights-page__header .ui-field {
-    min-width: 0;
-  }
-
   .owner-insights-charts,
   .owner-insights-orders-grid,
   .owner-insights-onboarding {
@@ -160,9 +148,5 @@
   .owner-insights-history li {
     align-items: start;
     grid-template-columns: 1fr;
-  }
-
-  .owner-insights-promotion-offer .ui-button {
-    justify-self: stretch;
   }
 }

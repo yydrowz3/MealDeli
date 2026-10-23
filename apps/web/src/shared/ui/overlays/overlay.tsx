@@ -97,7 +97,7 @@ export function Overlay({
 
   return createPortal(
     <div
-      className="ui-overlay-backdrop"
+      className="fixed inset-0 z-[1100] flex items-center justify-center bg-backdrop p-4"
       data-kind={kind}
       onMouseDown={(event) => {
         if (dismissible && event.target === event.currentTarget) onClose();
@@ -107,7 +107,12 @@ export function Overlay({
         aria-describedby={description ? descriptionId : undefined}
         aria-labelledby={titleId}
         aria-modal="true"
-        className={["ui-overlay", kind === "drawer" ? "ui-overlay--drawer" : ""]
+        className={[
+          "grid w-full max-w-auth gap-4 overflow-auto rounded-overlay bg-surface p-6 text-charcoal shadow-[0_var(--space-2)_var(--space-8)_var(--color-shadow)]",
+          kind === "drawer"
+            ? "ml-auto h-full max-h-screen rounded-tr-none rounded-br-none"
+            : "max-h-[calc(100vh-var(--space-8))]",
+        ]
           .filter(Boolean)
           .join(" ")}
         onKeyDown={trapFocus}
@@ -115,12 +120,18 @@ export function Overlay({
         role="dialog"
         tabIndex={-1}
       >
-        <header className="ui-overlay__header">
-          <h2 id={titleId}>{title}</h2>
-          {description ? <p id={descriptionId}>{description}</p> : null}
+        <header>
+          <h2 className="m-0 text-section leading-heading" id={titleId}>
+            {title}
+          </h2>
+          {description ? (
+            <p className="mt-2 mr-0 mb-0 ml-0 text-muted" id={descriptionId}>
+              {description}
+            </p>
+          ) : null}
         </header>
         <div>{children}</div>
-        {footer ? <footer className="ui-overlay__footer">{footer}</footer> : null}
+        {footer ? <footer className="flex justify-end gap-3">{footer}</footer> : null}
       </div>
     </div>,
     document.body,
