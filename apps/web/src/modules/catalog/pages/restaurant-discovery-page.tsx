@@ -19,8 +19,6 @@ import type {
   RestaurantSummary,
 } from "../model/types";
 
-import "../catalog.css";
-
 export type RestaurantDiscoveryPageProps = {
   repository: CatalogRepository;
   search: CatalogSearch;
@@ -35,18 +33,18 @@ function DiscoverySkeleton() {
   return (
     <div
       aria-label="Loading restaurants"
-      className="catalog-page [&_[data-state]_h2]:mb-0!"
+      className="mx-auto grid max-w-content gap-8 p-6 font-sans text-charcoal [@media(max-width:39.99rem)]:p-4 [&_h1]:my-0 [&_h1]:text-page [&_h2]:mt-0 [&_h2]:mb-4 [&_h2]:text-section [&_h3]:my-0 [&_h3]:text-[1.05rem] [&_p]:my-0 [&_[data-state]_h2]:mb-0!"
       role="status"
     >
-      <Skeleton className="catalog-skeleton-search" />
-      <div className="catalog-skeleton-categories">
+      <Skeleton className="h-control-md" />
+      <div className="flex gap-3 overflow-hidden">
         {Array.from({ length: 5 }, (_, index) => (
-          <Skeleton className="catalog-skeleton-category" key={index} />
+          <Skeleton className="h-32 flex-[0_0_8.5rem]" key={index} />
         ))}
       </div>
-      <div className="catalog-restaurant-grid">
+      <div className="grid grid-cols-3 gap-4 [@media(39.99rem<width<=63.99rem)]:grid-cols-2 [@media(max-width:39.99rem)]:grid-cols-1">
         {Array.from({ length: 6 }, (_, index) => (
-          <Skeleton className="catalog-skeleton-card" key={index} />
+          <Skeleton className="h-80" key={index} />
         ))}
       </div>
     </div>
@@ -63,7 +61,7 @@ function RestaurantGrid({
   now?: Date | number;
 }) {
   return (
-    <div className="catalog-restaurant-grid">
+    <div className="grid grid-cols-3 gap-4 [@media(39.99rem<width<=63.99rem)]:grid-cols-2 [@media(max-width:39.99rem)]:grid-cols-1">
       {restaurants.map((restaurant) => (
         <RestaurantCard
           key={restaurant.id}
@@ -165,10 +163,10 @@ export function RestaurantDiscoveryPage({
   const emptyDescription = search.query ? "Try a different restaurant name." : undefined;
 
   return (
-    <main className="catalog-page [&_[data-state]_h2]:mb-0!">
-      <header className="catalog-page__header">
+    <main className="mx-auto grid max-w-content gap-8 p-6 font-sans text-charcoal [@media(max-width:39.99rem)]:p-4 [&_h1]:my-0 [&_h1]:text-page [&_h2]:mt-0 [&_h2]:mb-4 [&_h2]:text-section [&_h3]:my-0 [&_h3]:text-[1.05rem] [&_p]:my-0 [&_[data-state]_h2]:mb-0!">
+      <header className="grid grid-cols-[minmax(12rem,1fr)_minmax(18rem,2fr)] [align-items:end] gap-4 [@media(max-width:39.99rem)]:grid-cols-1">
         <div>
-          <p className="catalog-eyebrow">MealDeli</p>
+          <p className="text-[length:var(--font-size-small)] font-bold text-jade-text">MealDeli</p>
           <h1>Restaurants</h1>
         </div>
         <CatalogSearchForm
@@ -177,7 +175,10 @@ export function RestaurantDiscoveryPage({
         />
       </header>
 
-      <section aria-label="Delivery address" className="catalog-address">
+      <section
+        aria-label="Delivery address"
+        className="flex items-center justify-between gap-4 rounded-card bg-jade-soft px-6 py-4 [&_p]:text-muted"
+      >
         <div>
           <strong>{deliveryAddress ? "Delivery to" : "Add a delivery address"}</strong>
           {deliveryAddress ? (
@@ -210,14 +211,17 @@ export function RestaurantDiscoveryPage({
         />
       ) : (
         <section aria-busy={refreshing} aria-labelledby="catalog-results-title">
-          <div className="catalog-results-heading">
+          <div className="flex items-baseline justify-between gap-3 [&_span]:text-[length:var(--font-size-small)] [&_span]:text-muted">
             <h2 id="catalog-results-title" ref={resultTitleRef} tabIndex={-1}>
               {search.query ? `Results for “${search.query}”` : "All restaurants"}
             </h2>
             {refreshing ? <span role="status">Refreshing restaurants…</span> : null}
           </div>
           {error ? (
-            <div className="catalog-inline-error" role="alert">
+            <div
+              className="mb-4 flex items-center justify-between rounded-control bg-danger-soft p-3"
+              role="alert"
+            >
               <span>We couldn’t refresh restaurants.</span>
               <Button onClick={() => setRetryVersion((value) => value + 1)} variant="tertiary">
                 Try again

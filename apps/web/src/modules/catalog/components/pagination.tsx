@@ -15,11 +15,14 @@ function visiblePages(page: number, totalPages: number) {
 export function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
   if (totalPages <= 1) return null;
   return (
-    <nav aria-label="Restaurant pages" className="catalog-pagination">
+    <nav
+      aria-label="Restaurant pages"
+      className="mt-6 flex items-center justify-center gap-2 [div+&]:mt-4"
+    >
       <Button disabled={page <= 1} onClick={() => onPageChange(page - 1)} variant="secondary">
         Previous
       </Button>
-      <div className="catalog-pagination__numbers">
+      <div className="flex gap-1 [@media(max-width:39.99rem)]:hidden">
         {visiblePages(page, totalPages).map((number) => (
           <Button
             aria-current={number === page ? "page" : undefined}
@@ -31,7 +34,7 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
           </Button>
         ))}
       </div>
-      <span className="catalog-pagination__mobile-current" aria-live="polite">
+      <span className="hidden [@media(max-width:39.99rem)]:inline" aria-live="polite">
         Page {page} of {totalPages}
       </span>
       <Button

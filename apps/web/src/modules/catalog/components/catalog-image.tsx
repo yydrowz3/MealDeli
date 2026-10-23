@@ -24,7 +24,10 @@ export function CatalogImage({
     return (
       <div
         aria-label={`MealDeli placeholder for ${alt}`}
-        className={["catalog-image", "catalog-image--placeholder", className]
+        className={[
+          "flex items-center justify-center bg-[linear-gradient(135deg,var(--color-jade-soft),var(--color-neutral-soft))] object-cover font-extrabold text-jade-text",
+          className,
+        ]
           .filter(Boolean)
           .join(" ")}
         role="img"
@@ -37,7 +40,7 @@ export function CatalogImage({
   return (
     <img
       alt={alt}
-      className={["catalog-image", className].filter(Boolean).join(" ")}
+      className={["block object-cover", className].filter(Boolean).join(" ")}
       onError={() => setFailed(true)}
       src={usableSource}
     />

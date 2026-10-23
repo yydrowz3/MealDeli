@@ -59,7 +59,7 @@ export function CatalogSearchForm({ query, onSearch, debounceMs = 300 }: Catalog
 
   return (
     <form
-      className="catalog-search"
+      className="grid grid-cols-[minmax(12rem,1fr)_auto_auto] [align-items:end] gap-2 [@media(max-width:39.99rem)]:grid-cols-1"
       onSubmit={(event) => {
         event.preventDefault();
         void form.handleSubmit();

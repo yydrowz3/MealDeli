@@ -9,8 +9,6 @@ import { DishCard } from "../components/dish-card";
 import { isPromotionActive } from "../model/promotion";
 import type { Dish, RestaurantDetail } from "../model/types";
 
-import "../catalog.css";
-
 export type CatalogCartSlots = Readonly<{
   sidebar?: ReactNode;
   mobileBar?: ReactNode;
@@ -29,14 +27,14 @@ function MenuSkeleton() {
   return (
     <main
       aria-label="Loading restaurant menu"
-      className="catalog-page [&_[data-state]_h2]:mb-0!"
+      className="mx-auto grid max-w-content gap-8 p-6 font-sans text-charcoal [@media(max-width:39.99rem)]:p-4 [&_h1]:my-0 [&_h1]:text-page [&_h2]:mt-0 [&_h2]:mb-4 [&_h2]:text-section [&_h3]:my-0 [&_h3]:text-[1.05rem] [&_p]:my-0 [&_[data-state]_h2]:mb-0!"
       role="status"
     >
-      <Skeleton className="catalog-menu-hero" />
-      <Skeleton className="catalog-skeleton-title" />
-      <div className="catalog-dish-grid">
+      <Skeleton className="aspect-[3/1] w-full min-h-48! rounded-card! [@media(max-width:39.99rem)]:aspect-video" />
+      <Skeleton className="h-12 w-[45%]" />
+      <div className="grid grid-cols-3 gap-4 [@media(max-width:39.99rem)]:grid-cols-1">
         {Array.from({ length: 6 }, (_, index) => (
-          <Skeleton className="catalog-skeleton-dish" key={index} />
+          <Skeleton className="h-72" key={index} />
         ))}
       </div>
     </main>
@@ -76,13 +74,17 @@ export function RestaurantMenuPage({
 
   if (error) {
     return (
-      <main className="catalog-page [&_[data-state]_h2]:mb-0!">
-        <Button className="catalog-back-button" onClick={onBack} variant="tertiary">
+      <main className="mx-auto grid max-w-content gap-8 p-6 font-sans text-charcoal [@media(max-width:39.99rem)]:p-4 [&_h1]:my-0 [&_h1]:text-page [&_h2]:mt-0 [&_h2]:mb-4 [&_h2]:text-section [&_h3]:my-0 [&_h3]:text-[1.05rem] [&_p]:my-0 [&_[data-state]_h2]:mb-0!">
+        <Button
+          className="[&>span]:inline-flex [&>span]:items-center [&>span]:flex-row [&>span]:gap-2"
+          onClick={onBack}
+          variant="tertiary"
+        >
           <ArrowLeftIcon aria-hidden="true" size={18} />
           Back to restaurants
         </Button>
-        <div className="catalog-error-shell">
-          <Skeleton className="catalog-menu-hero" />
+        <div>
+          <Skeleton className="aspect-[3/1] w-full min-h-48! rounded-card! [@media(max-width:39.99rem)]:aspect-video" />
           <ErrorState
             action={{ label: "Try again", onClick: () => setRetryVersion((value) => value + 1) }}
             title="We couldn’t load this restaurant."
@@ -94,7 +96,7 @@ export function RestaurantMenuPage({
 
   if (!restaurant) {
     return (
-      <main className="catalog-page [&_[data-state]_h2]:mb-0!">
+      <main className="mx-auto grid max-w-content gap-8 p-6 font-sans text-charcoal [@media(max-width:39.99rem)]:p-4 [&_h1]:my-0 [&_h1]:text-page [&_h2]:mt-0 [&_h2]:mb-4 [&_h2]:text-section [&_h3]:my-0 [&_h3]:text-[1.05rem] [&_p]:my-0 [&_[data-state]_h2]:mb-0!">
         <ErrorState
           action={{ label: "Back to restaurants", onClick: onBack }}
           title="Restaurant not found"
@@ -104,20 +106,24 @@ export function RestaurantMenuPage({
   }
 
   return (
-    <main className="catalog-page [&_[data-state]_h2]:mb-0!">
-      <Button className="catalog-back-button" onClick={onBack} variant="tertiary">
+    <main className="mx-auto grid max-w-content gap-8 p-6 font-sans text-charcoal [@media(max-width:39.99rem)]:p-4 [&_h1]:my-0 [&_h1]:text-page [&_h2]:mt-0 [&_h2]:mb-4 [&_h2]:text-section [&_h3]:my-0 [&_h3]:text-[1.05rem] [&_p]:my-0 [&_[data-state]_h2]:mb-0!">
+      <Button
+        className="[&>span]:inline-flex [&>span]:items-center [&>span]:flex-row [&>span]:gap-2"
+        onClick={onBack}
+        variant="tertiary"
+      >
         <ArrowLeftIcon aria-hidden="true" size={18} />
         Back to restaurants
       </Button>
       <CatalogImage
         allowExternalSource
-        className="catalog-menu-hero"
+        className="aspect-[3/1] w-full min-h-48 rounded-card [@media(max-width:39.99rem)]:aspect-video"
         alt={restaurant.name}
         source={restaurant.image}
       />
-      <header className="catalog-menu-header">
+      <header className="[&_p]:text-muted [&_address]:text-muted [&_address]:not-italic">
         <div>
-          <div className="catalog-card__title-row">
+          <div className="flex items-center justify-between gap-2">
             <h1>{restaurant.name}</h1>
             {isPromotionActive(restaurant.promotedUntil, now) ? (
               <Badge tone="jade">Promoted</Badge>
@@ -129,8 +135,10 @@ export function RestaurantMenuPage({
       </header>
       <div
         className={[
-          "catalog-menu-layout",
-          cartSlots?.sidebar ? "catalog-menu-layout--with-cart" : "",
+          "grid [align-items:start] gap-6 [@media(max-width:63.99rem)]:grid-cols-1",
+          cartSlots?.sidebar
+            ? "grid-cols-[minmax(0,1fr)_minmax(15rem,22rem)]"
+            : "grid-cols-[minmax(0,1fr)]",
         ]
           .filter(Boolean)
           .join(" ")}
@@ -140,7 +148,7 @@ export function RestaurantMenuPage({
           {restaurant.dishes.length === 0 ? (
             <EmptyState title="This restaurant hasn’t added a menu yet." />
           ) : (
-            <div className="catalog-dish-grid">
+            <div className="grid grid-cols-3 gap-4 [@media(max-width:39.99rem)]:grid-cols-1">
               {restaurant.dishes.map((dish) => (
                 <DishCard dish={dish} key={dish.id} onSelect={onSelectDish} />
               ))}
@@ -148,11 +156,15 @@ export function RestaurantMenuPage({
           )}
         </section>
         {cartSlots?.sidebar ? (
-          <aside className="catalog-cart-sidebar">{cartSlots.sidebar}</aside>
+          <aside className="sticky top-4 [@media(max-width:63.99rem)]:hidden">
+            {cartSlots.sidebar}
+          </aside>
         ) : null}
       </div>
       {cartSlots?.mobileBar ? (
-        <div className="catalog-cart-mobile">{cartSlots.mobileBar}</div>
+        <div className="hidden [@media(max-width:63.99rem)]:sticky [@media(max-width:63.99rem)]:bottom-0 [@media(max-width:63.99rem)]:z-10 [@media(max-width:63.99rem)]:block">
+          {cartSlots.mobileBar}
+        </div>
       ) : null}
     </main>
   );

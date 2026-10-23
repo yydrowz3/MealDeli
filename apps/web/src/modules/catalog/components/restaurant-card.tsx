@@ -11,17 +11,24 @@ export type RestaurantCardProps = {
 
 export function RestaurantCard({ restaurant, onViewMenu, now }: RestaurantCardProps) {
   return (
-    <Card className="catalog-restaurant-card p-6!">
-      <CatalogImage allowExternalSource alt={restaurant.name} source={restaurant.image} />
-      <div className="catalog-card__body">
-        <div className="catalog-card__title-row">
+    <Card className="grid gap-3 overflow-hidden p-6!">
+      <CatalogImage
+        allowExternalSource
+        alt={restaurant.name}
+        className="aspect-video w-full max-h-48 overflow-hidden"
+        source={restaurant.image}
+      />
+      <div className="grid gap-2 px-4 pt-0 pb-4">
+        <div className="flex items-center justify-between gap-2">
           <h3>{restaurant.name}</h3>
           {isPromotionActive(restaurant.promotedUntil, now) ? (
             <Badge tone="jade">Promoted</Badge>
           ) : null}
         </div>
-        <p className="catalog-card__category">{restaurant.category.name}</p>
-        <p className="catalog-card__address">{restaurant.address}</p>
+        <p className="text-[length:var(--font-size-small)] font-[650] text-jade-text">
+          {restaurant.category.name}
+        </p>
+        <p className="line-clamp-2 text-muted">{restaurant.address}</p>
         <Button onClick={() => onViewMenu(restaurant.id)} variant="secondary">
           View menu
         </Button>
