@@ -75,9 +75,12 @@ export function OwnerRestaurantsPage({ repository, navigate }: OwnerRestaurantsP
   }
   if (!restaurants) {
     return (
-      <section aria-label="Loading restaurants" className="owner-restaurant-grid">
-        <Skeleton style={{ height: "13rem" }} />
-        <Skeleton style={{ height: "13rem" }} />
+      <section
+        aria-label="Loading restaurants"
+        className="grid grid-cols-[repeat(auto-fit,minmax(18rem,1fr))] gap-[var(--space-5)]"
+      >
+        <Skeleton className="h-52" />
+        <Skeleton className="h-52" />
       </section>
     );
   }
@@ -92,11 +95,13 @@ export function OwnerRestaurantsPage({ repository, navigate }: OwnerRestaurantsP
   }
 
   return (
-    <section className="owner-page">
-      <header className="owner-page__header">
+    <section className="mx-auto grid max-w-360 gap-6 p-6 [@media(max-width:47.99rem)]:p-4">
+      <header className="flex items-center justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]">
         <div>
-          <p className="owner-page__eyebrow">Owner workspace</p>
-          <h1>Restaurants</h1>
+          <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
+            Owner workspace
+          </p>
+          <h1 className="m-0">Restaurants</h1>
         </div>
         <Button
           className="[@media(max-width:47.99rem)]:w-full"
@@ -105,16 +110,21 @@ export function OwnerRestaurantsPage({ repository, navigate }: OwnerRestaurantsP
           Create restaurant
         </Button>
       </header>
-      <div className="owner-restaurant-grid">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(18rem,1fr))] gap-[var(--space-5)]">
         {restaurants.map((restaurant) => (
-          <Card className="owner-restaurant-card p-6!" key={restaurant.id}>
+          <Card className="overflow-hidden p-6!" key={restaurant.id}>
             {restaurant.image ? (
-              <img alt="" src={restaurant.image} />
+              <img alt="" className="aspect-video w-full object-cover" src={restaurant.image} />
             ) : (
-              <div className="owner-image-placeholder" aria-hidden="true" />
+              <div
+                className="aspect-video min-h-24 w-full object-cover [background:linear-gradient(135deg,var(--color-surface-muted),var(--color-border))]"
+                aria-hidden="true"
+              />
             )}
-            <div className="owner-restaurant-card__body">
-              <p className="owner-page__eyebrow">{restaurant.category.name}</p>
+            <div className="grid gap-3 p-[var(--space-5)]">
+              <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
+                {restaurant.category.name}
+              </p>
               <h2>{restaurant.name}</h2>
               <p>{restaurant.address}</p>
               <p>
@@ -125,7 +135,7 @@ export function OwnerRestaurantsPage({ repository, navigate }: OwnerRestaurantsP
                   Promoted until <DateTime value={restaurant.promotedUntil} />
                 </p>
               ) : null}
-              <div className="owner-card-actions">
+              <div className="flex flex-wrap gap-3">
                 <Button onClick={() => navigate(`/restaurants/${restaurant.id}`)}>
                   Open restaurant
                 </Button>

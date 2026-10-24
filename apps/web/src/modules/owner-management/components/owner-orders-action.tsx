@@ -34,7 +34,7 @@ export function OwnerOrdersAction({ order, repository, onOrder }: OwnerOrdersAct
   };
 
   return (
-    <div className="owner-order-action">
+    <div>
       <Button loading={submitting} onClick={() => void run()}>
         {action.label}
       </Button>

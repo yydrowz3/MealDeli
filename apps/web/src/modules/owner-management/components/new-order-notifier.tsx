@@ -68,12 +68,19 @@ export function NewOrderNotifier({
       {connection === "reconnecting" ? (
         <ConnectionBanner message="Live order updates are reconnecting…" />
       ) : null}
-      <div className="owner-order-toasts" aria-label="New orders">
+      <div
+        className="fixed right-6 bottom-6 z-60 grid max-w-104 gap-3 [@media(max-width:47.99rem)]:right-4 [@media(max-width:47.99rem)]:bottom-4 [@media(max-width:47.99rem)]:left-4 [@media(max-width:47.99rem)]:max-w-none"
+        aria-label="New orders"
+      >
         {toasts.map((toast) => (
-          <article className="owner-order-toast" key={toast.id} role="status">
+          <article
+            className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-[var(--radius-lg)] border border-solid border-border bg-surface p-4 [box-shadow:var(--shadow-lg)]"
+            key={toast.id}
+            role="status"
+          >
             <div>
               <strong>New order from {toast.restaurantName}</strong>
-              <p>
+              <p className="mx-0 mt-1 mb-0">
                 Order #{toast.shortId} · {formatUsd(toast.totalMinor)}
               </p>
             </div>

@@ -62,15 +62,17 @@ export function OwnerMenuPage({ restaurantId, repository, uploader }: OwnerMenuP
   };
 
   if (error) return <ErrorState title="We couldn’t load this menu." />;
-  if (restaurant === undefined) return <Skeleton style={{ height: "30rem" }} />;
+  if (restaurant === undefined) return <Skeleton className="h-120" />;
   if (restaurant === null) return <ErrorState title="Restaurant not found." />;
   const editingDish = editor === "new" || editor === null ? undefined : editor;
   return (
-    <section className="owner-page">
-      <header className="owner-page__header">
+    <section className="mx-auto grid max-w-360 gap-6 p-6 [@media(max-width:47.99rem)]:p-4">
+      <header className="flex items-center justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]">
         <div>
-          <p className="owner-page__eyebrow">{restaurant.name}</p>
-          <h1>Menu</h1>
+          <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
+            {restaurant.name}
+          </p>
+          <h1 className="m-0">Menu</h1>
         </div>
         <Button className="[@media(max-width:47.99rem)]:w-full" onClick={() => setEditor("new")}>
           Add dish
@@ -83,13 +85,23 @@ export function OwnerMenuPage({ restaurantId, repository, uploader }: OwnerMenuP
           title="Your menu is empty"
         />
       ) : (
-        <div className="owner-menu-list">
+        <div className="grid gap-3">
           {restaurant.dishes.map((dish) => (
-            <Card className="owner-dish-card" key={dish.id}>
+            <Card
+              className="flex items-center justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]"
+              key={dish.id}
+            >
               {dish.image ? (
-                <img alt="" src={dish.image} />
+                <img
+                  alt=""
+                  className="h-28 w-36 flex-none rounded-[var(--radius-md)] object-cover [@media(max-width:47.99rem)]:h-40 [@media(max-width:47.99rem)]:w-full"
+                  src={dish.image}
+                />
               ) : (
-                <div className="owner-image-placeholder" aria-hidden="true" />
+                <div
+                  className="h-28 min-h-24 w-36 flex-none rounded-[var(--radius-md)] object-cover [background:linear-gradient(135deg,var(--color-surface-muted),var(--color-border))] [@media(max-width:47.99rem)]:h-40 [@media(max-width:47.99rem)]:w-full"
+                  aria-hidden="true"
+                />
               )}
               <div>
                 <h2>{dish.name}</h2>
@@ -98,7 +110,7 @@ export function OwnerMenuPage({ restaurantId, repository, uploader }: OwnerMenuP
                   <Money minor={dish.priceMinor} /> · {dish.options.length} options
                 </p>
               </div>
-              <div className="owner-card-actions">
+              <div className="flex flex-wrap gap-3">
                 <Button onClick={() => setEditor(dish)} variant="secondary">
                   Edit
                 </Button>

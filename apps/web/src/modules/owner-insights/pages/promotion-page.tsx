@@ -56,7 +56,7 @@ export function PromotionPage({
   useEffect(load, [repository, restaurantId]);
 
   if (page.kind === "loading") {
-    return <Skeleton aria-label="Loading promotion" style={{ height: "28rem" }} />;
+    return <Skeleton aria-label="Loading promotion" className="h-[28rem]" />;
   }
   if (page.kind === "not-found") return <ErrorState title="Restaurant not found." />;
   if (page.kind === "error") {
@@ -82,9 +82,11 @@ export function PromotionPage({
   };
 
   return (
-    <main className="owner-insights-page owner-insights-page--promotion">
+    <main className="grid gap-6 mx-auto max-w-[58rem] p-6 [@media(max-width:47.99rem)]:p-4 [&_h1]:mt-0 [&_h2]:mt-0 [&_p]:mt-0">
       <header>
-        <p className="owner-insights-eyebrow">Demo promotion</p>
+        <p className="mb-2 text-jade-text text-[length:var(--text-small)] font-[750] tracking-[0.08em] uppercase">
+          Demo promotion
+        </p>
         <h1>Promote your restaurant</h1>
       </header>
       <PromotionCard
@@ -93,15 +95,18 @@ export function PromotionPage({
         restaurant={data.restaurant}
       />
 
-      <section aria-labelledby="promotion-history-title" className="owner-insights-history">
+      <section aria-labelledby="promotion-history-title">
         <h2 id="promotion-history-title">Promotion history</h2>
         {data.payments.length === 0 ? (
           <EmptyState title="No promotions yet." />
         ) : (
-          <ul>
+          <ul className="grid gap-3 list-none m-0 p-0">
             {data.payments.map((payment) => (
-              <li key={payment.id}>
-                <div>
+              <li
+                className="grid items-center bg-surface border border-solid border-border rounded-card gap-3 grid-cols-[minmax(12rem,1fr)_auto_auto_auto] p-4 [@media(max-width:47.99rem)]:[align-items:start] [@media(max-width:47.99rem)]:grid-cols-1"
+                key={payment.id}
+              >
+                <div className="grid">
                   <strong>{payment.restaurantName}</strong>
                   <span>
                     <DateTime value={payment.createdAt} />
@@ -136,7 +141,7 @@ export function PromotionPage({
         open={confirming}
         title={`Promote ${data.restaurant.name}?`}
       >
-        <dl className="owner-insights-confirmation">
+        <dl className="[&_div]:flex [&_div]:justify-between">
           <div>
             <dt>Duration</dt>
             <dd>{DEMO_PROMOTION.durationDays} days</dd>

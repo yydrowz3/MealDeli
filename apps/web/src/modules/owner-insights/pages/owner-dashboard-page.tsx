@@ -57,7 +57,7 @@ export function OwnerDashboardPage({
 
   if (restaurants.length === 0) {
     return (
-      <main className="owner-insights-page">
+      <main className="grid gap-6 mx-auto max-w-content p-6 [@media(max-width:47.99rem)]:p-4 [&_h1]:mt-0 [&_h2]:mt-0 [&_p]:mt-0">
         <h1>Dashboard</h1>
         <EmptyState
           action={
@@ -68,7 +68,7 @@ export function OwnerDashboardPage({
           description="Add your restaurant details, then build a menu and start receiving orders."
           title="Create your first restaurant"
         />
-        <ol className="owner-insights-onboarding">
+        <ol className="grid grid-cols-3 gap-4 [@media(max-width:47.99rem)]:grid-cols-1">
           <li>Restaurant details</li>
           <li>Add dishes</li>
           <li>Receive orders</li>
@@ -78,10 +78,12 @@ export function OwnerDashboardPage({
   }
 
   return (
-    <main className="owner-insights-page">
-      <header className="owner-insights-page__header">
+    <main className="grid gap-6 mx-auto max-w-content p-6 [@media(max-width:47.99rem)]:p-4 [&_h1]:mt-0 [&_h2]:mt-0 [&_p]:mt-0">
+      <header className="flex [align-items:end] justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch">
         <div>
-          <p className="owner-insights-eyebrow">Last 7 calendar days</p>
+          <p className="mb-2 text-jade-text text-[length:var(--text-small)] font-[750] tracking-[0.08em] uppercase">
+            Last 7 calendar days
+          </p>
           <h1>Dashboard</h1>
         </div>
         <div className="min-w-60 [@media(max-width:47.99rem)]:min-w-0">
@@ -100,7 +102,10 @@ export function OwnerDashboardPage({
         </div>
       </header>
 
-      <section aria-label="Owner metrics" className="owner-insights-metrics">
+      <section
+        aria-label="Owner metrics"
+        className="grid grid-cols-4 gap-4 [@media(max-width:63.99rem)]:grid-cols-2"
+      >
         <MetricCard
           description="Order sales in the last 7 days"
           label="Sales"
@@ -123,13 +128,13 @@ export function OwnerDashboardPage({
         />
       </section>
 
-      <section className="owner-insights-charts">
+      <section className="grid grid-cols-[minmax(0,3fr)_minmax(18rem,2fr)] gap-4 [@media(max-width:47.99rem)]:grid-cols-1">
         <SalesChart dailySales={metrics.dailySales} />
         <TopDishesChart dishes={metrics.topDishes} />
       </section>
 
-      <section aria-labelledby="owner-active-orders-title" className="owner-insights-active-orders">
-        <div className="owner-insights-section-heading">
+      <section aria-labelledby="owner-active-orders-title">
+        <div className="flex [align-items:end] justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch">
           <h2 id="owner-active-orders-title">Active orders</h2>
           {onViewAllOrders ? (
             <Button onClick={() => onViewAllOrders(selectedRestaurantId)} variant="tertiary">
@@ -143,7 +148,7 @@ export function OwnerDashboardPage({
             title="No active orders"
           />
         ) : (
-          <div className="owner-insights-orders-grid">
+          <div className="grid grid-cols-2 gap-4 [@media(max-width:47.99rem)]:grid-cols-1">
             {activeOrders.map((order) => (
               <OrderCard
                 action={renderOrderAction?.(order)}

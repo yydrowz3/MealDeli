@@ -67,7 +67,7 @@ export function RestaurantSettingsForm({
 
   return (
     <form
-      className="owner-form"
+      className="grid gap-[var(--space-5)]"
       onSubmit={(event) => {
         event.preventDefault();
         void form.handleSubmit();

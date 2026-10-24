@@ -1,5 +1,3 @@
-import "./owner-management.css";
-
 export {
   createOwnerRestaurantRepository,
   OwnerManagementRepositoryError,

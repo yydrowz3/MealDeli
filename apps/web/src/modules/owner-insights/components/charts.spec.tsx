@@ -7,7 +7,7 @@ import { TopDishesChart } from "./top-dishes-chart";
 describe("owner insight charts", () => {
   it("renders readable summaries alongside both charts", () => {
     render(
-      <div className="owner-insights-charts">
+      <div className="grid grid-cols-[minmax(0,3fr)_minmax(18rem,2fr)] gap-4 [@media(max-width:47.99rem)]:grid-cols-1">
         <SalesChart
           dailySales={[
             { date: "2026-08-11", salesMinor: 100 },
@@ -22,7 +22,7 @@ describe("owner insight charts", () => {
     expect(screen.getByRole("img", { name: "Daily sales chart" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Top dishes chart" })).toBeInTheDocument();
     expect(screen.getByText("Sales · Last 7 days").closest("figure")?.parentElement).toHaveClass(
-      "owner-insights-charts",
+      "grid",
     );
   });
 

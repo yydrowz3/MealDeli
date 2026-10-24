@@ -10,8 +10,10 @@ export type PromotionCardProps = Readonly<{
 export function PromotionCard({ restaurant, active, onPromote }: PromotionCardProps) {
   if (active && restaurant.promotedUntil) {
     return (
-      <Card className="owner-insights-promotion-active border-border! bg-surface!">
-        <p className="owner-insights-eyebrow">Promotion active</p>
+      <Card className="grid [align-items:start] gap-4">
+        <p className="mb-2 text-jade-text text-[length:var(--text-small)] font-[750] tracking-[0.08em] uppercase">
+          Promotion active
+        </p>
         <h2>{restaurant.name} is promoted</h2>
         <p>
           Promoted until <DateTime value={restaurant.promotedUntil} />
@@ -21,8 +23,8 @@ export function PromotionCard({ restaurant, active, onPromote }: PromotionCardPr
     );
   }
   return (
-    <Card className="owner-insights-promotion-offer">
-      <p className="owner-insights-price">
+    <Card className="grid [align-items:start] gap-4">
+      <p className="text-[clamp(1.6rem,4vw,2.4rem)] font-[750]">
         <Money minor={DEMO_PROMOTION.priceMinor} /> / {DEMO_PROMOTION.durationDays} days
       </p>
       <p>Promoted restaurants appear ahead of regular listings during the promotion period.</p>

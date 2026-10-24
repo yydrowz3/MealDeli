@@ -42,13 +42,15 @@ export function OwnerCreateRestaurantPage({
         title="We couldn’t load categories."
       />
     );
-  if (!categories) return <Skeleton style={{ height: "24rem" }} />;
+  if (!categories) return <Skeleton className="h-96" />;
   return (
-    <section className="owner-page owner-page--narrow">
-      <header className="owner-page__header">
+    <section className="mx-auto grid max-w-200 gap-6 p-6 [@media(max-width:47.99rem)]:p-4">
+      <header className="flex items-center justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]">
         <div>
-          <p className="owner-page__eyebrow">Restaurant details</p>
-          <h1>Create restaurant</h1>
+          <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
+            Restaurant details
+          </p>
+          <h1 className="m-0">Create restaurant</h1>
         </div>
       </header>
       <RestaurantForm

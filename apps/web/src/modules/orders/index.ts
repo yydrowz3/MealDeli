@@ -1,5 +1,3 @@
-import "./orders.css";
-
 export type {
   Order,
   OrderDetailResult,

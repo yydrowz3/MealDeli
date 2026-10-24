@@ -10,10 +10,10 @@ export type MetricCardProps = Readonly<{
 
 export function MetricCard({ label, value, description }: MetricCardProps) {
   return (
-    <Card className="owner-insights-metric">
-      <p>{label}</p>
-      <strong>{value}</strong>
-      <small>{description}</small>
+    <Card className="grid gap-2">
+      <p className="m-0 text-muted">{label}</p>
+      <strong className="text-[clamp(1.6rem,3vw,2.15rem)]">{value}</strong>
+      <small className="m-0 text-muted">{description}</small>
     </Card>
   );
 }

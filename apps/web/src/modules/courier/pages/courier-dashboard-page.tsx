@@ -169,7 +169,7 @@ export function CourierDashboardPage({
   }
   if (!data && loadError) {
     return (
-      <main className="courier-dashboard">
+      <main className="w-[min(1180px,calc(100%_-_2rem))] mx-auto pt-8 pb-24 [@media(max-width:767px)]:w-[min(100%_-_1rem,680px)] [@media(max-width:767px)]:pt-4">
         <ErrorState
           action={{ label: "Try again", onClick: load }}
           title="We couldn’t load the courier dashboard."
@@ -188,13 +188,15 @@ export function CourierDashboardPage({
       : undefined;
 
   return (
-    <main className="courier-dashboard">
+    <main className="w-[min(1180px,calc(100%_-_2rem))] mx-auto pt-8 pb-24 [@media(max-width:767px)]:w-[min(100%_-_1rem,680px)] [@media(max-width:767px)]:pt-4">
       {connectionState === "reconnecting" ? (
         <ConnectionBanner message="New order updates are reconnecting…" />
       ) : null}
-      <header className="courier-dashboard__header">
+      <header className="flex items-center justify-between gap-4">
         <div>
-          <p className="courier-eyebrow">Courier workspace</p>
+          <p className="text-[#087f5b] text-[0.82rem] font-bold tracking-[0.08em] uppercase">
+            Courier workspace
+          </p>
           <h1>Courier dashboard</h1>
         </div>
         <Badge tone="success">Online</Badge>
@@ -207,27 +209,30 @@ export function CourierDashboardPage({
         />
       ) : null}
       {selection.hasInvariantError ? (
-        <p className="courier-invariant" role="alert">
+        <p
+          className="border border-solid border-[#d97706] rounded-[0.75rem] bg-[#fffbeb] text-[#92400e] px-4 py-[0.8rem]"
+          role="alert"
+        >
           Multiple active deliveries need attention.
         </p>
       ) : null}
 
       <section aria-labelledby="available-orders-heading">
-        <div className="courier-section-heading">
+        <div className="flex items-center justify-between gap-4">
           <h2 id="available-orders-heading">Available orders</h2>
           <Button onClick={load} variant="tertiary">
             Refresh
           </Button>
         </div>
         {readyData.available.length === 0 ? (
-          <div className="courier-empty-heading" ref={emptyHeadingRef} tabIndex={-1}>
+          <div ref={emptyHeadingRef} tabIndex={-1}>
             <EmptyState
               description="New pickup orders will appear here while you’re online."
               title="No orders available"
             />
           </div>
         ) : (
-          <div className="courier-available-grid">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))] gap-4">
             {readyData.available.map((order) => (
               <AvailableOrderCard
                 accepting={acceptingId === order.id}
@@ -251,9 +256,12 @@ export function CourierDashboardPage({
         {readyData.recent.length === 0 ? (
           <p>No completed deliveries yet.</p>
         ) : (
-          <ul className="courier-recent-list">
+          <ul className="list-none p-0">
             {readyData.recent.map((order) => (
-              <li key={order.id}>
+              <li
+                className="flex justify-between gap-4 border-b border-solid border-b-[#d9dfdc] py-[0.85rem]"
+                key={order.id}
+              >
                 <span>{order.restaurant?.name ?? "Restaurant unavailable"}</span>
                 <Money minor={order.totalMinor} />
               </li>

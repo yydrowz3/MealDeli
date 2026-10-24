@@ -61,13 +61,13 @@ export function OrdersPage({
     role === "CUSTOMER" ? "Your orders" : role === "COURIER" ? "Delivery history" : "Orders";
 
   return (
-    <main className="orders-page">
-      <header className="orders-page__header">
-        <h1>{title}</h1>
+    <main className="mx-auto grid w-full max-w-content gap-6 p-6 font-sans text-charcoal">
+      <header>
+        <h1 className="m-0 text-page">{title}</h1>
       </header>
 
       {state.kind === "loading" ? (
-        <div aria-label="Loading orders" className="orders-loading">
+        <div aria-label="Loading orders" className="grid gap-4">
           <Skeleton className="min-h-40!" />
           <Skeleton className="min-h-40!" />
           <Skeleton className="min-h-40!" />
@@ -83,7 +83,7 @@ export function OrdersPage({
       ) : null}
 
       {state.kind === "ready" && role === "OWNER" ? (
-        <div className="orders-filters">
+        <div className="grid grid-cols-[repeat(2,minmax(0,18rem))] gap-4 [@media(max-width:47.99rem)]:grid-cols-[1fr]">
           <Select
             label="Restaurant"
             onChange={(event) => setRestaurantId(event.target.value)}
@@ -112,7 +112,7 @@ export function OrdersPage({
       ) : null}
 
       {state.kind === "ready" && role !== "OWNER" ? (
-        <div aria-label="Order sections" className="orders-tabs" role="tablist">
+        <div aria-label="Order sections" className="flex gap-2" role="tablist">
           {sections.map((section) => (
             <Button
               aria-selected={activeSection?.id === section.id}
@@ -140,7 +140,7 @@ export function OrdersPage({
             renderAction={renderAction}
           />
         ) : (
-          <div className="orders-grid">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,18rem),1fr))] gap-4">
             {activeSection.orders.map((order) => (
               <OrderCard
                 action={renderAction?.(order)}

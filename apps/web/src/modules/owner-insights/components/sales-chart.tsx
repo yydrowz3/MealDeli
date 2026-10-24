@@ -39,7 +39,7 @@ export function SalesChart({ dailySales }: SalesChartProps) {
       summary={summary}
       title="Sales · Last 7 days"
     >
-      <div aria-label="Daily sales chart" className="owner-insights-chart" role="img">
+      <div aria-label="Daily sales chart" className="h-72 w-full" role="img">
         <ResponsiveContainer height="100%" width="100%">
           <BarChart data={chartData} margin={{ left: 4, right: 4, top: 8 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />

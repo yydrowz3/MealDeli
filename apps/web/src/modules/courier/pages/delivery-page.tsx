@@ -206,8 +206,13 @@ export function DeliveryPage({
   }
   if (completed) {
     return (
-      <main className="courier-completed" aria-live="polite">
-        <p className="courier-eyebrow">Order #{orderId.slice(0, 8)}</p>
+      <main
+        className="w-[min(1180px,calc(100%_-_2rem))] mx-auto pt-8 pb-24 [@media(max-width:767px)]:w-[min(100%_-_1rem,680px)] [@media(max-width:767px)]:pt-4"
+        aria-live="polite"
+      >
+        <p className="text-[#087f5b] text-[0.82rem] font-bold tracking-[0.08em] uppercase">
+          Order #{orderId.slice(0, 8)}
+        </p>
         <h1>Delivery completed</h1>
         <p>The order is now in your delivery history.</p>
         <Button onClick={onBackDashboard}>Back to dashboard</Button>
@@ -216,7 +221,7 @@ export function DeliveryPage({
   }
   if (!order || error === "Order not found") {
     return (
-      <main className="courier-delivery-page">
+      <main className="w-[min(1180px,calc(100%_-_2rem))] mx-auto pt-8 pb-24 [@media(max-width:767px)]:w-[min(100%_-_1rem,680px)] [@media(max-width:767px)]:pt-4">
         <ErrorState
           action={{ label: "Back to dashboard", onClick: onBackDashboard }}
           title="Order not found"
@@ -238,17 +243,20 @@ export function DeliveryPage({
     : null;
 
   return (
-    <main className="courier-delivery-page">
+    <main className="w-[min(1180px,calc(100%_-_2rem))] mx-auto pt-8 pb-24 [@media(max-width:767px)]:w-[min(100%_-_1rem,680px)] [@media(max-width:767px)]:pt-4">
       {connectionState === "reconnecting" ? (
         <ConnectionBanner message="Delivery updates are reconnecting…" />
       ) : null}
       {mapFailed ? (
-        <div className="courier-map-warning" role="status">
+        <div
+          className="border border-solid border-[#d97706] rounded-[0.75rem] bg-[#fffbeb] text-[#92400e] px-4 py-[0.8rem]"
+          role="status"
+        >
           Map tiles are unavailable. The demo route is still active.
         </div>
       ) : null}
-      <div className="courier-delivery-layout">
-        <div className="courier-delivery-layout__map">
+      <div className="grid grid-cols-[minmax(0,1.8fr)_minmax(300px,1fr)] gap-6 [align-items:start] [@media(max-width:767px)]:grid-cols-1">
+        <div>
           {mapProps ? (
             renderMap ? (
               renderMap(mapProps)
@@ -265,16 +273,25 @@ export function DeliveryPage({
           ) : null}
         </div>
 
-        <section className="courier-delivery-details" ref={detailsRef} tabIndex={-1}>
-          <p className="courier-eyebrow">On the way</p>
+        <section
+          className="grid gap-[0.9rem] border border-solid border-[#d9dfdc] rounded-[1rem] p-5 bg-white [&_h1]:m-0 [&_h2]:m-0 [&_p]:m-0"
+          ref={detailsRef}
+          tabIndex={-1}
+        >
+          <p className="text-[#087f5b] text-[0.82rem] font-bold tracking-[0.08em] uppercase">
+            On the way
+          </p>
           <h1>{restaurantName}</h1>
           {order.restaurant ? <p>{order.restaurant.address}</p> : null}
           <h2>Demo delivery destination</h2>
           <p>Location is simulated for this demo.</p>
           <h2>Order summary</h2>
-          <ul className="courier-item-list">
+          <ul className="list-none p-0">
             {order.items.map((item) => (
-              <li key={item.id}>
+              <li
+                className="flex justify-between gap-4 border-b border-solid border-b-[#d9dfdc] py-[0.85rem]"
+                key={item.id}
+              >
                 <strong>
                   {item.quantity} × {item.dishName}
                 </strong>
@@ -291,7 +308,7 @@ export function DeliveryPage({
               </li>
             ))}
           </ul>
-          <p className="courier-order-total">
+          <p className="flex justify-between font-bold">
             Order total <Money minor={order.totalMinor} />
           </p>
           {error ? <p role="alert">{error}</p> : null}

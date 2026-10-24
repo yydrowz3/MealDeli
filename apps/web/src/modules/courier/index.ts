@@ -1,5 +1,3 @@
-import "./courier.css";
-
 export type {
   CourierRepository,
   CourierCommandPort,

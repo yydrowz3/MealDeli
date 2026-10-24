@@ -5,16 +5,26 @@ import { MapFrame } from "../../../shared/ui";
 import type { DemoRoute } from "../model/demo-route";
 import { MapFallback } from "./map-fallback";
 
+// Preserve the original 12px divIcon anchor while rendering the existing 2rem markers.
 const pickupIcon = divIcon({
-  className: "courier-leaflet-marker courier-leaflet-marker--pickup",
+  className:
+    "grid! place-items-center size-8 border-2 border-solid border-white rounded-[999px] [box-shadow:0_2px_8px_rgb(0_0_0/30%)] text-white font-[800] bg-[#087f5b]",
+  iconSize: [32, 32],
+  iconAnchor: [6, 6],
   html: "R",
 });
 const destinationIcon = divIcon({
-  className: "courier-leaflet-marker courier-leaflet-marker--destination",
+  className:
+    "grid! place-items-center size-8 border-2 border-solid border-white rounded-[999px] [box-shadow:0_2px_8px_rgb(0_0_0/30%)] text-white font-[800] bg-[#334155]",
+  iconSize: [32, 32],
+  iconAnchor: [6, 6],
   html: "⌂",
 });
 const courierIcon = divIcon({
-  className: "courier-leaflet-marker courier-leaflet-marker--courier",
+  className:
+    "grid! place-items-center size-8 border-2 border-solid border-white rounded-[999px] [box-shadow:0_2px_8px_rgb(0_0_0/30%)] text-white font-[800] bg-[#c2410c] motion-reduce:transition-none",
+  iconSize: [32, 32],
+  iconAnchor: [6, 6],
   html: "➤",
 });
 
@@ -46,8 +56,16 @@ export function DeliveryMap({
       state={failed ? "fallback" : "ready"}
       title="Demo route"
     >
-      <div aria-label="Simulated delivery map" className="courier-leaflet-map">
-        <MapContainer center={courier} scrollWheelZoom={false} zoom={14}>
+      <div
+        aria-label="Simulated delivery map"
+        className="relative min-h-[460px] overflow-hidden rounded-[0.9rem] [@media(max-width:767px)]:min-h-[48vh]"
+      >
+        <MapContainer
+          className="min-h-[460px] w-full [@media(max-width:767px)]:min-h-[48vh]"
+          center={courier}
+          scrollWheelZoom={false}
+          zoom={14}
+        >
           <TileLayer
             attribution="© OpenStreetMap contributors"
             eventHandlers={{ tileerror: () => onTileFailure?.() }}
@@ -63,7 +81,7 @@ export function DeliveryMap({
           />
           <Marker alt="Simulated courier location" icon={courierIcon} position={courier} />
         </MapContainer>
-        <ul className="courier-map-labels">
+        <ul className="list-none p-0 absolute [inline-size:1px] [block-size:1px] overflow-hidden [clip:rect(0,0,0,0)]">
           <li>Pickup: {restaurantName}</li>
           <li>Demo delivery destination</li>
           <li>Simulated courier location</li>

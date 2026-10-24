@@ -1,5 +1,3 @@
-import "./owner-insights.css";
-
 export { computeOwnerMetrics } from "./model/analytics";
 export type {
   DailySales,

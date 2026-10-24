@@ -57,7 +57,7 @@ export function RestaurantForm({
 
   return (
     <form
-      className="owner-form"
+      className="grid gap-[var(--space-5)]"
       onSubmit={(event) => {
         event.preventDefault();
         void form.handleSubmit();
@@ -115,7 +115,7 @@ export function RestaurantForm({
           />
         )}
       </form.Field>
-      <div className="owner-form__actions">
+      <div className="flex flex-wrap gap-3">
         {onCancel ? (
           <Button onClick={onCancel} type="button" variant="secondary">
             Cancel

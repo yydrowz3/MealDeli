@@ -48,7 +48,7 @@ export function OwnerRestaurantOverviewPage({
     };
   }, [orderRepository, repository, restaurantId, select]);
   if (error) return <ErrorState title="We couldn’t load this restaurant." />;
-  if (restaurant === undefined) return <Skeleton style={{ height: "28rem" }} />;
+  if (restaurant === undefined) return <Skeleton className="h-112" />;
   if (restaurant === null) return <ErrorState title="Restaurant not found." />;
   const activeOrders = orders.filter((order) => order.status !== "DELIVERED");
   const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
@@ -59,20 +59,29 @@ export function OwnerRestaurantOverviewPage({
     .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
     .slice(0, 5);
   return (
-    <section className="owner-page">
-      <header className="owner-overview-hero">
+    <section className="mx-auto grid max-w-360 gap-6 p-6 [@media(max-width:47.99rem)]:p-4">
+      <header className="grid grid-cols-[minmax(12rem,22rem)_1fr] items-center gap-6 [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]">
         {restaurant.image ? (
-          <img alt="" src={restaurant.image} />
+          <img
+            alt=""
+            className="h-56 w-full rounded-[var(--radius-lg)] object-cover"
+            src={restaurant.image}
+          />
         ) : (
-          <div className="owner-image-placeholder" aria-hidden="true" />
+          <div
+            className="h-56 min-h-24 w-full rounded-[var(--radius-lg)] object-cover [background:linear-gradient(135deg,var(--color-surface-muted),var(--color-border))]"
+            aria-hidden="true"
+          />
         )}
         <div>
-          <p className="owner-page__eyebrow">{restaurant.category.name}</p>
-          <h1>{restaurant.name}</h1>
+          <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
+            {restaurant.category.name}
+          </p>
+          <h1 className="m-0">{restaurant.name}</h1>
           <p>{restaurant.address}</p>
         </div>
       </header>
-      <div className="owner-card-actions">
+      <div className="flex flex-wrap gap-3">
         <Button onClick={() => navigate(`/restaurants/${restaurant.id}/menu`)}>Manage menu</Button>
         <Button onClick={() => navigate(`/orders?restaurant=${restaurant.id}`)} variant="secondary">
           View orders
@@ -90,7 +99,7 @@ export function OwnerRestaurantOverviewPage({
           Promote restaurant
         </Button>
       </div>
-      <div className="owner-summary-grid">
+      <div className="grid grid-cols-[repeat(3,1fr)] gap-4 [@media(max-width:47.99rem)]:grid-cols-2 [&_strong]:[font-size:var(--font-size-2xl)]">
         <Card>
           <p>Dishes</p>
           <strong>{restaurant.dishes.length}</strong>
@@ -114,15 +123,18 @@ export function OwnerRestaurantOverviewPage({
         </Card>
       ) : null}
       <section>
-        <div className="owner-section-heading">
+        <div className="flex items-center justify-between gap-4">
           <h2>Recent orders</h2>
         </div>
         {recent.length === 0 ? (
           <p>No orders yet.</p>
         ) : (
-          <div className="owner-recent-orders">
+          <div className="grid gap-3">
             {recent.map((order) => (
-              <Card key={order.id}>
+              <Card
+                className="flex items-center justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]"
+                key={order.id}
+              >
                 <strong>Order #{order.id.slice(-8).toUpperCase()}</strong>
                 <DateTime value={order.createdAt} />
                 <StatusBadge status={order.status} />

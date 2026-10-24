@@ -62,14 +62,16 @@ export function OwnerRestaurantSettingsPage({
     });
     navigate("/restaurants");
   };
-  if (restaurant === undefined) return <Skeleton style={{ height: "28rem" }} />;
+  if (restaurant === undefined) return <Skeleton className="h-112" />;
   if (restaurant === null) return <ErrorState title="Restaurant not found." />;
   return (
-    <section className="owner-page owner-page--narrow">
-      <header className="owner-page__header">
+    <section className="mx-auto grid max-w-200 gap-6 p-6 [@media(max-width:47.99rem)]:p-4">
+      <header className="flex items-center justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]">
         <div>
-          <p className="owner-page__eyebrow">{restaurant.name}</p>
-          <h1>Restaurant settings</h1>
+          <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
+            {restaurant.name}
+          </p>
+          <h1 className="m-0">Restaurant settings</h1>
         </div>
       </header>
       <RestaurantSettingsForm
@@ -82,7 +84,7 @@ export function OwnerRestaurantSettingsPage({
         restaurant={restaurant}
         uploader={uploader}
       />
-      <Card className="owner-danger-zone border-border!">
+      <Card className="mt-8 grid gap-3 border-border!">
         <h2>Danger zone</h2>
         <p>Deleting a restaurant permanently removes its menu. Past orders are not changed.</p>
         <Button onClick={() => setConfirmDelete(true)} variant="danger">

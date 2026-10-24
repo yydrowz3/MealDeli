@@ -20,8 +20,8 @@ function shortOrderId(id: string): string {
 export function OrderCard({ order, action, onView, viewLabel = "View order" }: OrderCardProps) {
   const itemCount = order.items.reduce((total, item) => total + item.quantity, 0);
   return (
-    <Card className="orders-card">
-      <div className="orders-card__header">
+    <Card className="grid gap-4 [&_h2]:m-0 [&_p]:m-0 [&_dl]:m-0">
+      <div className="flex [align-items:start] justify-between gap-3">
         <div>
           <h2>{order.restaurant?.name ?? "Restaurant unavailable"}</h2>
           <p>Order #{shortOrderId(order.id)}</p>
@@ -29,7 +29,7 @@ export function OrderCard({ order, action, onView, viewLabel = "View order" }: O
         <OrderStatusBadge status={order.status} />
       </div>
       <p>{ORDER_STATUS_DESCRIPTIONS[order.status]}</p>
-      <dl className="orders-card__facts">
+      <dl className="grid grid-cols-[repeat(3,1fr)] gap-3 [&>div]:grid [&>div]:gap-1 [&_dt]:text-muted [&_dt]:text-[length:var(--font-size-small)] [&_dd]:m-0">
         <div>
           <dt>Placed</dt>
           <dd>

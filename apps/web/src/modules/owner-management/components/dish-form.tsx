@@ -45,7 +45,7 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
 
   return (
     <form
-      className="owner-dish-form"
+      className="grid gap-[var(--space-5)]"
       onSubmit={(event) => {
         event.preventDefault();
         void form.handleSubmit();
@@ -101,8 +101,8 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
         )}
       </form.Field>
 
-      <section className="owner-option-builder" aria-labelledby="dish-options-title">
-        <div className="owner-option-builder__heading">
+      <section className="grid gap-4" aria-labelledby="dish-options-title">
+        <div className="flex items-center justify-between gap-4">
           <h3 id="dish-options-title">Options</h3>
           <form.Field name="options" mode="array">
             {(optionsField) => (
@@ -118,14 +118,14 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
           </form.Field>
         </div>
         {removedExistingOption ? (
-          <p className="owner-option-builder__warning" role="status">
+          <p className="text-warning-text" role="status">
             Past orders keep their saved option snapshots and are not changed.
           </p>
         ) : null}
         <form.Field name="options" mode="array">
           {(optionsField) =>
             optionsField.state.value.map((option, optionIndex) => (
-              <Card className="owner-option-builder__option" key={option.uiKey}>
+              <Card className="grid gap-4" key={option.uiKey}>
                 <form.Field name={`options[${optionIndex}].name`}>
                   {(field) => (
                     <Input
@@ -137,7 +137,7 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
                     />
                   )}
                 </form.Field>
-                <div className="owner-option-builder__limits">
+                <div className="grid grid-cols-2 gap-3 [@media(max-width:47.99rem)]:grid-cols-[1fr]">
                   <form.Field name={`options[${optionIndex}].minSelections`}>
                     {(field) => (
                       <Input
@@ -167,9 +167,12 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
                 </div>
                 <form.Field name={`options[${optionIndex}].choices`} mode="array">
                   {(choicesField) => (
-                    <div className="owner-option-builder__choices">
+                    <div className="grid gap-4">
                       {choicesField.state.value.map((choice, choiceIndex) => (
-                        <div className="owner-option-builder__choice" key={choice.uiKey}>
+                        <div
+                          className="grid grid-cols-2 [align-items:end] gap-3 border-t border-solid border-t-border pt-3 [@media(max-width:47.99rem)]:grid-cols-[1fr]"
+                          key={choice.uiKey}
+                        >
                           <form.Field name={`options[${optionIndex}].choices[${choiceIndex}].name`}>
                             {(field) => (
                               <Input
@@ -233,7 +236,7 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
           }
         </form.Field>
       </section>
-      <div className="owner-form__actions">
+      <div className="flex flex-wrap gap-3">
         <Button onClick={onCancel} type="button" variant="secondary">
           Cancel
         </Button>
