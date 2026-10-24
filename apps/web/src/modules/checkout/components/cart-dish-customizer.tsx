@@ -34,7 +34,7 @@ export function CartDishCustomizer({ dish, restaurant, onAdded, uuid }: CartDish
       <DishCustomizer dish={dish} onAdd={add} uuid={uuid} />
       <Modal
         footer={
-          <div className="checkout-dialog-actions">
+          <div className="flex items-center gap-3">
             <Button onClick={() => setPending(null)} variant="secondary">
               Keep current cart
             </Button>

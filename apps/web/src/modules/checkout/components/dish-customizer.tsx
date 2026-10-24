@@ -44,7 +44,7 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
 
   return (
     <form
-      className="dish-customizer"
+      className="grid gap-4"
       onSubmit={(event) => {
         event.preventDefault();
         void form.handleSubmit();
@@ -62,7 +62,7 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
             const atLimit = values.length >= option.maxSelections;
             return (
               <fieldset
-                className="dish-option"
+                className="m-0 grid gap-4 border-0 border-none p-0"
                 ref={(node) => {
                   if (node) optionRefs.current.set(option.id, node);
                   else optionRefs.current.delete(option.id);
@@ -75,7 +75,10 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
                   const checked = selected(values, choice.id);
                   const single = option.maxSelections === 1;
                   return (
-                    <label className="dish-choice" key={choice.id}>
+                    <label
+                      className="flex items-center gap-3 [&>span:last-child]:ms-auto"
+                      key={choice.id}
+                    >
                       <input
                         checked={checked}
                         disabled={!checked && atLimit && !single}
@@ -101,7 +104,7 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
                   );
                 })}
                 {field.state.meta.errors.length > 0 ? (
-                  <p className="dish-option__error" role="alert">
+                  <p className="text-[var(--ui-color-danger,#b42318)]" role="alert">
                     {optionSelectionRule(option.minSelections, option.maxSelections)}
                   </p>
                 ) : null}
@@ -112,9 +115,10 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
       ))}
       <form.Field name="quantity">
         {(field) => (
-          <div aria-label="Quantity" className="checkout-stepper" role="group">
+          <div aria-label="Quantity" className="flex items-center gap-3" role="group">
             <Button
               aria-label="Decrease quantity"
+              className="min-h-11! min-w-11"
               disabled={field.state.value <= 1}
               onClick={() => field.handleChange(field.state.value - 1)}
               variant="secondary"
@@ -124,6 +128,7 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
             <span aria-live="polite">{field.state.value}</span>
             <Button
               aria-label="Increase quantity"
+              className="min-h-11! min-w-11"
               disabled={field.state.value >= 99}
               onClick={() => field.handleChange(field.state.value + 1)}
               variant="secondary"

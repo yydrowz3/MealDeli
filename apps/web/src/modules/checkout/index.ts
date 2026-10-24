@@ -1,5 +1,3 @@
-import "./checkout.css";
-
 export type {
   AddCartLineInput,
   AddCartLineResult,

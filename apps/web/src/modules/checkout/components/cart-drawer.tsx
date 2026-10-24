@@ -37,7 +37,7 @@ export function CartDrawer({
         footer={
           cart.lines.length > 0 ? (
             <Button
-              className="checkout-drawer-checkout-button"
+              className="h-9 min-h-9! py-0 [&>span]:inline-flex [&>span]:items-center [&>span]:gap-2"
               disabled={locked}
               onClick={onCheckout}
               size="sm"
@@ -74,7 +74,7 @@ export function CartDrawer({
       </Drawer>
       <Modal
         footer={
-          <div className="checkout-dialog-actions">
+          <div className="flex items-center gap-3">
             <Button onClick={() => setPendingRemoval(null)} variant="secondary">
               Keep item
             </Button>

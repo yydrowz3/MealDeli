@@ -105,11 +105,11 @@ export function CheckoutPage({
   };
 
   return (
-    <main className="checkout-page">
+    <main className="mx-auto max-w-[72rem] p-[var(--ui-space-6,1.5rem)]">
       <h1>Checkout</h1>
       {hasInvalidLines ? <p role="alert">Some items are no longer available.</p> : null}
-      <div className="checkout-page__grid">
-        <div className="checkout-page__details">
+      <div className="grid gap-[var(--ui-space-6,1.5rem)] min-[48rem]:grid-cols-[minmax(0,7fr)_minmax(20rem,5fr)]">
+        <div className="grid gap-[var(--ui-space-4,1rem)]">
           <Card>
             <h2>Delivery address</h2>
             {!editingAddress && address ? (
@@ -141,7 +141,7 @@ export function CheckoutPage({
             <p>No card is required. Your order will be placed immediately.</p>
           </Card>
         </div>
-        <Card className="checkout-page__summary">
+        <Card className="[align-self:start] min-[48rem]:sticky min-[48rem]:top-4">
           <h2>Order summary</h2>
           <CartSummary
             cart={cart}

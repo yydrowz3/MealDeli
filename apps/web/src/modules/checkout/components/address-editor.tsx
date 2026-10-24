@@ -64,7 +64,6 @@ export function AddressEditor({ repository, onSaved, store: injectedStore }: Add
 
   return (
     <form
-      className="checkout-address-form"
       onSubmit={(event) => {
         event.preventDefault();
         void form.handleSubmit();
