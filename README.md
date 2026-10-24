@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./web/public/brand/mealdeli-logo-primary.svg" alt="MealDeli" width="280" />
+  <img src="./apps/web/public/brand/mealdeli-logo-primary.svg" alt="MealDeli" width="280" />
 </p>
 
 <p align="center">
@@ -132,11 +132,11 @@ Authentication uses a short-lived access token in the Authorization header and a
 
 ```text
 MealDeli/
-├── api/                     # NestJS GraphQL API
+├── apps/api/                     # NestJS GraphQL API
 │   ├── prisma/              # Schema, migrations, seed script, and sample data
 │   ├── src/                 # Feature modules and generated GraphQL schema
 │   └── test/                # End-to-end tests
-├── web/                     # React PWA
+├── apps/web/                     # React PWA
 │   ├── public/              # Brand assets and PWA icons
 │   ├── src/app/             # Runtime composition, routing, Apollo, and PWA
 │   ├── src/modules/         # Domain-focused product features
@@ -304,8 +304,8 @@ For database changes, inspect the generated migration SQL before committing it. 
 
 ## 📚 Documentation
 
-- [API reference and development guide](./api/README.md)
-- [Web architecture and development guide](./web/README.md)
+- [API reference and development guide](./apps/api/README.md)
+- [Web architecture and development guide](./apps/web/README.md)
 - [System architecture](./docs/detailed-designs/00-architecture.md)
 - [Feature implementation status](./docs/tasks/progress.md)
 
