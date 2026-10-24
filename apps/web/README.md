@@ -157,6 +157,17 @@ Feature modules access the network through repositories and adapters. They map g
 
 `src/shared/ui/` contains design tokens and reusable components for buttons, cards, forms, overlays, async states, status badges, dates, money, maps, and charts. Business modules own domain composition and feature-specific styling.
 
+### Styling
+
+- `src/index.css` is the only application-owned stylesheet. Only `src/main.tsx` imports it. Keep Tailwind, DaisyUI configuration, vendor CSS (including Leaflet), theme tokens, shared animations, and global base rules there.
+- Write component and page styles as Tailwind utilities in their TSX files. Do not add module CSS, `@apply`, component selectors in the entry, CSS-in-JS, or component `<style>` elements.
+- Reuse the entry's color, spacing, typography, radius, and container tokens. Preserve existing fallback values and exact media-query boundaries when maintaining a view; do not round custom breakpoints to framework defaults.
+- Keep complete utility strings in variant maps and conditional branches so Tailwind can scan them. For example, map each badge tone to `bg-jade-soft text-jade-text`; do not assemble partial classes such as `bg-${color}`.
+- Avoid conflicting base and variant utilities. When a caller must override a shared default or a vendor rule, use a local important utility such as `grid!` and document why it is needed.
+- Fixed layout values belong in utilities. The only application-owned inline styles are fallback-map route progress (`strokeDasharray`) and simulated courier coordinates (`left` / `top`). SVG drawing parameters and vendor-generated Leaflet, Recharts, and Sonner styles remain under those APIs' control.
+- Overlays toggle the complete `overflow-hidden!` utility on the document body for scroll locking and restore its prior class state on cleanup.
+- Verify responsive layouts, keyboard focus, overlays, charts, and both normal and failed-tile maps in a browser. DOM tests alone do not validate generated CSS or visual equivalence.
+
 ## PWA behavior
 
 - The build emits an installable manifest with standard and maskable icons.

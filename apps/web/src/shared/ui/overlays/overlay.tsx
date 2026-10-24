@@ -46,8 +46,8 @@ export function Overlay({
     if (!open) return;
 
     const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const hadScrollLock = document.body.classList.contains("overflow-hidden!");
+    document.body.classList.add("overflow-hidden!");
 
     const panel = panelRef.current;
     const firstFocusable = panel?.querySelector<HTMLElement>(focusableSelector);
@@ -64,7 +64,7 @@ export function Overlay({
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = previousOverflow;
+      if (!hadScrollLock) document.body.classList.remove("overflow-hidden!");
       trigger?.focus();
     };
   }, [initialFocusRef, open]);

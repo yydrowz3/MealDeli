@@ -2,7 +2,7 @@
 @import "leaflet/dist/leaflet.css";
 @plugin "daisyui";
 
-/* Keep every token available while legacy styles still reference it. */
+/* Export every design token for utilities and vendor drawing APIs. */
 @theme static {
   --color-charcoal: #202723;
   --color-jade: #2fa36b;
@@ -74,7 +74,7 @@
   --color-warning: #b7791f;
   --color-info: #3973b7;
 
-  /* Compatibility names for modules that have not migrated yet. */
+  /* Aliases retained for shared components and existing token consumers. */
   --space-1: var(--spacing-1);
   --space-2: var(--spacing-2);
   --space-3: var(--spacing-3);

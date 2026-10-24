@@ -36,7 +36,7 @@ describe("Modal", () => {
     const confirm = screen.getByRole("button", { name: "Confirm" });
     expect(dialog).toHaveAccessibleDescription("This cannot be undone.");
     expect(cancel).toHaveFocus();
-    expect(document.body.style.overflow).toBe("hidden");
+    expect(document.body).toHaveClass("overflow-hidden!");
 
     confirm.focus();
     await user.tab();
@@ -46,7 +46,7 @@ describe("Modal", () => {
 
     await user.keyboard("{Escape}");
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-    expect(document.body.style.overflow).toBe("");
+    expect(document.body).not.toHaveClass("overflow-hidden!");
     expect(trigger).toHaveFocus();
   });
 
