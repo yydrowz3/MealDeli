@@ -61,7 +61,8 @@ export function DeliveryMap({
         className="relative min-h-[460px] overflow-hidden rounded-[0.9rem] [@media(max-width:767px)]:min-h-[48vh]"
       >
         <MapContainer
-          className="min-h-[460px] w-full [@media(max-width:767px)]:min-h-[48vh]"
+          // Important utilities override Leaflet's unlayered vendor styles locally.
+          className="min-h-[460px] w-full bg-neutral-soft! [@media(max-width:767px)]:min-h-[48vh] [&_.leaflet-control-zoom_a]:bg-surface! [&_.leaflet-control-zoom_a]:text-charcoal! [&_.leaflet-control-zoom_a]:border-border! [&_.leaflet-control-attribution]:bg-surface! [&_.leaflet-control-attribution]:text-charcoal! [&_.leaflet-control-attribution_a]:text-action!"
           center={courier}
           scrollWheelZoom={false}
           zoom={14}

@@ -61,6 +61,7 @@ afterEach(() => {
   window.localStorage.clear();
   window.sessionStorage.clear();
   document.body.replaceChildren();
+  document.documentElement.removeAttribute("data-theme");
   document.head.querySelectorAll("[data-test-owned]").forEach((node) => node.remove());
 });
 

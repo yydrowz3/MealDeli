@@ -1,6 +1,6 @@
 import { ApolloClient, ApolloLink, InMemoryCache } from "@apollo/client";
 import { Provider, createStore } from "jotai";
-import { act, render, renderHook, screen } from "@testing-library/react";
+import { act, render as renderWithoutTheme, renderHook, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
@@ -16,6 +16,13 @@ import { AppProviders } from "./providers/app-providers";
 import { registerPwa, usePwaUpdatePrompt } from "./pwa/update-controller";
 import { PrivateContentGate } from "./routing/private-content-gate";
 import { RequireAccess } from "./routing/require-access";
+
+import { ThemeProvider } from "./theme/theme-provider";
+import { ThemeSwitch } from "./theme/theme-switch";
+import { toastAdapter } from "../shared/ui";
+
+const render = (ui: import("react").ReactElement) =>
+  renderWithoutTheme(ui, { wrapper: ThemeProvider });
 
 describe("Platform rendered states", () => {
   it("renders all role shells, navigation states, badges, and actions", async () => {
@@ -54,9 +61,14 @@ describe("Platform rendered states", () => {
     await user.click(screen.getAllByRole("button", { name: "Log out" })[0]!);
     expect(onCartOpen).toHaveBeenCalledOnce();
     expect(onLogOut).toHaveBeenCalledOnce();
+    expect(screen.getAllByRole("button", { name: "Switch to dark mode" })).toHaveLength(5);
+    await user.click(screen.getAllByRole("button", { name: "Switch to dark mode" })[0]!);
+    expect(document.documentElement).toHaveAttribute("data-theme", "dark");
+    expect(screen.getAllByRole("button", { name: "Switch to light mode" })).toHaveLength(5);
   });
 
-  it("renders startup, offline, chunk, and caught root errors", () => {
+  it("renders startup, offline, chunk, and caught root errors", async () => {
+    const user = userEvent.setup();
     const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
     const Broken = () => {
       throw new Error("boom");
@@ -76,6 +88,12 @@ describe("Platform rendered states", () => {
     expect(screen.getByText("We couldn’t load this part of MealDeli.")).toBeInTheDocument();
     expect(screen.getByText("MealDeli couldn’t open this page.")).toBeInTheDocument();
     expect(consoleError).toHaveBeenCalled();
+    await user.click(screen.getAllByRole("button", { name: "Switch to dark mode" })[0]!);
+    expect(document.documentElement).toHaveAttribute("data-theme", "dark");
+    expect(screen.getByRole("img", { name: "MealDeli" })).toHaveAttribute(
+      "src",
+      "/brand/mealdeli-logo-inverse.svg",
+    );
   });
 
   it("switches OnlineRequired without losing its shell state", () => {
@@ -161,7 +179,8 @@ describe("Platform rendered states", () => {
     expect(screen.getByText("gated content")).toBeInTheDocument();
   });
 
-  it("mounts the provider order around application content", () => {
+  it("mounts the provider order and forwards theme changes to notifications", async () => {
+    const user = userEvent.setup();
     const services = {
       apolloClient: new ApolloClient({ cache: new InMemoryCache(), link: ApolloLink.empty() }),
       jotaiStore: createStore(),
@@ -175,9 +194,23 @@ describe("Platform rendered states", () => {
     render(
       <AppProviders services={services}>
         <span>provider content</span>
+        <ThemeSwitch />
       </AppProviders>,
     );
     expect(screen.getByText("provider content")).toBeInTheDocument();
+    act(() => {
+      toastAdapter.success("Theme notification");
+    });
+    await screen.findByText("Theme notification");
+    expect(document.querySelector("[data-sonner-toaster]")).toHaveAttribute(
+      "data-sonner-theme",
+      "light",
+    );
+    await user.click(screen.getByRole("button", { name: "Switch to dark mode" }));
+    expect(document.querySelector("[data-sonner-toaster]")).toHaveAttribute(
+      "data-sonner-theme",
+      "dark",
+    );
   });
 });
 

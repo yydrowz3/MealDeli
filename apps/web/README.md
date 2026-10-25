@@ -15,6 +15,7 @@ The React frontend for MealDeli. It provides responsive, role-specific food deli
 - Authentication, verification, and role-aware route gates
 - Coordinated token refresh, safe mutation retry rules, and subscription reconnects
 - Shared responsive UI primitives, design tokens, loading states, and notifications
+- Persistent light/dark theme switching for every role on desktop and mobile
 - Installable PWA with safe caching boundaries and production update prompts
 
 ## Stack
@@ -158,6 +159,10 @@ Feature modules access the network through repositories and adapters. They map g
 `src/shared/ui/` contains design tokens and reusable components for buttons, cards, forms, overlays, async states, status badges, dates, money, maps, and charts. Business modules own domain composition and feature-specific styling.
 
 ### Styling
+
+The app defaults to light mode, independent of the operating system. The sun/moon control in each role's layout switches themes immediately and stores `light` or `dark` under `localStorage["mealdeli.theme"]`. Other tabs synchronize changes. Missing or invalid preferences default to light; blocked storage still allows switching in the current page. The head script restores the preference before first paint, and `ThemeProvider` owns runtime state, including error pages. Keep the head script's storage key and accepted values in sync with the provider.
+
+Theme variables live in `src/index.css`: default values preserve the light palette, while `:root[data-theme="dark"]` overrides dark values and `color-scheme`. DaisyUI only enables explicit light/dark themes. Use semantic foreground tokens (`on-primary`, `on-primary-hover`, `on-danger`, `action`, and `on-sidebar`) for controls instead of reusing page background or body text colors. Keep both themes' text contrast tests passing when changing palettes. Maps retain the existing OpenStreetMap tiles; their controls and local fallback adapt to the theme.
 
 - `src/index.css` is the only application-owned stylesheet. Only `src/main.tsx` imports it. Keep Tailwind, DaisyUI configuration, vendor CSS (including Leaflet), theme tokens, shared animations, and global base rules there.
 - Write component and page styles as Tailwind utilities in their TSX files. Do not add module CSS, `@apply`, component selectors in the entry, CSS-in-JS, or component `<style>` elements.

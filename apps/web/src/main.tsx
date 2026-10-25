@@ -5,6 +5,7 @@ import {
   AppProviders,
   PwaUpdatePrompt,
   StartupErrorPage,
+  ThemeProvider,
   initializeMealDeliRuntime,
   parseRuntimeConfig,
 } from "./app";
@@ -31,16 +32,20 @@ if (!rootElement.innerHTML) {
     const runtime = initializeMealDeliRuntime(parseRuntimeConfig(import.meta.env));
     root.render(
       <StrictMode>
-        <AppProviders services={runtime.services}>
-          <RouterProvider router={router} />
-          {import.meta.env.PROD ? <PwaUpdatePrompt /> : null}
-        </AppProviders>
+        <ThemeProvider>
+          <AppProviders services={runtime.services}>
+            <RouterProvider router={router} />
+            {import.meta.env.PROD ? <PwaUpdatePrompt /> : null}
+          </AppProviders>
+        </ThemeProvider>
       </StrictMode>,
     );
   } catch {
     root.render(
       <StrictMode>
-        <StartupErrorPage />
+        <ThemeProvider>
+          <StartupErrorPage />
+        </ThemeProvider>
       </StrictMode>,
     );
   }

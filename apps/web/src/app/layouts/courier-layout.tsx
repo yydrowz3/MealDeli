@@ -1,4 +1,5 @@
 import { BrandLink } from "./brand-link";
+import { ThemeSwitch } from "../theme/theme-switch";
 import { NavigationLinks } from "./layout-types";
 import type { LayoutProps } from "./layout-types";
 
@@ -15,9 +16,12 @@ export function CourierLayout(
         >
           <NavigationLinks items={props.navigation} />
         </nav>
-        <button onClick={props.onLogOut} type="button">
-          Log out
-        </button>
+        <div className="flex shrink-0 items-center gap-3">
+          <ThemeSwitch />
+          <button onClick={props.onLogOut} type="button">
+            Log out
+          </button>
+        </div>
       </header>
       {props.activeDeliveryHref ? (
         <a

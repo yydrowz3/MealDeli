@@ -3,6 +3,7 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 import { ChartFrame, formatUsd } from "../../../shared/ui";
 import type { DailySales } from "../model/analytics";
 import { localDateFromKey } from "../model/date-buckets";
+import { ChartTooltip } from "./chart-tooltip";
 
 export type SalesChartProps = Readonly<{
   dailySales: readonly DailySales[];
@@ -42,10 +43,17 @@ export function SalesChart({ dailySales }: SalesChartProps) {
       <div aria-label="Daily sales chart" className="h-72 w-full" role="img">
         <ResponsiveContainer height="100%" width="100%">
           <BarChart data={chartData} margin={{ left: 4, right: 4, top: 8 }}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="label" />
-            <YAxis tickFormatter={(value: number) => `$${value}`} width={56} />
-            <Tooltip formatter={(value) => formatUsd(Math.round(Number(value) * 100))} />
+            <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" vertical={false} />
+            <XAxis dataKey="label" stroke="var(--color-muted)" />
+            <YAxis
+              stroke="var(--color-muted)"
+              tickFormatter={(value: number) => `$${value}`}
+              width={56}
+            />
+            <Tooltip
+              content={<ChartTooltip formatValue={(value) => formatUsd(Math.round(value * 100))} />}
+              cursor={{ fill: "var(--color-neutral-soft)" }}
+            />
             <Bar dataKey="sales" fill="var(--color-jade)" name="Sales" radius={[6, 6, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>

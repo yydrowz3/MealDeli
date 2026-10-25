@@ -1,8 +1,13 @@
-import { render, screen } from "@testing-library/react";
+import { render as renderWithoutTheme, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { GuestLayout } from "../layouts/guest-layout";
 import { LandingPage } from "./landing-page";
+
+import { ThemeProvider } from "../theme/theme-provider";
+
+const render = (ui: import("react").ReactElement) =>
+  renderWithoutTheme(ui, { wrapper: ThemeProvider });
 
 describe("LandingPage", () => {
   it("has one H1 and the three role-specific signup targets", () => {
@@ -35,6 +40,8 @@ describe("LandingPage", () => {
     );
     await user.tab();
     expect(screen.getByRole("link", { name: "MealDeli home" })).toHaveFocus();
+    await user.tab();
+    expect(screen.getByRole("button", { name: "Switch to dark mode" })).toHaveFocus();
     await user.tab();
     expect(screen.getAllByRole("link", { name: "Log in" })[0]).toHaveFocus();
     await user.tab();

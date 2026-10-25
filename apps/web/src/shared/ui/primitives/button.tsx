@@ -10,11 +10,11 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const variantClasses = {
   primary:
-    "border-transparent bg-jade text-charcoal [&:hover:not(:disabled)]:bg-jade-dark [&:hover:not(:disabled)]:text-surface",
+    "border-transparent bg-jade text-on-primary [&:hover:not(:disabled)]:bg-jade-dark [&:hover:not(:disabled)]:text-on-primary-hover",
   secondary: "border-border bg-surface text-charcoal [&:hover:not(:disabled)]:bg-neutral-soft",
   tertiary:
-    "border-transparent bg-transparent text-jade-dark [&:hover:not(:disabled)]:bg-neutral-soft",
-  danger: "border-transparent bg-danger text-surface [&:hover:not(:disabled)]:bg-danger-dark",
+    "border-transparent bg-transparent text-action [&:hover:not(:disabled)]:bg-neutral-soft",
+  danger: "border-transparent bg-danger text-on-danger [&:hover:not(:disabled)]:bg-danger-hover",
 };
 
 const sizeClasses = {

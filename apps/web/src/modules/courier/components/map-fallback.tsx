@@ -9,7 +9,7 @@ export function MapFallback({ route, restaurantName }: MapFallbackProps) {
   const progress = route.progressIndex / Math.max(route.path.length - 1, 1);
   return (
     <div
-      className="relative min-h-[460px] overflow-hidden rounded-[0.9rem] [@media(max-width:767px)]:min-h-[48vh] bg-[#f2f5f3] [background-image:linear-gradient(#dce3df_1px,transparent_1px),linear-gradient(90deg,#dce3df_1px,transparent_1px)] [background-size:28px_28px]"
+      className="relative min-h-[460px] overflow-hidden rounded-[0.9rem] [@media(max-width:767px)]:min-h-[48vh] bg-neutral-soft [background-image:linear-gradient(var(--color-border)_1px,transparent_1px),linear-gradient(90deg,var(--color-border)_1px,transparent_1px)] [background-size:28px_28px]"
       data-testid="courier-map-fallback"
     >
       <svg
@@ -20,14 +20,14 @@ export function MapFallback({ route, restaurantName }: MapFallbackProps) {
       >
         <path
           fill="none"
-          stroke="#aeb9b4"
+          stroke="var(--color-muted)"
           strokeLinecap="round"
           strokeWidth="3"
           d="M 8 48 C 32 42, 58 22, 92 10"
         />
         <path
           fill="none"
-          stroke="#087f5b"
+          stroke="var(--color-jade)"
           strokeLinecap="round"
           strokeWidth="3"
           d="M 8 48 C 32 42, 58 22, 92 10"
