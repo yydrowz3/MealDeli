@@ -1,12 +1,23 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes:
+    light --default,
+    dark;
+}
 
 /* Export every design token for utilities and vendor drawing APIs. */
 @theme static {
   --color-charcoal: #202723;
   --color-jade: #2fa36b;
   --color-jade-dark: #247f54;
+  --color-action: #247f54;
+  --color-on-primary: #202723;
+  --color-on-primary-hover: #ffffff;
+  --color-on-danger: #ffffff;
+  --color-danger-hover: #9f302b;
+  --color-sidebar: #202723;
+  --color-on-sidebar: #ffffff;
   --color-jade-text: #1d6a45;
   --color-jade-soft: #e3f3ea;
   --color-warm-white: #f7f6f2;
@@ -70,6 +81,7 @@
 }
 
 :root {
+  color-scheme: light;
   /* Preserve the original unlayered overrides of DaisyUI's shared names. */
   --color-warning: #b7791f;
   --color-info: #3973b7;
@@ -97,6 +109,30 @@
   --line-height-heading: var(--leading-heading);
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-warm-white: #121a16;
+  --color-surface: #1b2620;
+  --color-charcoal: #e7eee9;
+  --color-muted: #a5b2aa;
+  --color-border: #35483c;
+  --color-action: #7cd9a6;
+  --color-jade-text: #7cd9a6;
+  --color-jade-soft: #203d2d;
+  --color-neutral-soft: #29392f;
+  --color-warning: #d9a34b;
+  --color-warning-text: #f5cf83;
+  --color-warning-soft: #3e301b;
+  --color-danger-dark: #ffb4aa;
+  --color-danger-soft: #422725;
+  --color-info: #8fbfff;
+  --color-info-dark: #a4ccff;
+  --color-info-soft: #203549;
+  --color-sidebar: #17201b;
+  --color-backdrop: rgb(0 0 0 / 65%);
+  --color-shadow: rgb(0 0 0 / 35%);
+}
+
 *,
 *::before,
 *::after {
@@ -104,6 +140,7 @@
 }
 
 html {
+  background: var(--color-warm-white);
   scroll-behavior: smooth;
 }
 
@@ -112,6 +149,7 @@ body {
   color: var(--color-charcoal);
   font: var(--font-size-body) / var(--line-height-body) var(--font-sans);
   margin: 0;
+  min-height: 100dvh;
 }
 
 @layer base {

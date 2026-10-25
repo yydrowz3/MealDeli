@@ -1,5 +1,7 @@
 export { Button } from "./primitives/button";
 export type { ButtonProps } from "./primitives/button";
+export { ThemeToggle } from "./primitives/theme-toggle";
+export type { ThemeToggleProps } from "./primitives/theme-toggle";
 export {
   Input,
   PasswordInput,

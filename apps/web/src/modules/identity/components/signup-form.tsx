@@ -42,7 +42,7 @@ export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
       }}
     >
       {formError ? (
-        <p className="text-danger" role="alert">
+        <p className="text-danger-dark" role="alert">
           {formError}
         </p>
       ) : null}
@@ -119,7 +119,7 @@ export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
               </label>
               {error ? (
                 <span
-                  className="ml-7 block text-[0.875rem] text-danger"
+                  className="ml-7 block text-[0.875rem] text-danger-dark"
                   id="demo-acknowledged-error"
                 >
                   {error}

@@ -86,7 +86,7 @@ export function ProfileForm({
       }}
     >
       {formError ? (
-        <p className="text-danger" role="alert">
+        <p className="text-danger-dark" role="alert">
           {formError}
         </p>
       ) : null}

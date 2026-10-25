@@ -27,14 +27,14 @@ export function CartSummary({
           const invalid = invalidLineIds.has(line.lineId);
           return (
             <li
-              className="grid gap-2 border-b border-solid border-b-[var(--ui-color-border,#d9d9d9)] py-4 data-[invalid]:border-s-4 data-[invalid]:border-s-[var(--ui-color-danger,#b42318)] data-[invalid]:ps-3 [&_h3]:m-0 [&_p]:m-0"
+              className="grid gap-2 border-b border-solid border-b-[var(--color-border)] py-4 data-[invalid]:border-s-4 data-[invalid]:border-s-[var(--color-danger-dark)] data-[invalid]:ps-3 [&_h3]:m-0 [&_p]:m-0"
               data-invalid={invalid || undefined}
               key={line.lineId}
             >
               <div>
                 <h3>{line.dishName}</h3>
                 {line.options.map((option) => (
-                  <p className="text-[var(--ui-color-text-muted,#666)]" key={option.optionId}>
+                  <p className="text-[var(--color-muted)]" key={option.optionId}>
                     {option.name}: {option.choices.map((choice) => choice.name).join(", ")}
                   </p>
                 ))}
@@ -73,7 +73,7 @@ export function CartSummary({
               {onRemove ? (
                 <Button
                   aria-label={`Remove ${line.dishName}`}
-                  className="[justify-self:start] text-jade-dark! [&>span]:inline-flex [&>span]:items-center [&>span]:gap-2"
+                  className="[justify-self:start] text-action! [&>span]:inline-flex [&>span]:items-center [&>span]:gap-2"
                   disabled={disabled}
                   onClick={() => onRemove(line.lineId)}
                   size="sm"

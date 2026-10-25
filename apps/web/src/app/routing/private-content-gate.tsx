@@ -28,7 +28,7 @@ export function PrivateContentGate(props: {
             You don’t have access to this page.
           </h1>
           <button
-            className="cursor-pointer [justify-self:start] border-0 border-none bg-transparent text-jade-dark underline"
+            className="cursor-pointer [justify-self:start] border-0 border-none bg-transparent text-action underline"
             onClick={() => props.onRedirect(decision.to)}
             type="button"
           >

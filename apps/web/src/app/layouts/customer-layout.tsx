@@ -1,6 +1,7 @@
 import { ShoppingCartIcon } from "@phosphor-icons/react";
 
 import { BrandLink } from "./brand-link";
+import { ThemeSwitch } from "../theme/theme-switch";
 import { NavigationLinks } from "./layout-types";
 import type { LayoutProps } from "./layout-types";
 
@@ -15,15 +16,18 @@ export function CustomerLayout(props: LayoutProps & { cartCount: number; onCartO
         >
           <NavigationLinks items={props.navigation} />
         </nav>
-        <button
-          aria-label={`Cart, ${props.cartCount} items`}
-          className="inline-flex cursor-pointer items-center justify-center gap-2 border-0 border-none bg-transparent p-2 text-inherit hover:text-jade-dark"
-          onClick={props.onCartOpen}
-          type="button"
-        >
-          <ShoppingCartIcon aria-hidden="true" size={24} weight="bold" />
-          {props.cartCount > 0 ? <span>{props.cartCount}</span> : null}
-        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <ThemeSwitch />
+          <button
+            aria-label={`Cart, ${props.cartCount} items`}
+            className="inline-flex cursor-pointer items-center justify-center gap-2 border-0 border-none bg-transparent p-2 text-inherit hover:text-action"
+            onClick={props.onCartOpen}
+            type="button"
+          >
+            <ShoppingCartIcon aria-hidden="true" size={24} weight="bold" />
+            {props.cartCount > 0 ? <span>{props.cartCount}</span> : null}
+          </button>
+        </div>
       </header>
       <main className="mx-auto max-w-content px-4 pt-8 pb-24">{props.children}</main>
       <nav

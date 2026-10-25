@@ -210,7 +210,7 @@ export function DeliveryPage({
         className="w-[min(1180px,calc(100%_-_2rem))] mx-auto pt-8 pb-24 [@media(max-width:767px)]:w-[min(100%_-_1rem,680px)] [@media(max-width:767px)]:pt-4"
         aria-live="polite"
       >
-        <p className="text-[#087f5b] text-[0.82rem] font-bold tracking-[0.08em] uppercase">
+        <p className="text-jade-text text-[0.82rem] font-bold tracking-[0.08em] uppercase">
           Order #{orderId.slice(0, 8)}
         </p>
         <h1>Delivery completed</h1>
@@ -249,7 +249,7 @@ export function DeliveryPage({
       ) : null}
       {mapFailed ? (
         <div
-          className="border border-solid border-[#d97706] rounded-[0.75rem] bg-[#fffbeb] text-[#92400e] px-4 py-[0.8rem]"
+          className="border border-solid border-warning rounded-[0.75rem] bg-warning-soft text-warning-text px-4 py-[0.8rem]"
           role="status"
         >
           Map tiles are unavailable. The demo route is still active.
@@ -274,11 +274,11 @@ export function DeliveryPage({
         </div>
 
         <section
-          className="grid gap-[0.9rem] border border-solid border-[#d9dfdc] rounded-[1rem] p-5 bg-white [&_h1]:m-0 [&_h2]:m-0 [&_p]:m-0"
+          className="grid gap-[0.9rem] border border-solid border-border rounded-[1rem] p-5 bg-surface [&_h1]:m-0 [&_h2]:m-0 [&_p]:m-0"
           ref={detailsRef}
           tabIndex={-1}
         >
-          <p className="text-[#087f5b] text-[0.82rem] font-bold tracking-[0.08em] uppercase">
+          <p className="text-jade-text text-[0.82rem] font-bold tracking-[0.08em] uppercase">
             On the way
           </p>
           <h1>{restaurantName}</h1>
@@ -289,7 +289,7 @@ export function DeliveryPage({
           <ul className="list-none p-0">
             {order.items.map((item) => (
               <li
-                className="flex justify-between gap-4 border-b border-solid border-b-[#d9dfdc] py-[0.85rem]"
+                className="flex justify-between gap-4 border-b border-solid border-b-border py-[0.85rem]"
                 key={item.id}
               >
                 <strong>

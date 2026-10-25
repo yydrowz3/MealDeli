@@ -37,7 +37,7 @@ export function LandingPage() {
             Order from local restaurants, run your kitchen, or deliver with us.
           </p>
           <a
-            className="inline-flex min-h-control-lg items-center justify-center gap-2 rounded-control border border-solid border-transparent bg-jade px-6 py-0 text-charcoal no-underline hover:bg-jade-dark hover:text-surface mt-6 font-[700]"
+            className="inline-flex min-h-control-lg items-center justify-center gap-2 rounded-control border border-solid border-transparent bg-jade px-6 py-0 text-on-primary no-underline hover:bg-jade-dark hover:text-on-primary-hover mt-6 font-[700]"
             href="#choose-role"
           >
             Get started <ArrowRightIcon aria-hidden="true" />

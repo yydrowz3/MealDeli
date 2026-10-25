@@ -1,11 +1,16 @@
 import { BrandLink } from "./brand-link";
+import { ThemeSwitch } from "../theme/theme-switch";
 import { NavigationLinks } from "./layout-types";
 import type { LayoutProps } from "./layout-types";
 
 export function OwnerLayout(props: LayoutProps & { ownerName?: string; onLogOut: () => void }) {
   return (
     <div className="min-h-screen grid grid-cols-[15rem_minmax(0,1fr)] [@media(max-width:63.999rem)]:block">
-      <aside className="sticky top-0 flex min-h-screen flex-col gap-8 bg-charcoal p-6 text-surface [@media(max-width:63.999rem)]:hidden">
+      <header className="sticky top-0 z-20 hidden min-h-16 items-center justify-between gap-3 border-b border-solid border-border bg-warm-white px-4 py-3 [@media(max-width:63.999rem)]:flex">
+        <BrandLink />
+        <ThemeSwitch />
+      </header>
+      <aside className="sticky top-0 flex h-dvh flex-col gap-8 self-start overflow-y-auto bg-sidebar p-6 text-on-sidebar [@media(max-width:63.999rem)]:hidden">
         <BrandLink />
         <nav
           aria-label="Owner navigation"
@@ -14,6 +19,7 @@ export function OwnerLayout(props: LayoutProps & { ownerName?: string; onLogOut:
           <NavigationLinks items={props.navigation} />
         </nav>
         <div className="mt-auto grid gap-2">
+          <ThemeSwitch />
           {props.ownerName ? <span>{props.ownerName}</span> : null}
           <button onClick={props.onLogOut} type="button">
             Log out

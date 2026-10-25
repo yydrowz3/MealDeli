@@ -3,12 +3,22 @@ import { readFileSync } from "node:fs";
 
 const tokensCss = readFileSync("src/index.css", "utf8");
 
-function token(name: string, visited = new Set<string>()): string {
+function token(
+  name: string,
+  theme: "light" | "dark" = "light",
+  visited = new Set<string>(),
+): string {
   if (visited.has(name)) throw new Error(`Circular design token: ${name}`);
   visited.add(name);
-  const value = new RegExp(`${name}:\\s*([^;]+);`).exec(tokensCss)?.[1].trim() ?? "";
+  const [lightCss, darkCss] = tokensCss.split(':root[data-theme="dark"]');
+  const pattern = new RegExp(`${name}:\\s*([^;]+);`);
+  const value = (
+    (theme === "dark" ? pattern.exec(darkCss)?.[1] : undefined) ??
+    pattern.exec(lightCss)?.[1] ??
+    ""
+  ).trim();
   const alias = /^var\((--[\w-]+)\)$/.exec(value);
-  return alias ? token(alias[1], visited) : value;
+  return alias ? token(alias[1], theme, visited) : value;
 }
 
 function luminance(hex: string) {
@@ -44,17 +54,28 @@ describe("design tokens", () => {
     expect(token("--font-sans")).toContain("system-ui");
   });
 
-  it.each([
-    ["--color-charcoal", "--color-surface"],
-    ["--color-charcoal", "--color-jade"],
-    ["--color-surface", "--color-jade-dark"],
-    ["--color-jade-text", "--color-jade-soft"],
-    ["--color-warning-text", "--color-warning-soft"],
-    ["--color-surface", "--color-danger"],
-    ["--color-danger-dark", "--color-danger-soft"],
-    ["--color-info-dark", "--color-info-soft"],
-    ["--color-muted", "--color-surface"],
-  ])("keeps %s on %s at WCAG AA text contrast", (foreground, background) => {
-    expect(contrast(token(foreground), token(background))).toBeGreaterThanOrEqual(4.5);
+  describe.each(["light", "dark"] as const)("%s theme", (theme) => {
+    it.each([
+      ["--color-charcoal", "--color-surface"],
+      ["--color-charcoal", "--color-warm-white"],
+      ["--color-on-primary", "--color-jade"],
+      ["--color-on-primary-hover", "--color-jade-dark"],
+      ["--color-action", "--color-surface"],
+      ["--color-on-sidebar", "--color-sidebar"],
+      ["--color-jade-text", "--color-jade-soft"],
+      ["--color-warning-text", "--color-warning-soft"],
+      ["--color-on-danger", "--color-danger"],
+      ["--color-on-danger", "--color-danger-hover"],
+      ["--color-danger-dark", "--color-danger-soft"],
+      ["--color-info-dark", "--color-info-soft"],
+      ["--color-muted", "--color-surface"],
+      ["--color-muted", "--color-warm-white"],
+      ["--color-danger-dark", "--color-surface"],
+      ["--color-warning-text", "--color-surface"],
+    ])("keeps %s on %s at WCAG AA text contrast", (foreground, background) => {
+      expect(contrast(token(foreground, theme), token(background, theme))).toBeGreaterThanOrEqual(
+        4.5,
+      );
+    });
   });
 });

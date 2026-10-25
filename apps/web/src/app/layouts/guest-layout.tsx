@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { BrandLink } from "./brand-link";
+import { ThemeSwitch } from "../theme/theme-switch";
 
 export function GuestLayout({ children }: { children: ReactNode }) {
   return (
@@ -10,9 +11,10 @@ export function GuestLayout({ children }: { children: ReactNode }) {
           aria-label="Guest navigation"
           className="flex items-center gap-6 [&_a]:font-[650] [&_a]:no-underline"
         >
+          <ThemeSwitch />
           <a href="/login">Log in</a>
           <a
-            className="inline-flex min-h-control-lg items-center justify-center gap-2 rounded-control border border-solid border-transparent bg-jade px-6 py-0 text-charcoal no-underline hover:bg-jade-dark hover:text-surface font-[650] [@media(max-width:39.999rem)]:hidden"
+            className="inline-flex min-h-control-lg items-center justify-center gap-2 rounded-control border border-solid border-transparent bg-jade px-6 py-0 text-on-primary no-underline hover:bg-jade-dark hover:text-on-primary-hover font-[650] [@media(max-width:39.999rem)]:hidden"
             href="/signup"
           >
             Sign up

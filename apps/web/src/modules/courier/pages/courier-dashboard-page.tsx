@@ -194,7 +194,7 @@ export function CourierDashboardPage({
       ) : null}
       <header className="flex items-center justify-between gap-4">
         <div>
-          <p className="text-[#087f5b] text-[0.82rem] font-bold tracking-[0.08em] uppercase">
+          <p className="text-jade-text text-[0.82rem] font-bold tracking-[0.08em] uppercase">
             Courier workspace
           </p>
           <h1>Courier dashboard</h1>
@@ -210,7 +210,7 @@ export function CourierDashboardPage({
       ) : null}
       {selection.hasInvariantError ? (
         <p
-          className="border border-solid border-[#d97706] rounded-[0.75rem] bg-[#fffbeb] text-[#92400e] px-4 py-[0.8rem]"
+          className="border border-solid border-warning rounded-[0.75rem] bg-warning-soft text-warning-text px-4 py-[0.8rem]"
           role="alert"
         >
           Multiple active deliveries need attention.
@@ -259,7 +259,7 @@ export function CourierDashboardPage({
           <ul className="list-none p-0">
             {readyData.recent.map((order) => (
               <li
-                className="flex justify-between gap-4 border-b border-solid border-b-[#d9dfdc] py-[0.85rem]"
+                className="flex justify-between gap-4 border-b border-solid border-b-border py-[0.85rem]"
                 key={order.id}
               >
                 <span>{order.restaurant?.name ?? "Restaurant unavailable"}</span>

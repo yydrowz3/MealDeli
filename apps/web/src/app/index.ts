@@ -1,6 +1,9 @@
 export { parseRuntimeConfig, RuntimeConfigError } from "./config/runtime-config";
 export type { RuntimeConfig } from "./config/runtime-config";
 export { AppProviders } from "./providers/app-providers";
+export { ThemeProvider } from "./theme/theme-provider";
+export { useTheme } from "./theme/use-theme";
+export type { Theme } from "./theme/theme-context";
 export { createAppServices } from "./providers/create-app-services";
 export type { AppServices, AppServiceOptions } from "./providers/create-app-services";
 export type { AuthPort } from "./apollo/auth-port";

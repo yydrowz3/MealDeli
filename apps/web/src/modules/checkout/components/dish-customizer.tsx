@@ -104,7 +104,7 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
                   );
                 })}
                 {field.state.meta.errors.length > 0 ? (
-                  <p className="text-[var(--ui-color-danger,#b42318)]" role="alert">
+                  <p className="text-[var(--color-danger-dark)]" role="alert">
                     {optionSelectionRule(option.minSelections, option.maxSelections)}
                   </p>
                 ) : null}
