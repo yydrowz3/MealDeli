@@ -66,7 +66,7 @@ export function PromotionPage({
   useEffect(load, [repository, restaurantId]);
 
   if (page.kind === "loading") {
-    return <Skeleton aria-label={t("insights.loading")} className="h-[28rem]" />;
+    return <Skeleton aria-label={t("insights.loading")} className="h-112" />;
   }
   if (page.kind === "not-found") return <ErrorState title={t("common.restaurantNotFound")} />;
   if (page.kind === "error") {
@@ -97,9 +97,9 @@ export function PromotionPage({
   };
 
   return (
-    <main className="grid gap-6 mx-auto max-w-[58rem] p-6 [@media(max-width:47.99rem)]:p-4 [&_h1]:mt-0 [&_h2]:mt-0 [&_p]:mt-0">
+    <main className="grid gap-6 mx-auto max-w-4xl p-4 md:p-6">
       <header>
-        <p className="mb-2 text-jade-text text-[length:var(--text-small)] font-[750] tracking-[0.08em] uppercase">
+        <p className="mb-2 text-jade-text text-small font-bold uppercase">
           {t("insights.demoPromotion")}
         </p>
         <h1>{t("insights.promoteRestaurant")}</h1>
@@ -115,10 +115,10 @@ export function PromotionPage({
         {data.payments.length === 0 ? (
           <EmptyState title={t("insights.emptyPromotions")} />
         ) : (
-          <ul className="grid gap-3 list-none m-0 p-0">
+          <ul className="grid gap-3 list-none p-0">
             {data.payments.map((payment) => (
               <li
-                className="grid items-center bg-surface border border-solid border-border rounded-card gap-3 grid-cols-[minmax(12rem,1fr)_auto_auto_auto] p-4 [@media(max-width:47.99rem)]:[align-items:start] [@media(max-width:47.99rem)]:grid-cols-1"
+                className="grid gap-3 rounded-card border border-border bg-surface p-4 lg:grid-cols-[minmax(0,1fr)_auto_auto_auto] lg:items-center"
                 key={payment.id}
               >
                 <div className="grid">

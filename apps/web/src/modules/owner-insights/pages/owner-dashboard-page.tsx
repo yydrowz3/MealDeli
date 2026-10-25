@@ -59,7 +59,7 @@ export function OwnerDashboardPage({
 
   if (restaurants.length === 0) {
     return (
-      <main className="grid gap-6 mx-auto max-w-content p-6 [@media(max-width:47.99rem)]:p-4 [&_h1]:mt-0 [&_h2]:mt-0 [&_p]:mt-0">
+      <main className="grid gap-6 mx-auto max-w-content p-4 md:p-6">
         <h1>{t("common.dashboard")}</h1>
         <EmptyState
           action={
@@ -70,7 +70,7 @@ export function OwnerDashboardPage({
           description={t("insights.firstRestaurantHelp")}
           title={t("insights.firstRestaurant")}
         />
-        <ol className="grid grid-cols-3 gap-4 [@media(max-width:47.99rem)]:grid-cols-1">
+        <ol className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <li>{t("insights.restaurantDetails")}</li>
           <li>{t("insights.addDishes")}</li>
           <li>{t("insights.receiveOrders")}</li>
@@ -80,15 +80,15 @@ export function OwnerDashboardPage({
   }
 
   return (
-    <main className="grid gap-6 mx-auto max-w-content p-6 [@media(max-width:47.99rem)]:p-4 [&_h1]:mt-0 [&_h2]:mt-0 [&_p]:mt-0">
-      <header className="flex [align-items:end] justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch">
+    <main className="grid gap-6 mx-auto max-w-content p-4 md:p-6">
+      <header className="grid gap-4 md:flex md:items-end md:justify-between">
         <div>
-          <p className="mb-2 text-jade-text text-[length:var(--text-small)] font-[750] tracking-[0.08em] uppercase">
+          <p className="mb-2 text-jade-text text-small font-bold uppercase">
             {t("insights.lastSevenDays")}
           </p>
           <h1>{t("common.dashboard")}</h1>
         </div>
-        <div className="min-w-60 [@media(max-width:47.99rem)]:min-w-0">
+        <div className="md:min-w-60">
           <Select
             label={t("common.restaurant")}
             onChange={(event) => onRestaurantChange(event.target.value || null)}
@@ -106,7 +106,7 @@ export function OwnerDashboardPage({
 
       <section
         aria-label={t("insights.metrics")}
-        className="grid grid-cols-4 gap-4 [@media(max-width:63.99rem)]:grid-cols-2"
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
       >
         <MetricCard
           description={t("insights.salesHelp")}
@@ -130,13 +130,13 @@ export function OwnerDashboardPage({
         />
       </section>
 
-      <section className="grid grid-cols-[minmax(0,3fr)_minmax(18rem,2fr)] gap-4 [@media(max-width:47.99rem)]:grid-cols-1">
+      <section className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <SalesChart dailySales={metrics.dailySales} />
         <TopDishesChart dishes={metrics.topDishes} />
       </section>
 
       <section aria-labelledby="owner-active-orders-title">
-        <div className="flex [align-items:end] justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch">
+        <div className="grid gap-4 md:flex md:items-end md:justify-between">
           <h2 id="owner-active-orders-title">{t("insights.activeOrders")}</h2>
           {onViewAllOrders ? (
             <Button onClick={() => onViewAllOrders(selectedRestaurantId)} variant="tertiary">
@@ -147,7 +147,7 @@ export function OwnerDashboardPage({
         {activeOrders.length === 0 ? (
           <EmptyState description={t("insights.emptyActiveHelp")} title={t("orders.emptyActive")} />
         ) : (
-          <div className="grid grid-cols-2 gap-4 [@media(max-width:47.99rem)]:grid-cols-1">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {activeOrders.map((order) => (
               <OrderCard
                 action={renderOrderAction?.(order)}

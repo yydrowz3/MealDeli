@@ -65,7 +65,7 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
             const atLimit = values.length >= option.maxSelections;
             return (
               <fieldset
-                className="m-0 grid gap-4 border-0 border-none p-0"
+                className="grid gap-4 border-0 p-0"
                 ref={(node) => {
                   if (node) optionRefs.current.set(option.id, node);
                   else optionRefs.current.delete(option.id);
@@ -107,7 +107,7 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
                   );
                 })}
                 {field.state.meta.errors.length > 0 ? (
-                  <p className="text-[var(--color-danger-dark)]" role="alert">
+                  <p className="text-danger-dark" role="alert">
                     {text(optionSelectionRule(option.minSelections, option.maxSelections))}
                   </p>
                 ) : null}
@@ -121,7 +121,7 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
           <div aria-label={t("common.quantity")} className="flex items-center gap-3" role="group">
             <Button
               aria-label={t("checkout.decreaseQuantity")}
-              className="min-h-11! min-w-11"
+              className="min-w-11"
               disabled={field.state.value <= 1}
               onClick={() => field.handleChange(field.state.value - 1)}
               variant="secondary"
@@ -131,7 +131,7 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
             <span aria-live="polite">{formatNumber(field.state.value)}</span>
             <Button
               aria-label={t("checkout.increaseQuantity")}
-              className="min-h-11! min-w-11"
+              className="min-w-11"
               disabled={field.state.value >= 99}
               onClick={() => field.handleChange(field.state.value + 1)}
               variant="secondary"

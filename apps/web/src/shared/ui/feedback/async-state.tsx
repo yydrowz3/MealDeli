@@ -17,7 +17,7 @@ export function AsyncStateView({ title, description, action, icon, kind }: Async
   return (
     <section
       aria-labelledby={`${kind}-state-title`}
-      className="grid [align-items:start] [justify-items:start] gap-3 p-6 text-left font-sans text-charcoal [&_h2]:m-0 [&_h2]:text-section [&_h2]:leading-heading [&_p]:m-0 [&_p]:text-muted"
+      className="grid items-start justify-items-start gap-3 p-6 text-left font-sans text-charcoal [&_h2]:text-section [&_h2]:leading-heading [&_p]:text-muted"
       data-state={kind}
     >
       {icon ? <span aria-hidden="true">{icon}</span> : null}

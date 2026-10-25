@@ -12,21 +12,21 @@ import { MapFallback } from "./map-fallback";
 // Preserve the original 12px divIcon anchor while rendering the existing 2rem markers.
 const pickupIcon = divIcon({
   className:
-    "grid! place-items-center size-8 border-2 border-solid border-white rounded-[999px] [box-shadow:0_2px_8px_rgb(0_0_0/30%)] text-white font-[800] bg-[#087f5b]",
+    "grid! place-items-center size-8 border-2 border-solid border-white rounded-full shadow-md text-white font-extrabold bg-[#087f5b]",
   iconSize: [32, 32],
   iconAnchor: [6, 6],
   html: "R",
 });
 const destinationIcon = divIcon({
   className:
-    "grid! place-items-center size-8 border-2 border-solid border-white rounded-[999px] [box-shadow:0_2px_8px_rgb(0_0_0/30%)] text-white font-[800] bg-[#334155]",
+    "grid! place-items-center size-8 border-2 border-solid border-white rounded-full shadow-md text-white font-extrabold bg-[#334155]",
   iconSize: [32, 32],
   iconAnchor: [6, 6],
   html: "⌂",
 });
 const courierIcon = divIcon({
   className:
-    "grid! place-items-center size-8 border-2 border-solid border-white rounded-[999px] [box-shadow:0_2px_8px_rgb(0_0_0/30%)] text-white font-[800] bg-[#c2410c] motion-reduce:transition-none",
+    "grid! place-items-center size-8 border-2 border-solid border-white rounded-full shadow-md text-white font-extrabold bg-[#c2410c] motion-reduce:transition-none",
   iconSize: [32, 32],
   iconAnchor: [6, 6],
   html: "➤",
@@ -73,11 +73,11 @@ export function DeliveryMap({
     >
       <div
         aria-label={t("courier.mapLabel")}
-        className="relative min-h-[460px] overflow-hidden rounded-[0.9rem] [@media(max-width:767px)]:min-h-[48vh]"
+        className="relative h-96 overflow-hidden rounded-card md:h-120"
       >
         <MapContainer
           // Important utilities override Leaflet's unlayered vendor styles locally.
-          className="min-h-[460px] w-full bg-neutral-soft! [@media(max-width:767px)]:min-h-[48vh] [&_.leaflet-control-zoom_a]:bg-surface! [&_.leaflet-control-zoom_a]:text-charcoal! [&_.leaflet-control-zoom_a]:border-border! [&_.leaflet-control-attribution]:bg-surface! [&_.leaflet-control-attribution]:text-charcoal! [&_.leaflet-control-attribution_a]:text-action!"
+          className="h-full w-full bg-neutral-soft! [&_.leaflet-control-zoom_a]:bg-surface! [&_.leaflet-control-zoom_a]:text-charcoal! [&_.leaflet-control-zoom_a]:border-border! [&_.leaflet-control-attribution]:bg-surface! [&_.leaflet-control-attribution]:text-charcoal! [&_.leaflet-control-attribution_a]:text-action!"
           center={courier}
           scrollWheelZoom={false}
           zoom={14}
@@ -107,7 +107,7 @@ export function DeliveryMap({
           />
           <AccessibleMarker label={t("courier.location")} icon={courierIcon} position={courier} />
         </MapContainer>
-        <ul className="list-none p-0 absolute [inline-size:1px] [block-size:1px] overflow-hidden [clip:rect(0,0,0,0)]">
+        <ul className="sr-only">
           <li>{t("courier.pickup", { name: restaurantName })}</li>
           <li>{t("courier.destination")}</li>
           <li>{t("courier.location")}</li>

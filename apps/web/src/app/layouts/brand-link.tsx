@@ -4,11 +4,11 @@ export function BrandLink() {
   return (
     <a
       aria-label={t("app.homeLabel")}
-      className="inline-flex items-center gap-2 text-[1.25rem] font-[750] no-underline"
+      className="inline-flex items-center gap-2 text-section font-bold"
       href="/"
     >
       <img alt="" height="36" src="/brand/mealdeli-mark-primary.svg" width="36" />
-      <span className="[@media(max-width:25.999rem)]:hidden">MealDeli</span>
+      <span className="max-[26rem]:hidden">MealDeli</span>
     </a>
   );
 }

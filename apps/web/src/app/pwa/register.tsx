@@ -11,11 +11,11 @@ export function PwaUpdatePrompt({ register }: { register?: PwaRegistrar } = {}) 
   return (
     <aside
       aria-live="polite"
-      className="fixed left-1/2 bottom-4 z-60 flex max-w-[calc(100vw-2rem)] items-center gap-3 rounded-card border border-solid border-border bg-surface p-4 [transform:translateX(-50%)] [box-shadow:0_var(--space-2)_var(--space-8)_var(--color-shadow)] [@media(max-width:39.999rem)]:bottom-3 [@media(max-width:39.999rem)]:w-[calc(100vw-2rem)] [@media(max-width:39.999rem)]:items-stretch [@media(max-width:39.999rem)]:flex-col"
+      className="fixed inset-x-4 bottom-4 z-60 mx-auto flex max-w-2xl flex-col gap-3 rounded-card border border-border bg-surface p-4 shadow-lg sm:flex-row sm:flex-wrap sm:items-center"
     >
       <div>
         <strong>{t("app.updateReady")}</strong>
-        <p className="m-0 text-muted">{t("app.updateHelp")}</p>
+        <p className="text-muted">{t("app.updateHelp")}</p>
       </div>
       <Button onClick={() => void update.reload()}>{t("common.reload")}</Button>
       <Button onClick={update.dismiss} variant="tertiary">

@@ -61,25 +61,21 @@ export function OwnerRestaurantOverviewPage({
     .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
     .slice(0, 5);
   return (
-    <section className="mx-auto grid max-w-360 gap-6 p-6 [@media(max-width:47.99rem)]:p-4">
-      <header className="grid grid-cols-[minmax(12rem,22rem)_1fr] items-center gap-6 [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]">
+    <section className="mx-auto grid max-w-360 gap-6 p-4 md:p-6">
+      <header className="grid grid-cols-1 items-center gap-6 md:grid-cols-2">
         {restaurant.image ? (
-          <img
-            alt=""
-            className="h-56 w-full rounded-[var(--radius-lg)] object-cover"
-            src={restaurant.image}
-          />
+          <img alt="" className="h-56 w-full rounded-card object-cover" src={restaurant.image} />
         ) : (
           <div
-            className="h-56 min-h-24 w-full rounded-[var(--radius-lg)] object-cover [background:linear-gradient(135deg,var(--color-surface-muted),var(--color-border))]"
+            className="h-56 w-full rounded-card bg-neutral-soft"
             aria-hidden="true"
           />
         )}
         <div>
-          <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
+          <p className="text-small text-muted font-bold uppercase">
             {text(restaurant.category.name)}
           </p>
-          <h1 className="m-0">{text(restaurant.name)}</h1>
+          <h1>{text(restaurant.name)}</h1>
           <p>{text(restaurant.address)}</p>
         </div>
       </header>
@@ -103,7 +99,7 @@ export function OwnerRestaurantOverviewPage({
           {t("owner.promoteRestaurant")}
         </Button>
       </div>
-      <div className="grid grid-cols-[repeat(3,1fr)] gap-4 [@media(max-width:47.99rem)]:grid-cols-2 [&_strong]:[font-size:var(--font-size-2xl)]">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 [&_strong]:text-2xl">
         <Card>
           <p>{t("owner.dishes")}</p>
           <strong>{formatNumber(restaurant.dishes.length)}</strong>
@@ -138,7 +134,7 @@ export function OwnerRestaurantOverviewPage({
           <div className="grid gap-3">
             {recent.map((order) => (
               <Card
-                className="flex items-center justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]"
+                className="grid gap-4 md:flex md:items-center md:justify-between"
                 key={order.id}
               >
                 <strong>

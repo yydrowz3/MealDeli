@@ -24,19 +24,19 @@ export function CartSummary({
   const totalMinor = getCartTotalMinor(cart);
   return (
     <div>
-      <ul className="m-0 grid list-none gap-4 p-0">
+      <ul className="grid list-none gap-4 p-0">
         {cart.lines.map((line) => {
           const invalid = invalidLineIds.has(line.lineId);
           return (
             <li
-              className="grid gap-2 border-b border-solid border-b-[var(--color-border)] py-4 data-[invalid]:border-s-4 data-[invalid]:border-s-[var(--color-danger-dark)] data-[invalid]:ps-3 [&_h3]:m-0 [&_p]:m-0"
+              className="grid gap-2 border-b border-b-border py-4 data-[invalid]:border-s-4 data-[invalid]:border-s-danger-dark data-[invalid]:ps-3"
               data-invalid={invalid || undefined}
               key={line.lineId}
             >
               <div>
                 <h3>{text(line.dishName)}</h3>
                 {line.options.map((option) => (
-                  <p className="text-[var(--color-muted)]" key={option.optionId}>
+                  <p className="text-muted" key={option.optionId}>
                     {text(option.name)}: {option.choices.map((choice) => choice.name).join(", ")}
                   </p>
                 ))}
@@ -77,7 +77,7 @@ export function CartSummary({
               {onRemove ? (
                 <Button
                   aria-label={t("checkout.removeNamedItem", { name: line.dishName })}
-                  className="[justify-self:start] text-action! [&>span]:inline-flex [&>span]:items-center [&>span]:gap-2"
+                  className="justify-self-start"
                   disabled={disabled}
                   onClick={() => onRemove(line.lineId)}
                   size="sm"

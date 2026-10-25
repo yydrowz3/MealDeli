@@ -110,10 +110,10 @@ export function Overlay({
         aria-labelledby={titleId}
         aria-modal="true"
         className={[
-          "grid w-full max-w-auth gap-4 overflow-auto rounded-overlay bg-surface p-6 text-charcoal shadow-[0_var(--space-2)_var(--space-8)_var(--color-shadow)]",
+          "grid w-full max-w-auth gap-4 overflow-auto rounded-overlay bg-surface p-4 text-charcoal shadow-xl shadow-shadow md:p-6",
           kind === "drawer"
             ? "ml-auto h-full max-h-screen rounded-tr-none rounded-br-none"
-            : "max-h-[calc(100vh-var(--space-8))]",
+            : "max-h-[calc(100dvh-2rem)]",
         ]
           .filter(Boolean)
           .join(" ")}
@@ -123,11 +123,11 @@ export function Overlay({
         tabIndex={-1}
       >
         <header>
-          <h2 className="m-0 text-section leading-heading" id={titleId}>
+          <h2 className="text-section leading-heading" id={titleId}>
             {text(title)}
           </h2>
           {description ? (
-            <p className="mt-2 mr-0 mb-0 ml-0 text-muted" id={descriptionId}>
+            <p className="mt-2 text-muted" id={descriptionId}>
               {text(description)}
             </p>
           ) : null}

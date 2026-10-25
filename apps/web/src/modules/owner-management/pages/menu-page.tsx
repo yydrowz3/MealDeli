@@ -68,15 +68,15 @@ export function OwnerMenuPage({ restaurantId, repository, uploader }: OwnerMenuP
   if (restaurant === null) return <ErrorState title={t("common.restaurantNotFound")} />;
   const editingDish = editor === "new" || editor === null ? undefined : editor;
   return (
-    <section className="mx-auto grid max-w-360 gap-6 p-6 [@media(max-width:47.99rem)]:p-4">
-      <header className="flex items-center justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]">
+    <section className="mx-auto grid max-w-360 gap-6 p-4 md:p-6">
+      <header className="grid gap-4 md:flex md:items-center md:justify-between">
         <div>
-          <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
+          <p className="text-small text-muted font-bold uppercase">
             {text(restaurant.name)}
           </p>
-          <h1 className="m-0">{t("common.menu")}</h1>
+          <h1>{t("common.menu")}</h1>
         </div>
-        <Button className="[@media(max-width:47.99rem)]:w-full" onClick={() => setEditor("new")}>
+        <Button className="max-md:w-full" onClick={() => setEditor("new")}>
           {t("owner.addDish")}
         </Button>
       </header>
@@ -89,19 +89,16 @@ export function OwnerMenuPage({ restaurantId, repository, uploader }: OwnerMenuP
       ) : (
         <div className="grid gap-3">
           {restaurant.dishes.map((dish) => (
-            <Card
-              className="flex items-center justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]"
-              key={dish.id}
-            >
+            <Card className="grid gap-4 md:flex md:items-center md:justify-between" key={dish.id}>
               {dish.image ? (
                 <img
                   alt=""
-                  className="h-28 w-36 flex-none rounded-[var(--radius-md)] object-cover [@media(max-width:47.99rem)]:h-40 [@media(max-width:47.99rem)]:w-full"
+                  className="h-40 w-full flex-none rounded-control object-cover md:h-28 md:w-36"
                   src={dish.image}
                 />
               ) : (
                 <div
-                  className="h-28 min-h-24 w-36 flex-none rounded-[var(--radius-md)] object-cover [background:linear-gradient(135deg,var(--color-surface-muted),var(--color-border))] [@media(max-width:47.99rem)]:h-40 [@media(max-width:47.99rem)]:w-full"
+                  className="h-40 w-full flex-none rounded-control bg-neutral-soft md:h-28 md:w-36"
                   aria-hidden="true"
                 />
               )}

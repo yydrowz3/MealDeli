@@ -45,7 +45,7 @@ export function SalesChart({ dailySales }: SalesChartProps) {
       summary={text(summary)}
       title={t("insights.salesTitle")}
     >
-      <div aria-label={t("insights.salesChart")} className="h-72 w-full" role="img">
+      <div aria-label={t("insights.salesChart")} className="h-72 min-w-0 w-full" role="img">
         <ResponsiveContainer height="100%" width="100%">
           <BarChart data={chartData} margin={{ left: 4, right: 4, top: 8 }}>
             <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" vertical={false} />

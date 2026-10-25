@@ -37,11 +37,13 @@ export function ChartFrame({
   return (
     <figure
       aria-labelledby={titleId}
-      className="grid gap-3 rounded-card border border-solid border-border bg-surface p-6 font-sans text-charcoal [&_h2]:m-0 [&_h2]:text-section [&_h2]:leading-heading [&_p]:m-0 [&_p]:text-muted"
+      className="grid min-w-0 gap-3 rounded-card border border-border bg-surface p-4 font-sans text-charcoal md:p-6 [&_p]:text-muted"
     >
-      <h2 id={titleId}>{text(title)}</h2>
+      <h2 className="text-section leading-heading" id={titleId}>
+        {text(title)}
+      </h2>
       {description ? <p>{text(description)}</p> : null}
-      <figcaption className="text-charcoal!">{text(summary)}</figcaption>
+      <figcaption>{text(summary)}</figcaption>
       <div className="min-h-control-lg">{text(content)}</div>
     </figure>
   );

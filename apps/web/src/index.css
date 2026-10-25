@@ -133,12 +133,6 @@
   --color-shadow: rgb(0 0 0 / 35%);
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
 html {
   background: var(--color-warm-white);
   scroll-behavior: smooth;
@@ -148,14 +142,7 @@ body {
   background: var(--color-warm-white);
   color: var(--color-charcoal);
   font: var(--font-size-body) / var(--line-height-body) var(--font-sans);
-  margin: 0;
   min-height: 100dvh;
-}
-
-@layer base {
-  a {
-    color: inherit;
-  }
 }
 
 button,

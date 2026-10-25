@@ -14,12 +14,12 @@ export function CategoryStrip({ categories, selected, onSelect }: CategoryStripP
     <nav aria-label={t("catalog.categoryNavigation")} className="flex gap-3 overflow-x-auto p-1">
       <button
         aria-pressed={!selected}
-        className="grid flex-[0_0_8.5rem] items-center gap-2 min-h-32 overflow-hidden rounded-card border border-solid border-border bg-surface p-2 text-left text-charcoal cursor-pointer aria-pressed:border-jade aria-pressed:[box-shadow:0_0_0_2px_var(--color-jade-soft)] focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-info focus-visible:outline-offset-2"
+        className="grid w-36 shrink-0 items-center gap-2 min-h-32 overflow-hidden rounded-card border border-border bg-surface p-2 text-left text-charcoal cursor-pointer aria-pressed:border-jade aria-pressed:ring-2 aria-pressed:ring-jade-soft focus-visible:outline-3 focus-visible:outline-info focus-visible:outline-offset-2"
         onClick={() => onSelect(undefined)}
         type="button"
       >
         <span
-          className="flex min-h-19 items-center justify-center rounded-control bg-jade-soft text-[1.35rem] font-[750] text-jade-text"
+          className="flex min-h-20 items-center justify-center rounded-control bg-jade-soft text-xl font-bold text-jade-text"
           aria-hidden="true"
         >
           {t("common.all")}
@@ -29,7 +29,7 @@ export function CategoryStrip({ categories, selected, onSelect }: CategoryStripP
       {categories.map((category) => (
         <button
           aria-pressed={selected === category.slug}
-          className="grid flex-[0_0_8.5rem] items-center gap-2 min-h-32 overflow-hidden rounded-card border border-solid border-border bg-surface p-2 text-left text-charcoal cursor-pointer aria-pressed:border-jade aria-pressed:[box-shadow:0_0_0_2px_var(--color-jade-soft)] focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-info focus-visible:outline-offset-2"
+          className="grid w-36 shrink-0 items-center gap-2 min-h-32 overflow-hidden rounded-card border border-border bg-surface p-2 text-left text-charcoal cursor-pointer aria-pressed:border-jade aria-pressed:ring-2 aria-pressed:ring-jade-soft focus-visible:outline-3 focus-visible:outline-info focus-visible:outline-offset-2"
           key={category.id}
           onClick={() => onSelect(category.slug)}
           type="button"
@@ -37,7 +37,7 @@ export function CategoryStrip({ categories, selected, onSelect }: CategoryStripP
           <CatalogImage
             allowExternalSource
             alt={text(category.name)}
-            className="aspect-video h-19 max-h-19 min-h-0 overflow-hidden rounded-control w-full"
+            className="h-20 w-full rounded-control"
             source={category.image}
           />
           <span>{text(category.name)}</span>

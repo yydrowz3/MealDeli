@@ -24,7 +24,7 @@ export function TopDishesChart({ dishes }: TopDishesChartProps) {
       summary={text(getTopDishesSummary(dishes))}
       title={t("insights.topDishes")}
     >
-      <div aria-label={t("insights.topDishesChart")} className="h-72 w-full" role="img">
+      <div aria-label={t("insights.topDishesChart")} className="h-72 min-w-0 w-full" role="img">
         <ResponsiveContainer height="100%" width="100%">
           <BarChart data={dishes} layout="vertical" margin={{ left: 18, right: 8, top: 8 }}>
             <CartesianGrid horizontal={false} stroke="var(--color-border)" strokeDasharray="3 3" />

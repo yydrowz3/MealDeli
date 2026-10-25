@@ -79,7 +79,7 @@ export function OwnerRestaurantsPage({ repository, navigate }: OwnerRestaurantsP
     return (
       <section
         aria-label={t("catalog.loadingRestaurants")}
-        className="grid grid-cols-[repeat(auto-fit,minmax(18rem,1fr))] gap-[var(--space-5)]"
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
       >
         <Skeleton className="h-52" />
         <Skeleton className="h-52" />
@@ -97,34 +97,31 @@ export function OwnerRestaurantsPage({ repository, navigate }: OwnerRestaurantsP
   }
 
   return (
-    <section className="mx-auto grid max-w-360 gap-6 p-6 [@media(max-width:47.99rem)]:p-4">
-      <header className="flex items-center justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]">
+    <section className="mx-auto grid max-w-360 gap-6 p-4 md:p-6">
+      <header className="grid gap-4 md:flex md:items-center md:justify-between">
         <div>
-          <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
+          <p className="text-small text-muted font-bold uppercase">
             {t("owner.workspace")}
           </p>
-          <h1 className="m-0">{t("common.restaurants")}</h1>
+          <h1>{t("common.restaurants")}</h1>
         </div>
-        <Button
-          className="[@media(max-width:47.99rem)]:w-full"
-          onClick={() => navigate("/restaurants/new")}
-        >
+        <Button className="max-md:w-full" onClick={() => navigate("/restaurants/new")}>
           {t("owner.createRestaurant")}
         </Button>
       </header>
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(18rem,1fr))] gap-[var(--space-5)]">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {restaurants.map((restaurant) => (
-          <Card className="overflow-hidden p-6!" key={restaurant.id}>
+          <Card className="overflow-hidden" key={restaurant.id}>
             {restaurant.image ? (
               <img alt="" className="aspect-video w-full object-cover" src={restaurant.image} />
             ) : (
               <div
-                className="aspect-video min-h-24 w-full object-cover [background:linear-gradient(135deg,var(--color-surface-muted),var(--color-border))]"
+                className="aspect-video min-h-24 w-full bg-neutral-soft"
                 aria-hidden="true"
               />
             )}
-            <div className="grid gap-3 p-[var(--space-5)]">
-              <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
+            <div className="grid gap-3 p-4">
+              <p className="text-small text-muted font-bold uppercase">
                 {text(restaurant.category.name)}
               </p>
               <h2>{text(restaurant.name)}</h2>

@@ -13,7 +13,7 @@ export function PrivateContentGate(props: {
     return (
       <main
         aria-label={t("app.checkingSession")}
-        className="mx-auto my-[15vh] grid max-w-[40rem] gap-4 p-6"
+        className="mx-auto my-[15vh] grid max-w-2xl gap-4 p-6"
       >
         <Skeleton className="min-h-12! w-[55%]" />
         <Skeleton className="min-h-28!" />
@@ -25,10 +25,10 @@ export function PrivateContentGate(props: {
     const decision = props.decision;
     if (decision.reason === "role") {
       return (
-        <main className="mx-auto my-[15vh] grid max-w-[40rem] gap-4 p-6" role="alert">
-          <h1 className="m-0 text-[length:var(--font-size-page)]">{t("app.accessDenied")}</h1>
+        <main className="mx-auto my-[15vh] grid max-w-2xl gap-4 p-6" role="alert">
+          <h1 className="text-page">{t("app.accessDenied")}</h1>
           <button
-            className="cursor-pointer [justify-self:start] border-0 border-none bg-transparent text-action underline"
+            className="cursor-pointer justify-self-start border-0 bg-transparent text-action underline"
             onClick={() => props.onRedirect(decision.to)}
             type="button"
           >

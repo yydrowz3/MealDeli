@@ -70,9 +70,9 @@ export function OrdersPage({
         : t("common.orders");
 
   return (
-    <main className="mx-auto grid w-full max-w-content gap-6 p-6 font-sans text-charcoal">
+    <main className="mx-auto grid w-full max-w-content gap-6 p-4 text-charcoal md:p-6">
       <header>
-        <h1 className="m-0 text-page">{text(title)}</h1>
+        <h1 className="text-page">{text(title)}</h1>
       </header>
 
       {state.kind === "loading" ? (
@@ -92,7 +92,7 @@ export function OrdersPage({
       ) : null}
 
       {state.kind === "ready" && role === "OWNER" ? (
-        <div className="grid grid-cols-[repeat(2,minmax(0,18rem))] gap-4 [@media(max-width:47.99rem)]:grid-cols-[1fr]">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Select
             label={t("common.restaurant")}
             onChange={(event) => setRestaurantId(event.target.value)}
@@ -149,7 +149,7 @@ export function OrdersPage({
             renderAction={renderAction}
           />
         ) : (
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,18rem),1fr))] gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {activeSection.orders.map((order) => (
               <OrderCard
                 action={renderAction?.(order)}

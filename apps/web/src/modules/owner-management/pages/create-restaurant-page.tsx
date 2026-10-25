@@ -46,13 +46,13 @@ export function OwnerCreateRestaurantPage({
     );
   if (!categories) return <Skeleton className="h-96" />;
   return (
-    <section className="mx-auto grid max-w-200 gap-6 p-6 [@media(max-width:47.99rem)]:p-4">
-      <header className="flex items-center justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]">
+    <section className="mx-auto grid max-w-200 gap-6 p-4 md:p-6">
+      <header className="grid gap-4 md:flex md:items-center md:justify-between">
         <div>
-          <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
+          <p className="text-small text-muted font-bold uppercase">
             {t("insights.restaurantDetails")}
           </p>
-          <h1 className="m-0">{t("owner.createRestaurant")}</h1>
+          <h1>{t("owner.createRestaurant")}</h1>
         </div>
       </header>
       <RestaurantForm
