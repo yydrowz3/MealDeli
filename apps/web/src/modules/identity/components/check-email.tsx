@@ -20,8 +20,8 @@ export function CheckEmail({
 }: CheckEmailProps) {
   const { t, text } = useI18n();
   return (
-    <Card className="w-full max-w-[440px] border! border-solid! border-border! [@media(max-width:639px)]:[box-shadow:none]">
-      <h1 className="mt-0 mb-2">
+    <Card className="w-full max-w-auth">
+      <h1 className="mb-2">
         {text(gate ? t("identity.verifyToContinue") : t("identity.checkEmail"))}
       </h1>
       <p>{text(gate ? email : t("identity.verificationSent", { email: email }))}</p>

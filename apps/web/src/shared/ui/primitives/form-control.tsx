@@ -9,7 +9,7 @@ import type {
 } from "react";
 
 const controlClasses =
-  "w-full rounded-control border border-solid border-border bg-surface p-3 font-sans text-body font-normal text-charcoal focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-info focus-visible:outline-offset-2 aria-invalid:border-danger";
+  "w-full rounded-control border border-border bg-surface p-3 font-sans text-body font-normal text-charcoal focus-visible:outline-3 focus-visible:outline-info focus-visible:outline-offset-2 aria-invalid:border-danger";
 
 type FieldShellProps = {
   controlId: string;
@@ -27,17 +27,17 @@ function FieldShell({ controlId, label, description, error, children }: FieldShe
 
   return (
     <div className="grid gap-2 font-sans">
-      <label className="text-charcoal font-[650]" htmlFor={controlId}>
+      <label className="text-charcoal font-semibold" htmlFor={controlId}>
         {text(label)}
       </label>
       {description ? (
-        <p className="m-0 text-small text-muted" id={descriptionId}>
+        <p className="text-small text-muted" id={descriptionId}>
           {text(description)}
         </p>
       ) : null}
       {text(children(describedBy))}
       {error ? (
-        <p className="m-0 text-small text-danger-dark" id={errorId}>
+        <p className="text-small text-danger-dark" id={errorId}>
           {text(error)}
         </p>
       ) : null}
@@ -111,11 +111,7 @@ export function PasswordInput({
             {...props}
             aria-describedby={describedBy}
             aria-invalid={error ? true : undefined}
-            className={[
-              controlClasses,
-              "min-h-control-md pr-[calc(var(--space-3)+2.75rem)]",
-              className,
-            ]
+            className={[controlClasses, "min-h-control-md pr-14", className]
               .filter(Boolean)
               .join(" ")}
             id={controlId}
@@ -124,7 +120,7 @@ export function PasswordInput({
           <button
             aria-controls={controlId}
             aria-label={text(showPassword ? t("ui.hidePassword") : t("ui.showPassword"))}
-            className="absolute right-0 top-0 flex h-full w-11 cursor-pointer items-center justify-center rounded-control border-0 bg-transparent p-0 text-muted hover:text-charcoal focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-info focus-visible:-outline-offset-3"
+            className="absolute right-0 top-0 flex h-full w-11 cursor-pointer items-center justify-center rounded-control border-0 bg-transparent p-0 text-muted hover:text-charcoal focus-visible:outline-3 focus-visible:outline-info focus-visible:-outline-offset-3"
             onClick={() => setShowPassword((value) => !value)}
             type="button"
           >
@@ -166,13 +162,7 @@ export function Textarea({ label, description, error, id, className, ...props }:
           {...props}
           aria-describedby={describedBy}
           aria-invalid={error ? true : undefined}
-          className={[
-            controlClasses,
-            "min-h-[calc(var(--control-height-md)*2)] resize-y",
-            className,
-          ]
-            .filter(Boolean)
-            .join(" ")}
+          className={[controlClasses, "min-h-24 resize-y", className].filter(Boolean).join(" ")}
           id={controlId}
         />
       )}
@@ -245,17 +235,17 @@ export function FormErrorSummary({
   return (
     <section
       aria-labelledby={titleId}
-      className="rounded-control border border-solid border-danger bg-danger-soft p-4 text-charcoal"
+      className="rounded-control border border-danger bg-danger-soft p-4 text-charcoal"
       role="alert"
     >
-      <h2 className="mt-0 mr-0 mb-2 ml-0 text-body" id={titleId}>
+      <h2 className="mb-2 text-body" id={titleId}>
         {text(title)}
       </h2>
-      <ul className="m-0 pl-6">
+      <ul className="pl-6">
         {errors.map((error) => (
           <li key={error.field}>
             <button
-              className="cursor-pointer border-0 bg-transparent p-1 text-danger-dark underline focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-info focus-visible:outline-offset-2"
+              className="cursor-pointer border-0 bg-transparent p-1 text-danger-dark underline focus-visible:outline-3 focus-visible:outline-info focus-visible:outline-offset-2"
               onClick={() => onFocus(error.field)}
               type="button"
             >

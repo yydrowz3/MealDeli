@@ -208,11 +208,8 @@ export function DeliveryPage({
   }
   if (completed) {
     return (
-      <main
-        className="w-[min(1180px,calc(100%_-_2rem))] mx-auto pt-8 pb-24 [@media(max-width:767px)]:w-[min(100%_-_1rem,680px)] [@media(max-width:767px)]:pt-4"
-        aria-live="polite"
-      >
-        <p className="text-jade-text text-[0.82rem] font-bold tracking-[0.08em] uppercase">
+      <main className="mx-auto max-w-content px-4 pt-4 pb-24 md:pt-8" aria-live="polite">
+        <p className="text-jade-text text-small font-bold uppercase">
           {t("common.orderNumber")}
           {text(orderId.slice(0, 8))}
         </p>
@@ -224,7 +221,7 @@ export function DeliveryPage({
   }
   if (!order || error === t("courier.orderNotFound")) {
     return (
-      <main className="w-[min(1180px,calc(100%_-_2rem))] mx-auto pt-8 pb-24 [@media(max-width:767px)]:w-[min(100%_-_1rem,680px)] [@media(max-width:767px)]:pt-4">
+      <main className="mx-auto max-w-content px-4 pt-4 pb-24 md:pt-8">
         <ErrorState
           action={{ label: t("courier.backToDashboard"), onClick: onBackDashboard }}
           title={t("courier.orderNotFound")}
@@ -246,19 +243,19 @@ export function DeliveryPage({
     : null;
 
   return (
-    <main className="w-[min(1180px,calc(100%_-_2rem))] mx-auto pt-8 pb-24 [@media(max-width:767px)]:w-[min(100%_-_1rem,680px)] [@media(max-width:767px)]:pt-4">
+    <main className="mx-auto max-w-content px-4 pt-4 pb-24 md:pt-8">
       {connectionState === "reconnecting" ? (
         <ConnectionBanner message={t("courier.reconnectingDelivery")} />
       ) : null}
       {mapFailed ? (
         <div
-          className="border border-solid border-warning rounded-[0.75rem] bg-warning-soft text-warning-text px-4 py-[0.8rem]"
+          className="border border-warning rounded-control bg-warning-soft text-warning-text px-4 py-3"
           role="status"
         >
           {t("courier.tilesUnavailable")}
         </div>
       ) : null}
-      <div className="grid grid-cols-[minmax(0,1.8fr)_minmax(300px,1fr)] gap-6 [align-items:start] [@media(max-width:767px)]:grid-cols-1">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
         <div>
           {mapProps ? (
             renderMap ? (
@@ -277,11 +274,11 @@ export function DeliveryPage({
         </div>
 
         <section
-          className="grid gap-[0.9rem] border border-solid border-border rounded-[1rem] p-5 bg-surface [&_h1]:m-0 [&_h2]:m-0 [&_p]:m-0"
+          className="grid gap-4 border border-border rounded-card p-5 bg-surface"
           ref={detailsRef}
           tabIndex={-1}
         >
-          <p className="text-jade-text text-[0.82rem] font-bold tracking-[0.08em] uppercase">
+          <p className="text-jade-text text-small font-bold uppercase">
             {t("orders.picked")}
           </p>
           <h1>{text(restaurantName)}</h1>
@@ -292,7 +289,7 @@ export function DeliveryPage({
           <ul className="list-none p-0">
             {order.items.map((item) => (
               <li
-                className="flex justify-between gap-4 border-b border-solid border-b-border py-[0.85rem]"
+                className="flex justify-between gap-4 border-b border-b-border py-3"
                 key={item.id}
               >
                 <strong>

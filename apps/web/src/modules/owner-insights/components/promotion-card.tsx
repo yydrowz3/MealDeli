@@ -13,8 +13,8 @@ export function PromotionCard({ restaurant, active, onPromote }: PromotionCardPr
   const { t, i18n, language } = useI18n();
   if (active && restaurant.promotedUntil) {
     return (
-      <Card className="grid [align-items:start] gap-4">
-        <p className="mb-2 text-jade-text text-[length:var(--text-small)] font-[750] tracking-[0.08em] uppercase">
+      <Card className="grid items-start gap-4">
+        <p className="mb-2 text-jade-text text-small font-bold uppercase">
           {t("insights.active")}
         </p>
         <h2>{t("insights.promotedName", { name: restaurant.name })}</h2>
@@ -26,8 +26,8 @@ export function PromotionCard({ restaurant, active, onPromote }: PromotionCardPr
     );
   }
   return (
-    <Card className="grid [align-items:start] gap-4">
-      <p className="text-[clamp(1.6rem,4vw,2.4rem)] font-[750]">
+    <Card className="grid items-start gap-4">
+      <p className="text-3xl font-bold">
         <Trans
           key={language}
           i18n={i18n}
@@ -38,10 +38,7 @@ export function PromotionCard({ restaurant, active, onPromote }: PromotionCardPr
       </p>
       <p>{t("insights.listingHelp")}</p>
       <strong>{t("insights.demoHelp")}</strong>
-      <Button
-        className="[justify-self:start] [@media(max-width:47.99rem)]:justify-self-stretch"
-        onClick={onPromote}
-      >
+      <Button className="justify-self-start max-md:justify-self-stretch" onClick={onPromote}>
         <Trans
           key={language}
           i18n={i18n}

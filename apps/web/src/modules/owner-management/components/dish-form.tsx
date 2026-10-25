@@ -47,7 +47,7 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
 
   return (
     <form
-      className="grid gap-[var(--space-5)]"
+      className="grid gap-4"
       onSubmit={(event) => {
         event.preventDefault();
         void form.handleSubmit();
@@ -139,7 +139,7 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
                     />
                   )}
                 </form.Field>
-                <div className="grid grid-cols-2 gap-3 [@media(max-width:47.99rem)]:grid-cols-[1fr]">
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                   <form.Field name={`options[${optionIndex}].minSelections`}>
                     {(field) => (
                       <Input
@@ -172,7 +172,7 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
                     <div className="grid gap-4">
                       {choicesField.state.value.map((choice, choiceIndex) => (
                         <div
-                          className="grid grid-cols-2 [align-items:end] gap-3 border-t border-solid border-t-border pt-3 [@media(max-width:47.99rem)]:grid-cols-[1fr]"
+                          className="grid grid-cols-1 items-end gap-3 border-t border-t-border pt-3 md:grid-cols-2"
                           key={choice.uiKey}
                         >
                           <form.Field name={`options[${optionIndex}].choices[${choiceIndex}].name`}>

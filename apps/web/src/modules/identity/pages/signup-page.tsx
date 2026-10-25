@@ -23,7 +23,7 @@ export function SignupPage({ repository, role, navigate }: SignupPageProps) {
   const [registeredEmail, setRegisteredEmail] = useState<string | null>(null);
   if (registeredEmail) {
     return (
-      <main className="flex min-h-dvh items-center justify-center bg-warm-white px-4 py-6 [@media(max-width:639px)]:[align-items:start] [@media(max-width:639px)]:pt-8">
+      <main className="flex min-h-dvh items-start justify-center px-4 py-8 sm:items-center">
         <CheckEmail
           email={registeredEmail}
           onBackToLogin={() => navigate("/login")}
@@ -34,9 +34,9 @@ export function SignupPage({ repository, role, navigate }: SignupPageProps) {
   }
 
   return (
-    <main className="flex min-h-dvh items-center justify-center bg-warm-white px-4 py-6 [@media(max-width:639px)]:[align-items:start] [@media(max-width:639px)]:pt-8">
-      <Card className="w-full max-w-[440px] border! border-solid! border-border! [@media(max-width:639px)]:[box-shadow:none]">
-        <h1 className="mt-0 mb-2">{text(role ? titles[role] : t("identity.chooseUsage"))}</h1>
+    <main className="flex min-h-dvh items-start justify-center px-4 py-8 sm:items-center">
+      <Card className="w-full max-w-auth">
+        <h1 className="mb-2">{text(role ? titles[role] : t("identity.chooseUsage"))}</h1>
         <SignupForm onSuccess={setRegisteredEmail} repository={repository} role={role} />
         {role ? (
           <Button onClick={() => navigate("/#roles")} variant="tertiary">

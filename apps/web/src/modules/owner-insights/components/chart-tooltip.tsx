@@ -12,10 +12,10 @@ export function ChartTooltip({ active, label, payload, formatValue }: ChartToolt
   const { formatNumber } = useI18n();
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-control border border-solid border-border bg-surface p-3 text-small text-charcoal shadow-[0_2px_8px_var(--color-shadow)]">
-      <p className="m-0 font-bold">{label}</p>
+    <div className="rounded-control border border-border bg-surface p-3 text-small text-charcoal shadow-[0_2px_8px_var(--color-shadow)]">
+      <p className="font-bold">{label}</p>
       {payload.map((entry, index) => (
-        <p className="m-0" key={index}>
+        <p key={index}>
           {entry.name}:{" "}
           {formatValue
             ? formatValue(Number(entry.value))

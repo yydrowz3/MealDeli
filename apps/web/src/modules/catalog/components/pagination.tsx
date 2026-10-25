@@ -19,12 +19,12 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
   return (
     <nav
       aria-label={t("catalog.pagination")}
-      className="mt-6 flex items-center justify-center gap-2 [div+&]:mt-4"
+      className="mt-4 flex items-center justify-center gap-2"
     >
       <Button disabled={page <= 1} onClick={() => onPageChange(page - 1)} variant="secondary">
         {t("common.previous")}
       </Button>
-      <div className="flex gap-1 [@media(max-width:39.99rem)]:hidden">
+      <div className="flex gap-1 max-sm:hidden">
         {visiblePages(page, totalPages).map((number) => (
           <Button
             aria-current={number === page ? "page" : undefined}
@@ -36,7 +36,7 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
           </Button>
         ))}
       </div>
-      <span className="hidden [@media(max-width:39.99rem)]:inline" aria-live="polite">
+      <span className="hidden max-sm:inline" aria-live="polite">
         {t("catalog.pageSummary", { page, total: totalPages })}
       </span>
       <Button

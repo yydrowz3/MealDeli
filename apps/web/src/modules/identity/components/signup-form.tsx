@@ -107,7 +107,7 @@ export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
           const error = firstFieldError(field.state.meta.errors);
           return (
             <div>
-              <label className="grid grid-cols-[auto_1fr] [align-items:start] gap-2">
+              <label className="grid grid-cols-[auto_1fr] items-start gap-2">
                 <input
                   aria-describedby={error ? "demo-acknowledged-error" : undefined}
                   checked={field.state.value}
@@ -119,7 +119,7 @@ export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
               </label>
               {error ? (
                 <span
-                  className="ml-7 block text-[0.875rem] text-danger-dark"
+                  className="ml-7 block text-small text-danger-dark"
                   id="demo-acknowledged-error"
                 >
                   {text(error)}

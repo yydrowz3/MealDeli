@@ -12,18 +12,17 @@ export type OrderTableProps = Readonly<{
   renderAction?: (order: Order) => ReactNode;
 }>;
 
-const headerCellClasses = "border-b border-solid border-b-border p-3 text-left";
-const cellClasses =
-  "border-b border-solid border-b-border p-3 text-left [@media(max-width:47.99rem)]:block [@media(max-width:47.99rem)]:border-0 [@media(max-width:47.99rem)]:border-none [@media(max-width:47.99rem)]:border-current [@media(max-width:47.99rem)]:px-0 [@media(max-width:47.99rem)]:py-2";
+const headerCellClasses = "border-b border-b-border p-3 text-left";
+const cellClasses = "block px-0 py-2 text-left md:table-cell md:border-b md:border-border md:p-3";
 const rowClasses =
-  "[@media(max-width:47.99rem)]:block [@media(max-width:47.99rem)]:mb-4 [@media(max-width:47.99rem)]:rounded-card [@media(max-width:47.99rem)]:border [@media(max-width:47.99rem)]:border-solid [@media(max-width:47.99rem)]:border-border [@media(max-width:47.99rem)]:p-4";
+  "max-md:mb-4 max-md:block max-md:rounded-card max-md:border max-md:border-border max-md:p-4";
 
 export function OrderTable({ orders, onView, renderAction }: OrderTableProps) {
   const { t, text } = useI18n();
   return (
-    <div className="overflow-x-auto [@media(max-width:47.99rem)]:overflow-visible">
-      <table className="w-full border-collapse [@media(max-width:47.99rem)]:block">
-        <thead className="[@media(max-width:47.99rem)]:hidden">
+    <div className="overflow-x-auto max-md:overflow-visible">
+      <table className="w-full border-collapse max-md:block">
+        <thead className="max-md:hidden">
           <tr className={rowClasses}>
             <th className={headerCellClasses}>{t("orders.order")}</th>
             <th className={headerCellClasses}>{t("common.restaurant")}</th>
@@ -34,7 +33,7 @@ export function OrderTable({ orders, onView, renderAction }: OrderTableProps) {
             <th className={headerCellClasses}>{t("orders.action")}</th>
           </tr>
         </thead>
-        <tbody className="[@media(max-width:47.99rem)]:block">
+        <tbody className="max-md:block">
           {orders.map((order) => (
             <tr className={rowClasses} key={order.id}>
               <td className={cellClasses}>#{text(order.id.slice(0, 8))}</td>

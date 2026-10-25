@@ -27,13 +27,13 @@ export class AppErrorBoundary extends Component<Props, State> {
 function AppErrorFallback() {
   const { t } = useI18n();
   return (
-    <main className="mx-auto my-[15vh] grid max-w-[40rem] gap-4 p-6" role="alert">
+    <main className="mx-auto my-[15vh] grid max-w-2xl gap-4 p-6" role="alert">
       <AppControls />
-      <p className="m-0 text-[0.8125rem] font-[800] tracking-[0.12em] uppercase text-muted">
+      <p className="text-small font-extrabold uppercase text-muted">
         {t("app.errorHeading")}
       </p>
-      <h1 className="m-0 text-[length:var(--font-size-page)]">{t("app.errorTitle")}</h1>
-      <p className="m-0 text-muted">{t("app.reloadHelp")}</p>
+      <h1 className="text-page">{t("app.errorTitle")}</h1>
+      <p className="text-muted">{t("app.reloadHelp")}</p>
       <Button onClick={() => window.location.reload()}>{t("app.reloadApp")}</Button>
     </main>
   );

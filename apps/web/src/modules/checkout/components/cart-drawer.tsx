@@ -38,12 +38,7 @@ export function CartDrawer({
         dismissible={!locked}
         footer={
           cart.lines.length > 0 ? (
-            <Button
-              className="h-9 min-h-9! py-0 [&>span]:inline-flex [&>span]:items-center [&>span]:gap-2"
-              disabled={locked}
-              onClick={onCheckout}
-              size="sm"
-            >
+            <Button disabled={locked} onClick={onCheckout} size="sm">
               {t("checkout.goToCheckout")}
               <ArrowRightIcon aria-hidden="true" size={18} />
             </Button>

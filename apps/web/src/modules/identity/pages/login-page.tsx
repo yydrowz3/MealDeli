@@ -24,7 +24,7 @@ export function LoginPage(props: LoginPageProps) {
 
   if (user && !user.verifiedAt) {
     return (
-      <main className="flex min-h-dvh items-center justify-center bg-warm-white px-4 py-6 [@media(max-width:639px)]:[align-items:start] [@media(max-width:639px)]:pt-8">
+      <main className="flex min-h-dvh items-start justify-center px-4 py-8 sm:items-center">
         <CheckEmail
           email={user.email}
           gate
@@ -36,9 +36,9 @@ export function LoginPage(props: LoginPageProps) {
   }
 
   return (
-    <main className="flex min-h-dvh items-center justify-center bg-warm-white px-4 py-6 [@media(max-width:639px)]:[align-items:start] [@media(max-width:639px)]:pt-8">
-      <Card className="w-full max-w-[440px] border! border-solid! border-border! [@media(max-width:639px)]:[box-shadow:none]">
-        <h1 className="mt-0 mb-2">{t("identity.welcomeBack")}</h1>
+    <main className="flex min-h-dvh items-start justify-center px-4 py-8 sm:items-center">
+      <Card className="w-full max-w-auth">
+        <h1 className="mb-2">{t("identity.welcomeBack")}</h1>
         <p>{t("identity.loginDescription")}</p>
         <LoginForm {...props} store={store} />
       </Card>

@@ -6,7 +6,7 @@ export function LanguageSwitch() {
   return (
     <select
       aria-label={t("ui.language")}
-      className="min-h-11 max-w-32 shrink-0 cursor-pointer rounded-control border border-solid border-current/30 bg-surface px-2 py-2 text-small text-charcoal focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-info focus-visible:outline-offset-2"
+      className="min-h-11 max-w-32 shrink-0 cursor-pointer rounded-control border border-current/30 bg-surface px-2 py-2 text-small text-charcoal focus-visible:outline-3 focus-visible:outline-info focus-visible:outline-offset-2"
       onChange={(event) => {
         const next = parseLanguage(event.target.value);
         changeLanguage(next, i18n);

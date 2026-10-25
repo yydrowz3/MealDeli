@@ -173,7 +173,7 @@ export function CourierDashboardPage({
   }
   if (!data && loadError) {
     return (
-      <main className="w-[min(1180px,calc(100%_-_2rem))] mx-auto pt-8 pb-24 [@media(max-width:767px)]:w-[min(100%_-_1rem,680px)] [@media(max-width:767px)]:pt-4">
+      <main className="mx-auto max-w-content px-4 pt-4 pb-24 md:pt-8">
         <ErrorState
           action={{ label: t("common.tryAgain"), onClick: load }}
           title={t("courier.loadDashboardFailed")}
@@ -192,13 +192,13 @@ export function CourierDashboardPage({
       : undefined;
 
   return (
-    <main className="w-[min(1180px,calc(100%_-_2rem))] mx-auto pt-8 pb-24 [@media(max-width:767px)]:w-[min(100%_-_1rem,680px)] [@media(max-width:767px)]:pt-4">
+    <main className="mx-auto max-w-content px-4 pt-4 pb-24 md:pt-8">
       {connectionState === "reconnecting" ? (
         <ConnectionBanner message={t("courier.reconnectingOrders")} />
       ) : null}
       <header className="flex items-center justify-between gap-4">
         <div>
-          <p className="text-jade-text text-[0.82rem] font-bold tracking-[0.08em] uppercase">
+          <p className="text-jade-text text-small font-bold uppercase">
             {t("courier.workspace")}
           </p>
           <h1>{t("courier.dashboard")}</h1>
@@ -214,7 +214,7 @@ export function CourierDashboardPage({
       ) : null}
       {selection.hasInvariantError ? (
         <p
-          className="border border-solid border-warning rounded-[0.75rem] bg-warning-soft text-warning-text px-4 py-[0.8rem]"
+          className="border border-warning rounded-control bg-warning-soft text-warning-text px-4 py-3"
           role="alert"
         >
           {t("courier.multipleActive")}
@@ -236,7 +236,7 @@ export function CourierDashboardPage({
             />
           </div>
         ) : (
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))] gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {readyData.available.map((order) => (
               <AvailableOrderCard
                 accepting={acceptingId === order.id}
@@ -263,7 +263,7 @@ export function CourierDashboardPage({
           <ul className="list-none p-0">
             {readyData.recent.map((order) => (
               <li
-                className="flex justify-between gap-4 border-b border-solid border-b-border py-[0.85rem]"
+                className="flex justify-between gap-4 border-b border-b-border py-3"
                 key={order.id}
               >
                 <span>{text(order.restaurant?.name ?? t("common.restaurantUnavailable"))}</span>

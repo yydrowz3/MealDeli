@@ -71,17 +71,17 @@ export function VerifyEmailPage({
   };
 
   return (
-    <main className="flex min-h-dvh items-center justify-center bg-warm-white px-4 py-6 [@media(max-width:639px)]:[align-items:start] [@media(max-width:639px)]:pt-8">
-      <Card className="w-full max-w-[440px] border! border-solid! border-border! [@media(max-width:639px)]:[box-shadow:none]">
+    <main className="flex min-h-dvh items-start justify-center px-4 py-8 sm:items-center">
+      <Card className="w-full max-w-auth">
         {state === "loading" ? (
           <>
-            <h1 className="mt-0 mb-2">{t("identity.verifying")}</h1>
+            <h1 className="mb-2">{t("identity.verifying")}</h1>
             <p role="status">{t("identity.pleaseWait")}</p>
           </>
         ) : null}
         {state === "success" ? (
           <>
-            <h1 className="mt-0 mb-2" tabIndex={-1}>
+            <h1 className="mb-2" tabIndex={-1}>
               {t("identity.verified")}
             </h1>
             <p>{t("identity.accountReady")}</p>
@@ -92,7 +92,7 @@ export function VerifyEmailPage({
         ) : null}
         {state === "invalid" ? (
           <>
-            <h1 className="mt-0 mb-2" tabIndex={-1}>
+            <h1 className="mb-2" tabIndex={-1}>
               {t("identity.invalidLink")}
             </h1>
             <p>{t("identity.requestNewLink")}</p>
@@ -104,7 +104,7 @@ export function VerifyEmailPage({
         ) : null}
         {state === "network" ? (
           <>
-            <h1 className="mt-0 mb-2" tabIndex={-1}>
+            <h1 className="mb-2" tabIndex={-1}>
               {t("identity.verifyFailed")}
             </h1>
             <p>{t("common.connectionRetry")}</p>

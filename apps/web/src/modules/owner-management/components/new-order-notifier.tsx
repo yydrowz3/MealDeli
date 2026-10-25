@@ -71,12 +71,12 @@ export function NewOrderNotifier({
         <ConnectionBanner message={t("ui.liveOrdersReconnecting")} />
       ) : null}
       <div
-        className="fixed right-6 bottom-6 z-60 grid max-w-104 gap-3 [@media(max-width:47.99rem)]:right-4 [@media(max-width:47.99rem)]:bottom-4 [@media(max-width:47.99rem)]:left-4 [@media(max-width:47.99rem)]:max-w-none"
+        className="fixed right-6 bottom-6 z-60 grid max-w-104 gap-3 max-md:right-4 max-md:bottom-4 max-md:left-4 max-md:max-w-none"
         aria-label={t("owner.newOrders")}
       >
         {toasts.map((toast) => (
           <article
-            className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-[var(--radius-lg)] border border-solid border-border bg-surface p-4 [box-shadow:var(--shadow-lg)]"
+            className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-card border border-border bg-surface p-4 [box-shadow:var(--shadow-lg)]"
             key={toast.id}
             role="status"
           >

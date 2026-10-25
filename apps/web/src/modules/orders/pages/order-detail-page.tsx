@@ -46,7 +46,7 @@ export function OrderDetailPage({
     return (
       <main
         aria-label={t("orders.loadingOrder")}
-        className="mx-auto grid w-full max-w-240 gap-6 p-6 font-sans text-charcoal"
+        className="mx-auto grid w-full max-w-240 gap-6 p-4 text-charcoal md:p-6"
       >
         <Skeleton />
         <Skeleton />
@@ -56,7 +56,7 @@ export function OrderDetailPage({
   }
   if (state.kind === "error") {
     return (
-      <main className="mx-auto grid w-full max-w-240 gap-6 p-6 font-sans text-charcoal">
+      <main className="mx-auto grid w-full max-w-240 gap-6 p-4 text-charcoal md:p-6">
         <ErrorState
           action={onRetry ? { label: t("common.tryAgain"), onClick: onRetry } : undefined}
           description={text(errorMessage(state.message, "common.connectionRetry"))}
@@ -67,7 +67,7 @@ export function OrderDetailPage({
   }
   if (state.kind === "not-found") {
     return (
-      <main className="mx-auto grid w-full max-w-240 gap-6 p-6 font-sans text-charcoal">
+      <main className="mx-auto grid w-full max-w-240 gap-6 p-4 text-charcoal md:p-6">
         <EmptyState
           action={
             onBack
@@ -88,24 +88,20 @@ export function OrderDetailPage({
   const order = state.order;
   const renderedAction = typeof actionSlot === "function" ? actionSlot(order) : actionSlot;
   return (
-    <main className="mx-auto grid w-full max-w-240 gap-6 p-6 font-sans text-charcoal">
+    <main className="mx-auto grid w-full max-w-240 gap-6 p-4 text-charcoal md:p-6">
       {connectionState === "reconnecting" ? <ConnectionBanner /> : null}
-      <Button
-        className="[&>span]:inline-flex [&>span]:flex-row [&>span]:items-center [&>span]:gap-2"
-        onClick={onBack}
-        variant="tertiary"
-      >
+      <Button onClick={onBack} variant="tertiary">
         <ArrowLeftIcon aria-hidden="true" size={18} />
         {t("orders.back")}
       </Button>
-      <header className="flex [align-items:start] justify-between gap-4">
+      <header className="flex items-start justify-between gap-4">
         <div>
-          <p className="mt-0 mb-2">
+          <p className="mb-2">
             {t("common.orderNumber")}
             {text(order.id.slice(0, 8))}
           </p>
-          <h1 className="m-0">{text(ORDER_STATUS_LABELS[order.status])}</h1>
-          <p className="mt-0 mb-2">{text(ORDER_STATUS_DESCRIPTIONS[order.status])}</p>
+          <h1>{text(ORDER_STATUS_LABELS[order.status])}</h1>
+          <p className="mb-2">{text(ORDER_STATUS_DESCRIPTIONS[order.status])}</p>
           <DateTime value={order.createdAt} />
         </div>
         <OrderStatusBadge status={order.status} />
@@ -113,9 +109,9 @@ export function OrderDetailPage({
 
       <section
         aria-labelledby="restaurant-summary-heading"
-        className="rounded-card border border-solid border-border bg-surface p-6"
+        className="rounded-card border border-border bg-surface p-6"
       >
-        <h2 className="mt-0" id="restaurant-summary-heading">
+        <h2 id="restaurant-summary-heading">
           {text(order.restaurant?.name ?? t("common.restaurantUnavailable"))}
         </h2>
         {order.restaurant ? <p>{text(order.restaurant.address)}</p> : null}
@@ -123,9 +119,9 @@ export function OrderDetailPage({
 
       <section
         aria-labelledby="progress-heading"
-        className="rounded-card border border-solid border-border bg-surface p-6"
+        className="rounded-card border border-border bg-surface p-6"
       >
-        <h2 className="mt-0" id="progress-heading">
+        <h2 id="progress-heading">
           {t("orders.progress")}
         </h2>
         <OrderTimeline status={order.status} />
@@ -133,15 +129,15 @@ export function OrderDetailPage({
 
       <section
         aria-labelledby="items-heading"
-        className="rounded-card border border-solid border-border bg-surface p-6"
+        className="rounded-card border border-border bg-surface p-6"
       >
-        <h2 className="mt-0" id="items-heading">
+        <h2 id="items-heading">
           {t("common.items")}
         </h2>
-        <ul className="m-0 grid list-none gap-4 p-0">
+        <ul className="grid list-none gap-4 p-0">
           {order.items.map((item) => (
             <li
-              className="[&+li]:border-t [&+li]:border-solid [&+li]:border-t-border [&+li]:pt-4"
+              className="[&+li]:border-t [&+li]:border-t-border [&+li]:pt-4"
               key={item.id}
             >
               <div className="flex justify-between gap-3">
@@ -162,12 +158,12 @@ export function OrderDetailPage({
 
       <section
         aria-labelledby="summary-heading"
-        className="rounded-card border border-solid border-border bg-surface p-6"
+        className="rounded-card border border-border bg-surface p-6"
       >
-        <h2 className="mt-0" id="summary-heading">
+        <h2 id="summary-heading">
           {t("common.orderSummary")}
         </h2>
-        <dl className="[&>div]:flex [&>div]:justify-between [&>div]:gap-3 [&_dd]:m-0">
+        <dl className="[&>div]:flex [&>div]:justify-between [&>div]:gap-3">
           <div>
             <dt>{t("common.subtotal")}</dt>
             <dd>

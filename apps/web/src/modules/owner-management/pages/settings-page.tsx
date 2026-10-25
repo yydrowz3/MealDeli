@@ -67,13 +67,13 @@ export function OwnerRestaurantSettingsPage({
   if (restaurant === undefined) return <Skeleton className="h-112" />;
   if (restaurant === null) return <ErrorState title={t("common.restaurantNotFound")} />;
   return (
-    <section className="mx-auto grid max-w-200 gap-6 p-6 [@media(max-width:47.99rem)]:p-4">
-      <header className="flex items-center justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]">
+    <section className="mx-auto grid max-w-200 gap-6 p-4 md:p-6">
+      <header className="grid gap-4 md:flex md:items-center md:justify-between">
         <div>
-          <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
+          <p className="text-small text-muted font-bold uppercase">
             {text(restaurant.name)}
           </p>
-          <h1 className="m-0">{t("owner.restaurantSettings")}</h1>
+          <h1>{t("owner.restaurantSettings")}</h1>
         </div>
       </header>
       <RestaurantSettingsForm
@@ -86,7 +86,7 @@ export function OwnerRestaurantSettingsPage({
         restaurant={restaurant}
         uploader={uploader}
       />
-      <Card className="mt-8 grid gap-3 border-border!">
+      <Card className="mt-8 grid gap-3">
         <h2>{t("owner.dangerZone")}</h2>
         <p>{t("owner.deleteWarning")}</p>
         <Button onClick={() => setConfirmDelete(true)} variant="danger">

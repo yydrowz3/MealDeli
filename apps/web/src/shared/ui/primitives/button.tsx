@@ -11,17 +11,16 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const variantClasses = {
   primary:
-    "border-transparent bg-jade text-on-primary [&:hover:not(:disabled)]:bg-jade-dark [&:hover:not(:disabled)]:text-on-primary-hover",
-  secondary: "border-border bg-surface text-charcoal [&:hover:not(:disabled)]:bg-neutral-soft",
-  tertiary:
-    "border-transparent bg-transparent text-action [&:hover:not(:disabled)]:bg-neutral-soft",
-  danger: "border-transparent bg-danger text-on-danger [&:hover:not(:disabled)]:bg-danger-hover",
+    "border-transparent bg-jade text-on-primary enabled:hover:bg-jade-dark enabled:hover:text-on-primary-hover",
+  secondary: "border-border bg-surface text-charcoal enabled:hover:bg-neutral-soft",
+  tertiary: "border-transparent bg-transparent text-action enabled:hover:bg-neutral-soft",
+  danger: "border-transparent bg-danger text-on-danger enabled:hover:bg-danger-hover",
 };
 
 const sizeClasses = {
-  sm: "min-h-control-sm text-small leading-none",
-  md: "min-h-control-md text-body leading-none",
-  lg: "min-h-control-lg text-body leading-none",
+  sm: "min-h-control-sm text-small",
+  md: "min-h-control-md text-body",
+  lg: "min-h-control-lg text-body",
 };
 const paddingClasses = { sm: "px-3", md: "px-4", lg: "px-6" };
 
@@ -42,7 +41,7 @@ export function Button({
   }
 
   const classes = [
-    "relative inline-flex items-center justify-center gap-2 rounded-control border border-solid font-sans font-[650] cursor-pointer transition-[background-color,border-color,color] duration-150 ease-[ease] focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-info focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-[0.62] py-0",
+    "relative inline-flex items-center justify-center rounded-control border font-sans font-semibold leading-none cursor-pointer transition-colors duration-150 focus-visible:outline-3 focus-visible:outline-info focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60",
     variantClasses[variant],
     sizeClasses[size],
     iconOnly ? "px-3" : paddingClasses[size],
@@ -59,7 +58,13 @@ export function Button({
       disabled={disabled || loading}
       type={type}
     >
-      <span className={loading ? "invisible" : undefined}>{text(children)}</span>
+      <span
+        className={["inline-flex items-center gap-2", loading ? "invisible" : ""]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        {text(children)}
+      </span>
       {loading ? (
         <CircleNotch aria-hidden="true" className="absolute animate-ui-spin" size={20} />
       ) : null}

@@ -22,29 +22,29 @@ export function AvailableOrderCard({
   const { t, text } = useI18n();
   return (
     <Card className="grid gap-4">
-      <p className="text-jade-text text-[0.82rem] font-bold tracking-[0.08em] uppercase">
+      <p className="text-jade-text text-small font-bold uppercase">
         {t("courier.readyForPickup")}
       </p>
       <h3 ref={headingRef} tabIndex={-1}>
         {text(order.restaurant?.name ?? t("common.restaurantUnavailable"))}
       </h3>
       {order.restaurant ? <p>{text(order.restaurant.address)}</p> : null}
-      <dl className="grid grid-cols-2 gap-3 m-0">
+      <dl className="grid grid-cols-2 gap-3">
         <div className="grid gap-1">
-          <dt className="text-muted text-[0.875rem]">{t("common.items")}</dt>
-          <dd className="m-0 font-[650]">
+          <dt className="text-muted text-small">{t("common.items")}</dt>
+          <dd className="font-semibold">
             {order.items.reduce((total, item) => total + item.quantity, 0)}
           </dd>
         </div>
         <div className="grid gap-1">
-          <dt className="text-muted text-[0.875rem]">{t("common.orderTotal")}</dt>
-          <dd className="m-0 font-[650]">
+          <dt className="text-muted text-small">{t("common.orderTotal")}</dt>
+          <dd className="font-semibold">
             <Money minor={order.totalMinor} />
           </dd>
         </div>
         <div className="grid gap-1">
-          <dt className="text-muted text-[0.875rem]">{t("common.created")}</dt>
-          <dd className="m-0 font-[650]">
+          <dt className="text-muted text-small">{t("common.created")}</dt>
+          <dd className="font-semibold">
             <DateTime value={order.createdAt} />
           </dd>
         </div>
@@ -52,7 +52,7 @@ export function AvailableOrderCard({
       <Button disabled={disabled || accepting} loading={accepting} onClick={() => onAccept(order)}>
         {t("courier.accept")}
       </Button>
-      {disabledReason ? <p className="text-muted text-[0.875rem]">{text(disabledReason)}</p> : null}
+      {disabledReason ? <p className="text-muted text-small">{text(disabledReason)}</p> : null}
     </Card>
   );
 }

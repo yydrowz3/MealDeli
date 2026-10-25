@@ -35,16 +35,16 @@ function DiscoverySkeleton() {
   return (
     <div
       aria-label={t("catalog.loadingRestaurants")}
-      className="mx-auto grid max-w-content gap-8 p-6 font-sans text-charcoal [@media(max-width:39.99rem)]:p-4 [&_h1]:my-0 [&_h1]:text-page [&_h2]:mt-0 [&_h2]:mb-4 [&_h2]:text-section [&_h3]:my-0 [&_h3]:text-[1.05rem] [&_p]:my-0 [&_[data-state]_h2]:mb-0!"
+      className="mx-auto grid min-w-0 max-w-content grid-cols-1 gap-8 p-4 md:p-6"
       role="status"
     >
       <Skeleton className="h-control-md" />
       <div className="flex gap-3 overflow-hidden">
         {Array.from({ length: 5 }, (_, index) => (
-          <Skeleton className="h-32 flex-[0_0_8.5rem]" key={index} />
+          <Skeleton className="h-32 w-36 shrink-0" key={index} />
         ))}
       </div>
-      <div className="grid grid-cols-3 gap-4 [@media(39.99rem<width<=63.99rem)]:grid-cols-2 [@media(max-width:39.99rem)]:grid-cols-1">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }, (_, index) => (
           <Skeleton className="h-80" key={index} />
         ))}
@@ -63,7 +63,7 @@ function RestaurantGrid({
   now?: Date | number;
 }) {
   return (
-    <div className="grid grid-cols-3 gap-4 [@media(39.99rem<width<=63.99rem)]:grid-cols-2 [@media(max-width:39.99rem)]:grid-cols-1">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {restaurants.map((restaurant) => (
         <RestaurantCard
           key={restaurant.id}
@@ -166,11 +166,11 @@ export function RestaurantDiscoveryPage({
   const emptyDescription = search.query ? t("catalog.searchHint") : undefined;
 
   return (
-    <main className="mx-auto grid max-w-content gap-8 p-6 font-sans text-charcoal [@media(max-width:39.99rem)]:p-4 [&_h1]:my-0 [&_h1]:text-page [&_h2]:mt-0 [&_h2]:mb-4 [&_h2]:text-section [&_h3]:my-0 [&_h3]:text-[1.05rem] [&_p]:my-0 [&_[data-state]_h2]:mb-0!">
-      <header className="grid grid-cols-[minmax(12rem,1fr)_minmax(18rem,2fr)] [align-items:end] gap-4 [@media(max-width:39.99rem)]:grid-cols-1">
+    <main className="mx-auto grid min-w-0 max-w-content grid-cols-1 gap-8 p-4 md:p-6">
+      <header className="grid grid-cols-1 items-end gap-4 md:grid-cols-2">
         <div>
-          <p className="text-[length:var(--font-size-small)] font-bold text-jade-text">MealDeli</p>
-          <h1>{t("common.restaurants")}</h1>
+          <p className="text-small font-bold text-jade-text">MealDeli</p>
+          <h1 className="text-page">{t("common.restaurants")}</h1>
         </div>
         <CatalogSearchForm
           onSearch={(query) => onSearchChange(selectCatalogQuery(query))}
@@ -180,7 +180,7 @@ export function RestaurantDiscoveryPage({
 
       <section
         aria-label={t("common.deliveryAddress")}
-        className="flex items-center justify-between gap-4 rounded-card bg-jade-soft px-6 py-4 [&_p]:text-muted"
+        className="flex flex-wrap items-center justify-between gap-4 rounded-card bg-jade-soft p-4 [&_p]:text-muted"
       >
         <div>
           <strong>
@@ -196,7 +196,9 @@ export function RestaurantDiscoveryPage({
       </section>
 
       <section aria-labelledby="catalog-categories-title">
-        <h2 id="catalog-categories-title">{t("common.categories")}</h2>
+        <h2 className="mb-4 text-section" id="catalog-categories-title">
+          {t("common.categories")}
+        </h2>
         <CategoryStrip
           categories={categories}
           onSelect={(slug) => onSearchChange(selectCatalogCategory(slug))}
@@ -215,8 +217,13 @@ export function RestaurantDiscoveryPage({
         />
       ) : (
         <section aria-busy={refreshing} aria-labelledby="catalog-results-title">
-          <div className="flex items-baseline justify-between gap-3 [&_span]:text-[length:var(--font-size-small)] [&_span]:text-muted">
-            <h2 id="catalog-results-title" ref={resultTitleRef} tabIndex={-1}>
+          <div className="flex items-baseline justify-between gap-3 [&_span]:text-small [&_span]:text-muted">
+            <h2
+              className="mb-4 text-section"
+              id="catalog-results-title"
+              ref={resultTitleRef}
+              tabIndex={-1}
+            >
               {text(
                 search.query
                   ? t("catalog.searchResults", { query: search.query })
@@ -242,7 +249,9 @@ export function RestaurantDiscoveryPage({
             <>
               {promoted.length > 0 ? (
                 <section aria-labelledby="catalog-promoted-title">
-                  <h3 id="catalog-promoted-title">{t("catalog.promotedOn")}</h3>
+                  <h3 className="mb-3 text-section" id="catalog-promoted-title">
+                    {t("catalog.promotedOn")}
+                  </h3>
                   <RestaurantGrid
                     now={now}
                     onViewRestaurant={onViewRestaurant}

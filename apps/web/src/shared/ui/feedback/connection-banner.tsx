@@ -15,7 +15,7 @@ export function ConnectionBanner({
     <div
       {...props}
       className={[
-        "rounded-control border border-solid border-info bg-info-soft px-4 py-3 font-sans text-info-dark",
+        "rounded-control border border-info bg-info-soft px-4 py-3 font-sans text-info-dark",
         className,
       ]
         .filter(Boolean)

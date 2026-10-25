@@ -110,11 +110,11 @@ export function CheckoutPage({
   };
 
   return (
-    <main className="mx-auto max-w-[72rem] p-[var(--ui-space-6,1.5rem)]">
+    <main className="mx-auto max-w-6xl p-4 md:p-6">
       <h1>{t("checkout.title")}</h1>
       {hasInvalidLines ? <p role="alert">{t("checkout.unavailableItems")}</p> : null}
-      <div className="grid gap-[var(--ui-space-6,1.5rem)] min-[48rem]:grid-cols-[minmax(0,7fr)_minmax(20rem,5fr)]">
-        <div className="grid gap-[var(--ui-space-4,1rem)]">
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-4">
           <Card>
             <h2>{t("common.deliveryAddress")}</h2>
             {!editingAddress && address ? (
@@ -146,7 +146,7 @@ export function CheckoutPage({
             <p>{t("checkout.paymentHelp")}</p>
           </Card>
         </div>
-        <Card className="[align-self:start] min-[48rem]:sticky min-[48rem]:top-4">
+        <Card className="self-start lg:sticky lg:top-4">
           <h2>{t("common.orderSummary")}</h2>
           <CartSummary
             cart={cart}
