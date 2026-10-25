@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import { useAtomValue, useSetAtom } from "jotai";
 
 import type { RestaurantSummary } from "../../catalog";
@@ -13,21 +14,22 @@ export type RestaurantSelectorProps = Readonly<{
 }>;
 
 export function RestaurantSelector({ restaurants, onSelect }: RestaurantSelectorProps) {
+  const { t, text } = useI18n();
   const selectedId = useAtomValue(selectedOwnerRestaurantIdAtom);
   const select = useSetAtom(setSelectedOwnerRestaurantAtom);
   return (
     <Select
-      label="Current restaurant"
+      label={t("owner.currentRestaurant")}
       onChange={(event) => {
         select(event.target.value);
         onSelect?.(event.target.value);
       }}
       value={selectedId ?? ""}
     >
-      {restaurants.length === 0 ? <option value="">No restaurants</option> : null}
+      {restaurants.length === 0 ? <option value="">{t("common.noRestaurants")}</option> : null}
       {restaurants.map((restaurant) => (
         <option key={restaurant.id} value={restaurant.id}>
-          {restaurant.name}
+          {text(restaurant.name)}
         </option>
       ))}
     </Select>

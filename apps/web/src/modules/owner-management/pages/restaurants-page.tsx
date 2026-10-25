@@ -1,3 +1,4 @@
+import { errorMessage, useI18n } from "../../../shared/i18n";
 import { useSetAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 
@@ -22,6 +23,7 @@ export type OwnerRestaurantsPageProps = Readonly<{
 }>;
 
 export function OwnerRestaurantsPage({ repository, navigate }: OwnerRestaurantsPageProps) {
+  const { t, text } = useI18n();
   const [restaurants, setRestaurants] = useState<readonly OwnerRestaurant[] | null>(null);
   const [error, setError] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<OwnerRestaurant | null>(null);
@@ -51,7 +53,7 @@ export function OwnerRestaurantsPage({ repository, navigate }: OwnerRestaurantsP
     setDeleteError(null);
     const result = await repository.delete(deleteTarget.id);
     if (!result.ok) {
-      setDeleteError(result.message);
+      setDeleteError(errorMessage(result.message, "owner.deleteFailed"));
       setDeleting(false);
       return;
     }
@@ -68,15 +70,15 @@ export function OwnerRestaurantsPage({ repository, navigate }: OwnerRestaurantsP
   if (error) {
     return (
       <ErrorState
-        action={{ label: "Try again", onClick: () => void load() }}
-        title="We couldn’t load your restaurants."
+        action={{ label: t("common.tryAgain"), onClick: () => void load() }}
+        title={t("owner.loadRestaurantsFailed")}
       />
     );
   }
   if (!restaurants) {
     return (
       <section
-        aria-label="Loading restaurants"
+        aria-label={t("catalog.loadingRestaurants")}
         className="grid grid-cols-[repeat(auto-fit,minmax(18rem,1fr))] gap-[var(--space-5)]"
       >
         <Skeleton className="h-52" />
@@ -87,9 +89,9 @@ export function OwnerRestaurantsPage({ repository, navigate }: OwnerRestaurantsP
   if (restaurants.length === 0) {
     return (
       <EmptyState
-        action={{ label: "Create restaurant", onClick: () => navigate("/restaurants/new") }}
-        description="Add your restaurant details, then build a menu and start receiving orders."
-        title="Create your first restaurant"
+        action={{ label: t("owner.createRestaurant"), onClick: () => navigate("/restaurants/new") }}
+        description={t("insights.firstRestaurantHelp")}
+        title={t("insights.firstRestaurant")}
       />
     );
   }
@@ -99,15 +101,15 @@ export function OwnerRestaurantsPage({ repository, navigate }: OwnerRestaurantsP
       <header className="flex items-center justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]">
         <div>
           <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
-            Owner workspace
+            {t("owner.workspace")}
           </p>
-          <h1 className="m-0">Restaurants</h1>
+          <h1 className="m-0">{t("common.restaurants")}</h1>
         </div>
         <Button
           className="[@media(max-width:47.99rem)]:w-full"
           onClick={() => navigate("/restaurants/new")}
         >
-          Create restaurant
+          {t("owner.createRestaurant")}
         </Button>
       </header>
       <div className="grid grid-cols-[repeat(auto-fit,minmax(18rem,1fr))] gap-[var(--space-5)]">
@@ -123,42 +125,44 @@ export function OwnerRestaurantsPage({ repository, navigate }: OwnerRestaurantsP
             )}
             <div className="grid gap-3 p-[var(--space-5)]">
               <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
-                {restaurant.category.name}
+                {text(restaurant.category.name)}
               </p>
-              <h2>{restaurant.name}</h2>
-              <p>{restaurant.address}</p>
+              <h2>{text(restaurant.name)}</h2>
+              <p>{text(restaurant.address)}</p>
               <p>
-                Created <DateTime value={restaurant.createdAt} />
+                {t("common.created")}
+                <DateTime value={restaurant.createdAt} />
               </p>
               {restaurant.promotedUntil ? (
                 <p>
-                  Promoted until <DateTime value={restaurant.promotedUntil} />
+                  {t("insights.promotedUntil")}
+                  <DateTime value={restaurant.promotedUntil} />
                 </p>
               ) : null}
               <div className="flex flex-wrap gap-3">
                 <Button onClick={() => navigate(`/restaurants/${restaurant.id}`)}>
-                  Open restaurant
+                  {t("owner.openRestaurant")}
                 </Button>
                 <Button
                   onClick={() => navigate(`/restaurants/${restaurant.id}/menu`)}
                   variant="secondary"
                 >
-                  Manage menu
+                  {t("owner.manageMenu")}
                 </Button>
                 <Button
                   onClick={() => navigate(`/restaurants/${restaurant.id}/settings`)}
                   variant="tertiary"
                 >
-                  Settings
+                  {t("owner.settings")}
                 </Button>
                 <Button
                   onClick={() => navigate(`/restaurants/${restaurant.id}/promotion`)}
                   variant="tertiary"
                 >
-                  Promotion
+                  {t("owner.promotion")}
                 </Button>
                 <Button onClick={() => setDeleteTarget(restaurant)} variant="danger">
-                  Delete restaurant
+                  {t("owner.deleteRestaurant")}
                 </Button>
               </div>
             </div>
@@ -169,24 +173,20 @@ export function OwnerRestaurantsPage({ repository, navigate }: OwnerRestaurantsP
         dismissible={!deleting}
         onClose={() => setDeleteTarget(null)}
         open={Boolean(deleteTarget)}
-        title="Delete this restaurant?"
-        description="This permanently removes the restaurant and its menu. This action can’t be undone."
+        title={t("owner.confirmDeleteRestaurant")}
+        description={t("owner.deleteRestaurantHelp")}
         footer={
           <>
             <Button disabled={deleting} onClick={() => setDeleteTarget(null)} variant="secondary">
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button loading={deleting} onClick={() => void remove()} variant="danger">
-              Delete restaurant
+              {t("owner.deleteRestaurant")}
             </Button>
           </>
         }
       >
-        {deleteError ? (
-          <p role="alert">{deleteError}</p>
-        ) : (
-          <p>Past orders will keep their saved item snapshots.</p>
-        )}
+        {deleteError ? <p role="alert">{text(deleteError)}</p> : <p>{t("owner.savedItemsHelp")}</p>}
       </Modal>
     </section>
   );

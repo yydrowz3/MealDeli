@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import { Button } from "../../../shared/ui";
 
 export type PaginationProps = {
@@ -13,14 +14,15 @@ function visiblePages(page: number, totalPages: number) {
 }
 
 export function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
+  const { t, formatNumber } = useI18n();
   if (totalPages <= 1) return null;
   return (
     <nav
-      aria-label="Restaurant pages"
+      aria-label={t("catalog.pagination")}
       className="mt-6 flex items-center justify-center gap-2 [div+&]:mt-4"
     >
       <Button disabled={page <= 1} onClick={() => onPageChange(page - 1)} variant="secondary">
-        Previous
+        {t("common.previous")}
       </Button>
       <div className="flex gap-1 [@media(max-width:39.99rem)]:hidden">
         {visiblePages(page, totalPages).map((number) => (
@@ -30,19 +32,19 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
             onClick={() => onPageChange(number)}
             variant={number === page ? "primary" : "tertiary"}
           >
-            {number}
+            {formatNumber(number)}
           </Button>
         ))}
       </div>
       <span className="hidden [@media(max-width:39.99rem)]:inline" aria-live="polite">
-        Page {page} of {totalPages}
+        {t("catalog.pageSummary", { page, total: totalPages })}
       </span>
       <Button
         disabled={page >= totalPages}
         onClick={() => onPageChange(page + 1)}
         variant="secondary"
       >
-        Next
+        {t("common.next")}
       </Button>
     </nav>
   );

@@ -25,7 +25,8 @@ describe("PromotionPage", () => {
       />,
     );
     expect(await screen.findByText("Demo payment — no real charge will be made.")).toBeVisible();
-    expect(screen.getByText("$9.99")).toBeVisible();
+    expect(screen.getAllByText("$9.99")).toHaveLength(2);
+    expect(screen.getByRole("button", { name: "Promote for $9.99" })).toBeVisible();
     const history = screen.getByRole("heading", { name: "Promotion history" }).parentElement!;
     expect(within(history).getByText("Demo promotion")).toBeVisible();
     expect(within(history).getByText("7 days")).toBeVisible();

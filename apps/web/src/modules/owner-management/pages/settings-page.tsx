@@ -1,3 +1,4 @@
+import { errorMessage, useI18n } from "../../../shared/i18n";
 import { useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
 
@@ -25,6 +26,7 @@ export function OwnerRestaurantSettingsPage({
   navigate,
   onDirtyChange,
 }: OwnerRestaurantSettingsPageProps) {
+  const { t, text } = useI18n();
   const [restaurant, setRestaurant] = useState<OwnerRestaurant | null | undefined>(undefined);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -51,7 +53,7 @@ export function OwnerRestaurantSettingsPage({
     setDeleteError(null);
     const result = await repository.delete(restaurantId);
     if (!result.ok) {
-      setDeleteError(result.message);
+      setDeleteError(errorMessage(result.message, "owner.deleteFailed"));
       setDeleting(false);
       return;
     }
@@ -63,15 +65,15 @@ export function OwnerRestaurantSettingsPage({
     navigate("/restaurants");
   };
   if (restaurant === undefined) return <Skeleton className="h-112" />;
-  if (restaurant === null) return <ErrorState title="Restaurant not found." />;
+  if (restaurant === null) return <ErrorState title={t("common.restaurantNotFound")} />;
   return (
     <section className="mx-auto grid max-w-200 gap-6 p-6 [@media(max-width:47.99rem)]:p-4">
       <header className="flex items-center justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]">
         <div>
           <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
-            {restaurant.name}
+            {text(restaurant.name)}
           </p>
-          <h1 className="m-0">Restaurant settings</h1>
+          <h1 className="m-0">{t("owner.restaurantSettings")}</h1>
         </div>
       </header>
       <RestaurantSettingsForm
@@ -85,10 +87,10 @@ export function OwnerRestaurantSettingsPage({
         uploader={uploader}
       />
       <Card className="mt-8 grid gap-3 border-border!">
-        <h2>Danger zone</h2>
-        <p>Deleting a restaurant permanently removes its menu. Past orders are not changed.</p>
+        <h2>{t("owner.dangerZone")}</h2>
+        <p>{t("owner.deleteWarning")}</p>
         <Button onClick={() => setConfirmDelete(true)} variant="danger">
-          Delete restaurant
+          {t("owner.deleteRestaurant")}
         </Button>
       </Card>
       <Modal
@@ -96,23 +98,19 @@ export function OwnerRestaurantSettingsPage({
         footer={
           <>
             <Button disabled={deleting} onClick={() => setConfirmDelete(false)} variant="secondary">
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button loading={deleting} onClick={() => void remove()} variant="danger">
-              Delete restaurant
+              {t("owner.deleteRestaurant")}
             </Button>
           </>
         }
         onClose={() => setConfirmDelete(false)}
         open={confirmDelete}
-        title="Delete this restaurant?"
-        description="This permanently removes the restaurant and its menu. This action can’t be undone."
+        title={t("owner.confirmDeleteRestaurant")}
+        description={t("owner.deleteRestaurantHelp")}
       >
-        {deleteError ? (
-          <p role="alert">{deleteError}</p>
-        ) : (
-          <p>Past orders keep their saved snapshots.</p>
-        )}
+        {deleteError ? <p role="alert">{text(deleteError)}</p> : <p>{t("owner.savedSnapshots")}</p>}
       </Modal>
     </section>
   );

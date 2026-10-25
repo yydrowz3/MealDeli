@@ -1,3 +1,4 @@
+import { useI18n } from "../../shared/i18n";
 import type { ComponentType } from "react";
 import type { IconProps } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
@@ -18,6 +19,7 @@ export type LayoutProps = {
 };
 
 export function NavigationLinks({ items }: { items: readonly NavigationItem[] }) {
+  const { t, text, formatNumber } = useI18n();
   return (
     <>
       {items.map((item) => (
@@ -28,8 +30,12 @@ export function NavigationLinks({ items }: { items: readonly NavigationItem[] })
           key={item.href}
         >
           {item.icon ? <item.icon aria-hidden="true" size={18} /> : null}
-          {item.label}
-          {item.badge ? <span aria-label={`${item.badge} new`}>{item.badge}</span> : null}
+          {text(item.label)}
+          {item.badge ? (
+            <span aria-label={t("app.newCount", { count: item.badge })}>
+              {formatNumber(item.badge)}
+            </span>
+          ) : null}
         </a>
       ))}
     </>

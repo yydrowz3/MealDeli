@@ -1,20 +1,21 @@
+import { message as localizedMessage } from "../../../shared/i18n";
 import type { OrderRole, OrderStatus } from "./types";
 import { ORDER_STATUSES } from "./types";
 
 export const ORDER_STATUS_LABELS: Readonly<Record<OrderStatus, string>> = {
-  PENDING: "Order placed",
-  COOKING: "Preparing your order",
-  WAITING: "Ready for pickup",
-  PICKED: "On the way",
-  DELIVERED: "Delivered",
+  PENDING: localizedMessage("orders.pending"),
+  COOKING: localizedMessage("orders.cooking"),
+  WAITING: localizedMessage("orders.waiting"),
+  PICKED: localizedMessage("orders.picked"),
+  DELIVERED: localizedMessage("orders.delivered"),
 };
 
 export const ORDER_STATUS_DESCRIPTIONS: Readonly<Record<OrderStatus, string>> = {
-  PENDING: "The restaurant has received this order.",
-  COOKING: "The restaurant is preparing this order.",
-  WAITING: "The order is ready for a courier.",
-  PICKED: "The courier is delivering this order.",
-  DELIVERED: "This order has been delivered.",
+  PENDING: localizedMessage("orders.pendingDescription"),
+  COOKING: localizedMessage("orders.cookingDescription"),
+  WAITING: localizedMessage("orders.waitingDescription"),
+  PICKED: localizedMessage("orders.pickedDescription"),
+  DELIVERED: localizedMessage("orders.deliveredDescription"),
 };
 
 const roleTargets: Readonly<Record<OrderRole, readonly OrderStatus[]>> = {

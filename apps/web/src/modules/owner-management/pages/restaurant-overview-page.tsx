@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import { useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
 
@@ -27,6 +28,7 @@ export function OwnerRestaurantOverviewPage({
   orderRepository,
   navigate,
 }: OwnerRestaurantOverviewPageProps) {
+  const { t, text, formatNumber } = useI18n();
   const [restaurant, setRestaurant] = useState<OwnerRestaurant | null | undefined>(undefined);
   const [orders, setOrders] = useState<readonly Order[]>([]);
   const [error, setError] = useState(false);
@@ -47,9 +49,9 @@ export function OwnerRestaurantOverviewPage({
       active = false;
     };
   }, [orderRepository, repository, restaurantId, select]);
-  if (error) return <ErrorState title="We couldn’t load this restaurant." />;
+  if (error) return <ErrorState title={t("common.loadRestaurantFailed")} />;
   if (restaurant === undefined) return <Skeleton className="h-112" />;
-  if (restaurant === null) return <ErrorState title="Restaurant not found." />;
+  if (restaurant === null) return <ErrorState title={t("common.restaurantNotFound")} />;
   const activeOrders = orders.filter((order) => order.status !== "DELIVERED");
   const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
   const salesMinor = orders
@@ -75,41 +77,43 @@ export function OwnerRestaurantOverviewPage({
         )}
         <div>
           <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
-            {restaurant.category.name}
+            {text(restaurant.category.name)}
           </p>
-          <h1 className="m-0">{restaurant.name}</h1>
-          <p>{restaurant.address}</p>
+          <h1 className="m-0">{text(restaurant.name)}</h1>
+          <p>{text(restaurant.address)}</p>
         </div>
       </header>
       <div className="flex flex-wrap gap-3">
-        <Button onClick={() => navigate(`/restaurants/${restaurant.id}/menu`)}>Manage menu</Button>
+        <Button onClick={() => navigate(`/restaurants/${restaurant.id}/menu`)}>
+          {t("owner.manageMenu")}
+        </Button>
         <Button onClick={() => navigate(`/orders?restaurant=${restaurant.id}`)} variant="secondary">
-          View orders
+          {t("owner.viewOrders")}
         </Button>
         <Button
           onClick={() => navigate(`/restaurants/${restaurant.id}/settings`)}
           variant="secondary"
         >
-          Edit restaurant
+          {t("owner.editRestaurant")}
         </Button>
         <Button
           onClick={() => navigate(`/restaurants/${restaurant.id}/promotion`)}
           variant="tertiary"
         >
-          Promote restaurant
+          {t("owner.promoteRestaurant")}
         </Button>
       </div>
       <div className="grid grid-cols-[repeat(3,1fr)] gap-4 [@media(max-width:47.99rem)]:grid-cols-2 [&_strong]:[font-size:var(--font-size-2xl)]">
         <Card>
-          <p>Dishes</p>
-          <strong>{restaurant.dishes.length}</strong>
+          <p>{t("owner.dishes")}</p>
+          <strong>{formatNumber(restaurant.dishes.length)}</strong>
         </Card>
         <Card>
-          <p>Active orders</p>
-          <strong>{activeOrders.length}</strong>
+          <p>{t("insights.activeOrders")}</p>
+          <strong>{formatNumber(activeOrders.length)}</strong>
         </Card>
         <Card>
-          <p>Sales · Last 7 days</p>
+          <p>{t("insights.salesTitle")}</p>
           <strong>
             <Money minor={salesMinor} />
           </strong>
@@ -117,17 +121,19 @@ export function OwnerRestaurantOverviewPage({
       </div>
       {restaurant.dishes.length === 0 ? (
         <Card>
-          <h2>Add your first dish</h2>
-          <p>Add dishes so customers can place an order.</p>
-          <Button onClick={() => navigate(`/restaurants/${restaurant.id}/menu`)}>Add dish</Button>
+          <h2>{t("owner.firstDish")}</h2>
+          <p>{t("owner.emptyMenuHelp")}</p>
+          <Button onClick={() => navigate(`/restaurants/${restaurant.id}/menu`)}>
+            {t("owner.addDish")}
+          </Button>
         </Card>
       ) : null}
       <section>
         <div className="flex items-center justify-between gap-4">
-          <h2>Recent orders</h2>
+          <h2>{t("owner.recentOrders")}</h2>
         </div>
         {recent.length === 0 ? (
-          <p>No orders yet.</p>
+          <p>{t("owner.noOrders")}</p>
         ) : (
           <div className="grid gap-3">
             {recent.map((order) => (
@@ -135,7 +141,10 @@ export function OwnerRestaurantOverviewPage({
                 className="flex items-center justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]"
                 key={order.id}
               >
-                <strong>Order #{order.id.slice(-8).toUpperCase()}</strong>
+                <strong>
+                  {t("common.orderNumber")}
+                  {text(order.id.slice(-8).toUpperCase())}
+                </strong>
                 <DateTime value={order.createdAt} />
                 <StatusBadge status={order.status} />
                 <Money minor={order.totalMinor} />

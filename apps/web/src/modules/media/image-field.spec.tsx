@@ -70,7 +70,9 @@ describe("ImageField", () => {
       target: { files: [image] },
     });
 
-    expect(await screen.findByRole("alert")).toHaveTextContent("Upload unavailable.");
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Image upload failed. Try again or continue without an image.",
+    );
     await userEvent.click(screen.getByRole("button", { name: "Try again" }));
     await waitFor(() =>
       expect(onChange).toHaveBeenCalledWith("https://assets.example.com/meal.png"),

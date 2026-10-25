@@ -1,6 +1,15 @@
+import { errorMessage, message as localizedMessage, useI18n } from "../../../shared/i18n";
 import { useEffect, useMemo, useState } from "react";
 
-import { Button, DateTime, EmptyState, ErrorState, Modal, Skeleton } from "../../../shared/ui";
+import {
+  Button,
+  DateTime,
+  EmptyState,
+  ErrorState,
+  Modal,
+  Money,
+  Skeleton,
+} from "../../../shared/ui";
 import { PromotionCard } from "../components/promotion-card";
 import {
   createPromotionCoordinator,
@@ -36,6 +45,7 @@ export function PromotionPage({
   uuid = systemUuid,
   diagnostic,
 }: PromotionPageProps) {
+  const { t, text } = useI18n();
   const [page, setPage] = useState<PageState>({ kind: "loading" });
   const [confirming, setConfirming] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -50,17 +60,22 @@ export function PromotionPage({
     void repository
       .refresh(restaurantId)
       .then((data) => setPage(data ? { kind: "ready", data } : { kind: "not-found" }))
-      .catch(() => setPage({ kind: "error", message: "We couldn’t load this promotion." }));
+      .catch(() => setPage({ kind: "error", message: localizedMessage("insights.loadFailed") }));
   };
 
   useEffect(load, [repository, restaurantId]);
 
   if (page.kind === "loading") {
-    return <Skeleton aria-label="Loading promotion" className="h-[28rem]" />;
+    return <Skeleton aria-label={t("insights.loading")} className="h-[28rem]" />;
   }
-  if (page.kind === "not-found") return <ErrorState title="Restaurant not found." />;
+  if (page.kind === "not-found") return <ErrorState title={t("common.restaurantNotFound")} />;
   if (page.kind === "error") {
-    return <ErrorState action={{ label: "Try again", onClick: load }} title={page.message} />;
+    return (
+      <ErrorState
+        action={{ label: t("common.tryAgain"), onClick: load }}
+        title={text(page.message)}
+      />
+    );
   }
 
   const { data } = page;
@@ -74,7 +89,7 @@ export function PromotionPage({
       setPage({ kind: "ready", data: result.data });
       setConfirming(false);
     } else if (result.kind === "error") {
-      setSubmitError(result.message);
+      setSubmitError(errorMessage(result.message, "insights.activateFailed"));
     } else {
       setConfirming(false);
     }
@@ -85,9 +100,9 @@ export function PromotionPage({
     <main className="grid gap-6 mx-auto max-w-[58rem] p-6 [@media(max-width:47.99rem)]:p-4 [&_h1]:mt-0 [&_h2]:mt-0 [&_p]:mt-0">
       <header>
         <p className="mb-2 text-jade-text text-[length:var(--text-small)] font-[750] tracking-[0.08em] uppercase">
-          Demo promotion
+          {t("insights.demoPromotion")}
         </p>
-        <h1>Promote your restaurant</h1>
+        <h1>{t("insights.promoteRestaurant")}</h1>
       </header>
       <PromotionCard
         active={active}
@@ -96,9 +111,9 @@ export function PromotionPage({
       />
 
       <section aria-labelledby="promotion-history-title">
-        <h2 id="promotion-history-title">Promotion history</h2>
+        <h2 id="promotion-history-title">{t("insights.history")}</h2>
         {data.payments.length === 0 ? (
-          <EmptyState title="No promotions yet." />
+          <EmptyState title={t("insights.emptyPromotions")} />
         ) : (
           <ul className="grid gap-3 list-none m-0 p-0">
             {data.payments.map((payment) => (
@@ -107,16 +122,16 @@ export function PromotionPage({
                 key={payment.id}
               >
                 <div className="grid">
-                  <strong>{payment.restaurantName}</strong>
+                  <strong>{text(payment.restaurantName)}</strong>
                   <span>
                     <DateTime value={payment.createdAt} />
                   </span>
                 </div>
-                <code title={payment.transactionId}>
-                  {truncateTransactionId(payment.transactionId)}
+                <code title={text(payment.transactionId)}>
+                  {text(truncateTransactionId(payment.transactionId))}
                 </code>
-                <span>{DEMO_PROMOTION.durationDays} days</span>
-                <span>Demo promotion</span>
+                <span>{t("insights.durationDays", { count: DEMO_PROMOTION.durationDays })}</span>
+                <span>{t("insights.demoPromotion")}</span>
               </li>
             ))}
           </ul>
@@ -128,10 +143,10 @@ export function PromotionPage({
         footer={
           <>
             <Button disabled={submitting} onClick={() => setConfirming(false)} variant="secondary">
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button loading={submitting} onClick={() => void submit()}>
-              {submitError ? "Retry promotion" : "Confirm promotion"}
+              {text(submitError ? t("insights.retry") : t("insights.confirm"))}
             </Button>
           </>
         }
@@ -139,24 +154,26 @@ export function PromotionPage({
           if (!submitting) setConfirming(false);
         }}
         open={confirming}
-        title={`Promote ${data.restaurant.name}?`}
+        title={t("insights.confirmName", { name: data.restaurant.name })}
       >
         <dl className="[&_div]:flex [&_div]:justify-between">
           <div>
-            <dt>Duration</dt>
-            <dd>{DEMO_PROMOTION.durationDays} days</dd>
+            <dt>{t("insights.duration")}</dt>
+            <dd>{t("insights.durationDays", { count: DEMO_PROMOTION.durationDays })}</dd>
           </div>
           <div>
-            <dt>Price</dt>
-            <dd>$9.99</dd>
+            <dt>{t("insights.price")}</dt>
+            <dd>
+              <Money minor={DEMO_PROMOTION.priceMinor} />
+            </dd>
           </div>
           <div>
-            <dt>Payment</dt>
-            <dd>Demo payment</dd>
+            <dt>{t("common.payment")}</dt>
+            <dd>{t("common.demoPayment")}</dd>
           </div>
         </dl>
-        <p>No real charge will be made.</p>
-        {submitError ? <p role="alert">{submitError}</p> : null}
+        <p>{t("insights.noCharge")}</p>
+        {submitError ? <p role="alert">{text(submitError)}</p> : null}
       </Modal>
     </main>
   );

@@ -1,3 +1,4 @@
+import { message } from "../../../shared/i18n";
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import { print } from "graphql";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -114,7 +115,7 @@ describe("promotion repository", () => {
     });
     await expect(repository.create("restaurant-1", "demo_3")).resolves.toEqual({
       kind: "failed",
-      message: "We couldn’t activate the promotion. Try again.",
+      message: message("insights.activateFailed"),
     });
   });
 });

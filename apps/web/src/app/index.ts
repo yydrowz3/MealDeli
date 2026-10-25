@@ -2,6 +2,9 @@ export { parseRuntimeConfig, RuntimeConfigError } from "./config/runtime-config"
 export type { RuntimeConfig } from "./config/runtime-config";
 export { AppProviders } from "./providers/app-providers";
 export { ThemeProvider } from "./theme/theme-provider";
+export { LanguageProvider } from "./i18n/language-provider";
+export { LanguageSwitch } from "./i18n/language-switch";
+export { changeLanguage, LANGUAGE_STORAGE_KEY } from "./i18n/language-preference";
 export { useTheme } from "./theme/use-theme";
 export type { Theme } from "./theme/theme-context";
 export { createAppServices } from "./providers/create-app-services";

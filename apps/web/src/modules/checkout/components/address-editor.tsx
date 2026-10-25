@@ -1,3 +1,4 @@
+import { message as localizedMessage, useI18n } from "../../../shared/i18n";
 import { useForm } from "@tanstack/react-form";
 import { useAtomValue, useStore } from "jotai";
 import { useState } from "react";
@@ -29,6 +30,7 @@ function errorText(errors: readonly unknown[]): string | undefined {
 }
 
 export function AddressEditor({ repository, onSaved, store: injectedStore }: AddressEditorProps) {
+  const { t, text } = useI18n();
   const contextStore = useStore();
   const store = injectedStore ?? contextStore;
   const user = useAtomValue(sessionUserAtom, { store });
@@ -39,7 +41,7 @@ export function AddressEditor({ repository, onSaved, store: injectedStore }: Add
     onSubmit: async ({ value }) => {
       setRequestError(null);
       if (!user || !accessToken) {
-        setRequestError("Your session expired. Please log in again.");
+        setRequestError(localizedMessage("common.sessionExpired"));
         return;
       }
       const { address } = checkoutAddressSchema.parse(value);
@@ -49,12 +51,12 @@ export function AddressEditor({ repository, onSaved, store: injectedStore }: Add
         image: user.image,
       });
       if (!result.ok) {
-        setRequestError("We couldn’t save your address. Try again.");
+        setRequestError(localizedMessage("checkout.saveAddressFailed"));
         return;
       }
       const refreshed = await repository.me(accessToken);
       if (!refreshed.ok) {
-        setRequestError("We couldn’t refresh your profile. Try again.");
+        setRequestError(localizedMessage("common.refreshProfileFailed"));
         return;
       }
       store.set(setSessionUserAtom, refreshed.value);
@@ -69,12 +71,12 @@ export function AddressEditor({ repository, onSaved, store: injectedStore }: Add
         void form.handleSubmit();
       }}
     >
-      {requestError ? <p role="alert">{requestError}</p> : null}
+      {requestError ? <p role="alert">{text(requestError)}</p> : null}
       <form.Field name="address">
         {(field) => (
           <Textarea
-            error={errorText(field.state.meta.errors)}
-            label="Delivery address"
+            error={text(errorText(field.state.meta.errors))}
+            label={t("common.deliveryAddress")}
             maxLength={500}
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
@@ -86,7 +88,7 @@ export function AddressEditor({ repository, onSaved, store: injectedStore }: Add
       <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting] as const}>
         {([canSubmit, isSubmitting]) => (
           <Button className="mt-4 mb-2" disabled={!canSubmit} loading={isSubmitting} type="submit">
-            Save address
+            {t("checkout.saveAddress")}
           </Button>
         )}
       </form.Subscribe>

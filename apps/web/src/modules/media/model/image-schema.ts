@@ -1,3 +1,4 @@
+import { message as localizedMessage } from "../../../shared/i18n";
 import { z } from "zod";
 
 export const uploadedImageSchema = z.object({
@@ -5,5 +6,5 @@ export const uploadedImageSchema = z.object({
   url: z.url().refine((url) => {
     const protocol = new URL(url).protocol;
     return protocol === "http:" || protocol === "https:";
-  }, "Image URL must use HTTP or HTTPS."),
+  }, localizedMessage("media.httpRequired")),
 });

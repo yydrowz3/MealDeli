@@ -1,3 +1,4 @@
+import { message as localizedMessage, useI18n } from "../../i18n";
 import type { HTMLAttributes } from "react";
 
 export type ConnectionBannerProps = HTMLAttributes<HTMLDivElement> & {
@@ -5,10 +6,11 @@ export type ConnectionBannerProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 export function ConnectionBanner({
-  message = "Live updates are reconnecting…",
+  message = localizedMessage("ui.reconnecting"),
   className,
   ...props
 }: ConnectionBannerProps) {
+  const { text } = useI18n();
   return (
     <div
       {...props}
@@ -20,7 +22,7 @@ export function ConnectionBanner({
         .join(" ")}
       role="status"
     >
-      {message}
+      {text(message)}
     </div>
   );
 }

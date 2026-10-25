@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import { useEffect, useState } from "react";
 
 import { isUberAssetUrl } from "../model/image-policy";
@@ -15,6 +16,7 @@ export function CatalogImage({
   className,
   allowExternalSource = false,
 }: CatalogImageProps) {
+  const { t, text } = useI18n();
   const usableSource = source && (allowExternalSource || !isUberAssetUrl(source)) ? source : null;
   const [failed, setFailed] = useState(false);
 
@@ -23,7 +25,7 @@ export function CatalogImage({
   if (!usableSource || failed) {
     return (
       <div
-        aria-label={`MealDeli placeholder for ${alt}`}
+        aria-label={t("catalog.placeholder", { name: alt })}
         className={[
           "flex items-center justify-center bg-[linear-gradient(135deg,var(--color-jade-soft),var(--color-neutral-soft))] object-cover font-extrabold text-jade-text",
           className,
@@ -39,7 +41,7 @@ export function CatalogImage({
 
   return (
     <img
-      alt={alt}
+      alt={text(alt)}
       className={["block object-cover", className].filter(Boolean).join(" ")}
       onError={() => setFailed(true)}
       src={usableSource}

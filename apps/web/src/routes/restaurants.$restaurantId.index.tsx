@@ -1,3 +1,4 @@
+import { message as localizedMessage, useI18n } from "../shared/i18n";
 import { createFileRoute } from "@tanstack/react-router";
 import { useAtomValue } from "jotai";
 import { useState } from "react";
@@ -14,6 +15,7 @@ export const Route = createFileRoute("/restaurants/$restaurantId/")({
 });
 
 function RestaurantRoute() {
+  const { t, text } = useI18n();
   const { restaurantId } = Route.useParams();
   const user = useAtomValue(sessionUserAtom);
   const runtime = getMealDeliRuntime();
@@ -35,11 +37,12 @@ function RestaurantRoute() {
         <RestaurantMenuPage
           onBack={() => window.location.assign("/restaurants")}
           onSelectDish={(dish) => {
-            void runtime.catalogRepository
-              .getRestaurant(restaurantId)
-              .then((restaurant) =>
-                setSelection({ dish, restaurantName: restaurant?.name ?? "Restaurant" }),
-              );
+            void runtime.catalogRepository.getRestaurant(restaurantId).then((restaurant) =>
+              setSelection({
+                dish,
+                restaurantName: restaurant?.name ?? localizedMessage("common.restaurant"),
+              }),
+            );
           }}
           repository={runtime.catalogRepository}
           restaurantId={restaurantId}
@@ -47,7 +50,7 @@ function RestaurantRoute() {
         <Modal
           onClose={() => setSelection(null)}
           open={selection !== null}
-          title={selection?.dish.name ?? "Customize dish"}
+          title={text(selection?.dish.name ?? t("catalog.customizeDish"))}
         >
           {selection ? (
             <CartDishCustomizer
@@ -67,7 +70,7 @@ function RestaurantRoute() {
         allowedRoles: ["CUSTOMER", "OWNER"],
       }}
     >
-      {page}
+      {text(page)}
     </RequireAccess>
   );
 }

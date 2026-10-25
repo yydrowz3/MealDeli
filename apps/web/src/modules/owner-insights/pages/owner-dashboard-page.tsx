@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import { useMemo, type ReactNode } from "react";
 
 import type { Order } from "../../orders";
@@ -36,6 +37,7 @@ export function OwnerDashboardPage({
   clock = systemClock,
   diagnostic,
 }: OwnerDashboardPageProps) {
+  const { t, text } = useI18n();
   const now = clock();
   const metrics = computeOwnerMetrics({
     orders,
@@ -58,20 +60,20 @@ export function OwnerDashboardPage({
   if (restaurants.length === 0) {
     return (
       <main className="grid gap-6 mx-auto max-w-content p-6 [@media(max-width:47.99rem)]:p-4 [&_h1]:mt-0 [&_h2]:mt-0 [&_p]:mt-0">
-        <h1>Dashboard</h1>
+        <h1>{t("common.dashboard")}</h1>
         <EmptyState
           action={
             onCreateRestaurant
-              ? { label: "Create restaurant", onClick: onCreateRestaurant }
+              ? { label: t("owner.createRestaurant"), onClick: onCreateRestaurant }
               : undefined
           }
-          description="Add your restaurant details, then build a menu and start receiving orders."
-          title="Create your first restaurant"
+          description={t("insights.firstRestaurantHelp")}
+          title={t("insights.firstRestaurant")}
         />
         <ol className="grid grid-cols-3 gap-4 [@media(max-width:47.99rem)]:grid-cols-1">
-          <li>Restaurant details</li>
-          <li>Add dishes</li>
-          <li>Receive orders</li>
+          <li>{t("insights.restaurantDetails")}</li>
+          <li>{t("insights.addDishes")}</li>
+          <li>{t("insights.receiveOrders")}</li>
         </ol>
       </main>
     );
@@ -82,20 +84,20 @@ export function OwnerDashboardPage({
       <header className="flex [align-items:end] justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch">
         <div>
           <p className="mb-2 text-jade-text text-[length:var(--text-small)] font-[750] tracking-[0.08em] uppercase">
-            Last 7 calendar days
+            {t("insights.lastSevenDays")}
           </p>
-          <h1>Dashboard</h1>
+          <h1>{t("common.dashboard")}</h1>
         </div>
         <div className="min-w-60 [@media(max-width:47.99rem)]:min-w-0">
           <Select
-            label="Restaurant"
+            label={t("common.restaurant")}
             onChange={(event) => onRestaurantChange(event.target.value || null)}
             value={selectedRestaurantId ?? ""}
           >
-            <option value="">All restaurants</option>
+            <option value="">{t("common.allRestaurants")}</option>
             {restaurants.map((restaurant) => (
               <option key={restaurant.id} value={restaurant.id}>
-                {restaurant.name}
+                {text(restaurant.name)}
               </option>
             ))}
           </Select>
@@ -103,27 +105,27 @@ export function OwnerDashboardPage({
       </header>
 
       <section
-        aria-label="Owner metrics"
+        aria-label={t("insights.metrics")}
         className="grid grid-cols-4 gap-4 [@media(max-width:63.99rem)]:grid-cols-2"
       >
         <MetricCard
-          description="Order sales in the last 7 days"
-          label="Sales"
+          description={t("insights.salesHelp")}
+          label={t("insights.sales")}
           value={<Money minor={metrics.salesMinor} />}
         />
         <MetricCard
-          description="Orders in the last 7 days"
-          label="Orders"
+          description={t("insights.ordersHelp")}
+          label={t("common.orders")}
           value={metrics.orderCount}
         />
         <MetricCard
-          description="Rounded to the nearest cent"
-          label="Average order"
+          description={t("insights.averageHelp")}
+          label={t("insights.averageOrder")}
           value={<Money minor={metrics.averageOrderMinor} />}
         />
         <MetricCard
-          description="All current non-delivered orders"
-          label="Active orders"
+          description={t("insights.activeOrdersHelp")}
+          label={t("insights.activeOrders")}
           value={metrics.activeOrderCount}
         />
       </section>
@@ -135,18 +137,15 @@ export function OwnerDashboardPage({
 
       <section aria-labelledby="owner-active-orders-title">
         <div className="flex [align-items:end] justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch">
-          <h2 id="owner-active-orders-title">Active orders</h2>
+          <h2 id="owner-active-orders-title">{t("insights.activeOrders")}</h2>
           {onViewAllOrders ? (
             <Button onClick={() => onViewAllOrders(selectedRestaurantId)} variant="tertiary">
-              View all orders
+              {t("insights.viewOrders")}
             </Button>
           ) : null}
         </div>
         {activeOrders.length === 0 ? (
-          <EmptyState
-            description="New orders and in-progress deliveries will appear here."
-            title="No active orders"
-          />
+          <EmptyState description={t("insights.emptyActiveHelp")} title={t("orders.emptyActive")} />
         ) : (
           <div className="grid grid-cols-2 gap-4 [@media(max-width:47.99rem)]:grid-cols-1">
             {activeOrders.map((order) => (

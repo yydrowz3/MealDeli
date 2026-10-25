@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import { ArrowRightIcon, TrashIcon } from "@phosphor-icons/react";
 import { useAtomValue, useStore } from "jotai";
 import { useState } from "react";
@@ -24,6 +25,7 @@ export function CartDrawer({
   store: injectedStore,
   locked = false,
 }: CartDrawerProps) {
+  const { t, text } = useI18n();
   const contextStore = useStore();
   const store = injectedStore ?? contextStore;
   const cart = useAtomValue(cartAtom, { store });
@@ -42,20 +44,20 @@ export function CartDrawer({
               onClick={onCheckout}
               size="sm"
             >
-              Go to checkout
+              {t("checkout.goToCheckout")}
               <ArrowRightIcon aria-hidden="true" size={18} />
             </Button>
           ) : undefined
         }
         onClose={onClose}
         open={open}
-        title={cart.restaurant?.name ?? "Your cart"}
+        title={text(cart.restaurant?.name ?? t("checkout.cart"))}
       >
         {cart.lines.length === 0 ? (
           <EmptyState
-            action={{ label: "Browse restaurants", onClick: onBrowseRestaurants }}
-            description="Add a dish to get started."
-            title="Your cart is empty"
+            action={{ label: t("checkout.browse"), onClick: onBrowseRestaurants }}
+            description={t("checkout.addDishHint")}
+            title={t("checkout.emptyCart")}
           />
         ) : (
           <>
@@ -68,7 +70,7 @@ export function CartDrawer({
               }}
               onRemove={remove}
             />
-            <p>Delivery is free in this demo.</p>
+            <p>{t("checkout.freeDelivery")}</p>
           </>
         )}
       </Drawer>
@@ -76,7 +78,7 @@ export function CartDrawer({
         footer={
           <div className="flex items-center gap-3">
             <Button onClick={() => setPendingRemoval(null)} variant="secondary">
-              Keep item
+              {t("checkout.keepItem")}
             </Button>
             <Button
               onClick={() => {
@@ -86,15 +88,15 @@ export function CartDrawer({
               variant="danger"
             >
               <TrashIcon aria-hidden="true" size={18} />
-              Remove item
+              {t("checkout.removeItem")}
             </Button>
           </div>
         }
         onClose={() => setPendingRemoval(null)}
         open={pendingRemoval !== null}
-        title="Remove item?"
+        title={t("checkout.confirmRemoveItem")}
       >
-        <p>Remove this item from your cart?</p>
+        <p>{t("checkout.removeItemHelp")}</p>
       </Modal>
     </>
   );

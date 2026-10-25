@@ -1,3 +1,4 @@
+import { errorMessage, message as localizedMessage, useI18n } from "../../../shared/i18n";
 import { useAtomValue, useStore } from "jotai";
 import { useMemo, useState } from "react";
 
@@ -29,6 +30,7 @@ export function CheckoutPage({
   onOrderCreated,
   store: injectedStore,
 }: CheckoutPageProps) {
+  const { t, text } = useI18n();
   const contextStore = useStore();
   const store = injectedStore ?? contextStore;
   const cart = useAtomValue(cartAtom, { store });
@@ -48,35 +50,42 @@ export function CheckoutPage({
   );
 
   if (state.kind === "forbidden") {
-    return <ErrorState description="Customer access is required." title="Checkout unavailable" />;
+    return (
+      <ErrorState description={t("checkout.customerRequired")} title={t("checkout.unavailable")} />
+    );
   }
   if (state.kind === "verification-required") {
     return (
       <ErrorState
-        description="Verify your email before placing an order."
-        title="Verification required"
+        description={t("checkout.verifyEmail")}
+        title={t("checkout.verificationRequired")}
       />
     );
   }
   if (state.kind === "empty" || cart.lines.length === 0) {
     return (
       <EmptyState
-        action={{ label: "Browse restaurants", onClick: onBrowseRestaurants }}
-        description="Add a dish before checking out."
-        title="Your cart is empty"
+        action={{ label: t("checkout.browse"), onClick: onBrowseRestaurants }}
+        description={t("checkout.addBeforeCheckout")}
+        title={t("checkout.emptyCart")}
       />
     );
   }
   if (state.kind === "restaurant-missing") {
     return (
       <ErrorState
-        description="Return to restaurants to start a new cart."
-        title="This restaurant is no longer available."
+        description={t("checkout.restartCart")}
+        title={t("checkout.restaurantUnavailable")}
       />
     );
   }
   if (state.kind === "error") {
-    return <ErrorState description={state.message} title="Checkout unavailable" />;
+    return (
+      <ErrorState
+        description={text(errorMessage(state.message, "checkout.loadFailed"))}
+        title={t("checkout.unavailable")}
+      />
+    );
   }
 
   const invalidLineIds = new Set(state.invalidLines.map((line) => line.lineId));
@@ -89,38 +98,34 @@ export function CheckoutPage({
     setSubmitError(null);
     const result = await coordinator.submit();
     if (result.kind === "success") {
-      toastAdapter.success("Order placed.");
+      toastAdapter.success(t("checkout.orderPlaced"));
     } else if (result.kind === "timeout-unresolved") {
-      setSubmitError(
-        "We couldn’t confirm whether your order was placed. Check your orders before trying again.",
-      );
+      setSubmitError(localizedMessage("checkout.checkOrders"));
     } else if (result.kind === "error") {
-      setSubmitError("We couldn’t place your order. Try again.");
+      setSubmitError(localizedMessage("checkout.placeFailed"));
     } else if (result.kind === "cart-changed") {
-      setSubmitError(
-        "Your cart changed while the order was being placed. Review it before continuing.",
-      );
+      setSubmitError(localizedMessage("checkout.cartChanged"));
     }
     setSubmitting(false);
   };
 
   return (
     <main className="mx-auto max-w-[72rem] p-[var(--ui-space-6,1.5rem)]">
-      <h1>Checkout</h1>
-      {hasInvalidLines ? <p role="alert">Some items are no longer available.</p> : null}
+      <h1>{t("checkout.title")}</h1>
+      {hasInvalidLines ? <p role="alert">{t("checkout.unavailableItems")}</p> : null}
       <div className="grid gap-[var(--ui-space-6,1.5rem)] min-[48rem]:grid-cols-[minmax(0,7fr)_minmax(20rem,5fr)]">
         <div className="grid gap-[var(--ui-space-4,1rem)]">
           <Card>
-            <h2>Delivery address</h2>
+            <h2>{t("common.deliveryAddress")}</h2>
             {!editingAddress && address ? (
               <>
-                <p>{address}</p>
+                <p>{text(address)}</p>
                 <Button
                   disabled={submitting}
                   onClick={() => setEditingAddress(true)}
                   variant="secondary"
                 >
-                  Edit
+                  {t("common.edit")}
                 </Button>
               </>
             ) : (
@@ -133,24 +138,24 @@ export function CheckoutPage({
                 store={store}
               />
             )}
-            {!addressValid ? <p>Add a delivery address to continue.</p> : null}
+            {!addressValid ? <p>{t("checkout.addressRequired")}</p> : null}
           </Card>
           <Card>
-            <h2>Payment</h2>
-            <h3>Demo payment</h3>
-            <p>No card is required. Your order will be placed immediately.</p>
+            <h2>{t("common.payment")}</h2>
+            <h3>{t("common.demoPayment")}</h3>
+            <p>{t("checkout.paymentHelp")}</p>
           </Card>
         </div>
         <Card className="[align-self:start] min-[48rem]:sticky min-[48rem]:top-4">
-          <h2>Order summary</h2>
+          <h2>{t("common.orderSummary")}</h2>
           <CartSummary
             cart={cart}
             disabled={submitting}
             invalidLineIds={invalidLineIds}
             onRemove={(lineId) => store.set(removeCartLineAtom, lineId)}
           />
-          <p>No delivery fee in this demo.</p>
-          {submitError ? <p role="alert">{submitError}</p> : null}
+          <p>{t("checkout.noDeliveryFee")}</p>
+          {submitError ? <p role="alert">{text(submitError)}</p> : null}
           <Button
             className="mt-4"
             disabled={!addressValid || hasInvalidLines}
@@ -158,7 +163,7 @@ export function CheckoutPage({
             onClick={() => void placeOrder()}
             size="lg"
           >
-            Pay &amp; place order
+            {t("checkout.pay")}
           </Button>
         </Card>
       </div>

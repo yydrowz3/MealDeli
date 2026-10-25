@@ -1,3 +1,4 @@
+import { errorMessage, message as localizedMessage, useI18n } from "../../../shared/i18n";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 import { Button } from "../../../shared/ui";
@@ -18,9 +19,7 @@ function isAbortError(error: unknown): boolean {
 }
 
 function messageFromError(error: unknown): string {
-  return error instanceof Error
-    ? error.message
-    : "Image upload failed. Try again or continue without an image.";
+  return errorMessage(error, "media.uploadFailed");
 }
 
 export function ImageField({
@@ -30,6 +29,7 @@ export function ImageField({
   uploader,
   onProgressChange,
 }: ImageFieldProps) {
+  const { t, text } = useI18n();
   const inputId = useId();
   const [progress, setProgress] = useState<UploadProgress>({ status: "idle" });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -62,7 +62,7 @@ export function ImageField({
         setProgress({
           status: "error",
           previewUrl: localPreviewUrl,
-          message: "Image uploader is not configured.",
+          message: localizedMessage("media.notConfigured"),
         });
         return;
       }
@@ -100,7 +100,7 @@ export function ImageField({
 
   const handleFile = (file: File | undefined) => {
     if (!file) return;
-    const validationError = validateImageFile(file);
+    const validationError = validateImageFile(file, (value) => value);
     if (validationError) {
       setProgress({ status: "error", message: validationError });
       return;
@@ -135,12 +135,12 @@ export function ImageField({
   return (
     <div className="grid gap-3 font-sans">
       <label className="text-charcoal font-[650]" htmlFor={inputId}>
-        {label}
+        {text(label)}
       </label>
       <p className="m-0 text-small text-muted" id={`${inputId}-description`}>
-        JPEG, PNG, or WebP, up to 5 MB. Uploaded images are public.
+        {t("media.help")}
       </p>
-      {displayedImage ? <ImagePreview label={label} src={displayedImage} /> : null}
+      {displayedImage ? <ImagePreview label={text(label)} src={displayedImage} /> : null}
       <input
         accept="image/jpeg,image/png,image/webp"
         aria-describedby={[`${inputId}-description`, error ? `${inputId}-error` : null]
@@ -160,37 +160,37 @@ export function ImageField({
           className="relative inline-flex items-center justify-center gap-2 rounded-control border border-solid font-sans font-[650] cursor-pointer transition-[background-color,border-color,color] duration-150 ease-[ease] focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-info focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-[0.62] min-h-control-md border-border bg-surface px-4 py-0 text-body leading-none text-charcoal [&:hover:not(:disabled)]:bg-neutral-soft"
           htmlFor={inputId}
         >
-          {displayedImage ? "Choose a different image" : "Choose image"}
+          {text(displayedImage ? t("media.changeImage") : t("media.chooseImage"))}
         </label>
         {progress.status === "uploading" ? (
           <Button onClick={cancel} variant="tertiary">
-            Cancel upload
+            {t("media.cancelUpload")}
           </Button>
         ) : null}
         {progress.status === "idle" && selectedFile && previewUrl ? (
           <Button onClick={() => void upload(selectedFile, previewUrl)} variant="secondary">
-            Upload image
+            {t("media.upload")}
           </Button>
         ) : null}
         {progress.status === "error" && selectedFile && previewUrl ? (
           <Button onClick={() => void upload(selectedFile, previewUrl)} variant="secondary">
-            Try again
+            {t("common.tryAgain")}
           </Button>
         ) : null}
         {displayedImage ? (
           <Button onClick={remove} variant="tertiary">
-            Remove image
+            {t("media.remove")}
           </Button>
         ) : null}
       </div>
       {progress.status === "uploading" ? (
         <p aria-live="polite" className="m-0 text-small text-muted">
-          Uploading image…
+          {t("media.uploading")}
         </p>
       ) : null}
       {error ? (
         <p className="m-0 text-small text-danger-dark" id={`${inputId}-error`} role="alert">
-          {error}
+          {text(error)}
         </p>
       ) : null}
     </div>

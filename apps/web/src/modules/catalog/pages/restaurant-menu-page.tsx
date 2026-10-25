@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import { ArrowLeftIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
@@ -24,9 +25,10 @@ export type RestaurantMenuPageProps = {
 };
 
 function MenuSkeleton() {
+  const { t } = useI18n();
   return (
     <main
-      aria-label="Loading restaurant menu"
+      aria-label={t("catalog.loadingMenu")}
       className="mx-auto grid max-w-content gap-8 p-6 font-sans text-charcoal [@media(max-width:39.99rem)]:p-4 [&_h1]:my-0 [&_h1]:text-page [&_h2]:mt-0 [&_h2]:mb-4 [&_h2]:text-section [&_h3]:my-0 [&_h3]:text-[1.05rem] [&_p]:my-0 [&_[data-state]_h2]:mb-0!"
       role="status"
     >
@@ -49,6 +51,7 @@ export function RestaurantMenuPage({
   cartSlots,
   now = Date.now(),
 }: RestaurantMenuPageProps) {
+  const { t, text } = useI18n();
   const [restaurant, setRestaurant] = useState<RestaurantDetail | null | undefined>(undefined);
   const [error, setError] = useState<Error | null>(null);
   const [retryVersion, setRetryVersion] = useState(0);
@@ -81,13 +84,16 @@ export function RestaurantMenuPage({
           variant="tertiary"
         >
           <ArrowLeftIcon aria-hidden="true" size={18} />
-          Back to restaurants
+          {t("catalog.back")}
         </Button>
         <div>
           <Skeleton className="aspect-[3/1] w-full min-h-48! rounded-card! [@media(max-width:39.99rem)]:aspect-video" />
           <ErrorState
-            action={{ label: "Try again", onClick: () => setRetryVersion((value) => value + 1) }}
-            title="We couldn’t load this restaurant."
+            action={{
+              label: t("common.tryAgain"),
+              onClick: () => setRetryVersion((value) => value + 1),
+            }}
+            title={t("common.loadRestaurantFailed")}
           />
         </div>
       </main>
@@ -98,8 +104,8 @@ export function RestaurantMenuPage({
     return (
       <main className="mx-auto grid max-w-content gap-8 p-6 font-sans text-charcoal [@media(max-width:39.99rem)]:p-4 [&_h1]:my-0 [&_h1]:text-page [&_h2]:mt-0 [&_h2]:mb-4 [&_h2]:text-section [&_h3]:my-0 [&_h3]:text-[1.05rem] [&_p]:my-0 [&_[data-state]_h2]:mb-0!">
         <ErrorState
-          action={{ label: "Back to restaurants", onClick: onBack }}
-          title="Restaurant not found"
+          action={{ label: t("catalog.back"), onClick: onBack }}
+          title={t("catalog.notFound")}
         />
       </main>
     );
@@ -113,24 +119,24 @@ export function RestaurantMenuPage({
         variant="tertiary"
       >
         <ArrowLeftIcon aria-hidden="true" size={18} />
-        Back to restaurants
+        {t("catalog.back")}
       </Button>
       <CatalogImage
         allowExternalSource
         className="aspect-[3/1] w-full min-h-48 rounded-card [@media(max-width:39.99rem)]:aspect-video"
-        alt={restaurant.name}
+        alt={text(restaurant.name)}
         source={restaurant.image}
       />
       <header className="[&_p]:text-muted [&_address]:text-muted [&_address]:not-italic">
         <div>
           <div className="flex items-center justify-between gap-2">
-            <h1>{restaurant.name}</h1>
+            <h1>{text(restaurant.name)}</h1>
             {isPromotionActive(restaurant.promotedUntil, now) ? (
-              <Badge tone="jade">Promoted</Badge>
+              <Badge tone="jade">{t("catalog.promoted")}</Badge>
             ) : null}
           </div>
-          <p>{restaurant.category.name}</p>
-          <address>{restaurant.address}</address>
+          <p>{text(restaurant.category.name)}</p>
+          <address>{text(restaurant.address)}</address>
         </div>
       </header>
       <div
@@ -144,9 +150,9 @@ export function RestaurantMenuPage({
           .join(" ")}
       >
         <section aria-labelledby="catalog-menu-title">
-          <h2 id="catalog-menu-title">Menu</h2>
+          <h2 id="catalog-menu-title">{t("common.menu")}</h2>
           {restaurant.dishes.length === 0 ? (
-            <EmptyState title="This restaurant hasn’t added a menu yet." />
+            <EmptyState title={t("catalog.emptyMenu")} />
           ) : (
             <div className="grid grid-cols-3 gap-4 [@media(max-width:39.99rem)]:grid-cols-1">
               {restaurant.dishes.map((dish) => (
@@ -157,13 +163,13 @@ export function RestaurantMenuPage({
         </section>
         {cartSlots?.sidebar ? (
           <aside className="sticky top-4 [@media(max-width:63.99rem)]:hidden">
-            {cartSlots.sidebar}
+            {text(cartSlots.sidebar)}
           </aside>
         ) : null}
       </div>
       {cartSlots?.mobileBar ? (
         <div className="hidden [@media(max-width:63.99rem)]:sticky [@media(max-width:63.99rem)]:bottom-0 [@media(max-width:63.99rem)]:z-10 [@media(max-width:63.99rem)]:block">
-          {cartSlots.mobileBar}
+          {text(cartSlots.mobileBar)}
         </div>
       ) : null}
     </main>

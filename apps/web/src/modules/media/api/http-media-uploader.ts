@@ -1,3 +1,4 @@
+import { message as localizedMessage, resolveMessage } from "../../../shared/i18n";
 import { uploadedImageSchema } from "../model/image-schema";
 import type { MediaAuthPort, MediaUploader, UploadedImage } from "../model/types";
 
@@ -9,22 +10,24 @@ export type HttpMediaUploaderOptions = {
 
 export class MediaUploadError extends Error {
   readonly status: number | undefined;
+  readonly localizedMessage: string;
 
   constructor(message: string, status?: number) {
-    super(message);
+    super(resolveMessage(message));
+    this.localizedMessage = message;
     this.name = "MediaUploadError";
     this.status = status;
   }
 }
 
-const SESSION_EXPIRED_MESSAGE = "Your session expired. Sign in again.";
-const UPLOAD_FAILED_MESSAGE = "Image upload failed. Try again or continue without an image.";
+const SESSION_EXPIRED_MESSAGE = localizedMessage("media.sessionExpired");
+const UPLOAD_FAILED_MESSAGE = localizedMessage("media.uploadFailed");
 
 function errorForStatus(status: number): MediaUploadError {
   if (status === 401) return new MediaUploadError(SESSION_EXPIRED_MESSAGE, status);
-  if (status === 413) return new MediaUploadError("Image must be 5 MB or smaller.", status);
+  if (status === 413) return new MediaUploadError(localizedMessage("media.tooLarge"), status);
   if (status === 400 || status === 415) {
-    return new MediaUploadError("Choose a JPEG, PNG, or WebP image.", status);
+    return new MediaUploadError(localizedMessage("media.invalidType"), status);
   }
   return new MediaUploadError(UPLOAD_FAILED_MESSAGE, status);
 }

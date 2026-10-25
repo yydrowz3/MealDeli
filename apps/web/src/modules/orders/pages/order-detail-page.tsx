@@ -1,3 +1,4 @@
+import { errorMessage, useI18n } from "../../../shared/i18n";
 import { ArrowLeftIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 
@@ -40,10 +41,11 @@ export function OrderDetailPage({
   onRetry,
   onBack,
 }: OrderDetailPageProps) {
+  const { t, text, formatNumber } = useI18n();
   if (state.kind === "loading") {
     return (
       <main
-        aria-label="Loading order"
+        aria-label={t("orders.loadingOrder")}
         className="mx-auto grid w-full max-w-240 gap-6 p-6 font-sans text-charcoal"
       >
         <Skeleton />
@@ -56,9 +58,9 @@ export function OrderDetailPage({
     return (
       <main className="mx-auto grid w-full max-w-240 gap-6 p-6 font-sans text-charcoal">
         <ErrorState
-          action={onRetry ? { label: "Try again", onClick: onRetry } : undefined}
-          description={state.message}
-          title="We couldn’t load this order."
+          action={onRetry ? { label: t("common.tryAgain"), onClick: onRetry } : undefined}
+          description={text(errorMessage(state.message, "common.connectionRetry"))}
+          title={t("orders.loadOrderFailed")}
         />
       </main>
     );
@@ -71,13 +73,13 @@ export function OrderDetailPage({
             onBack
               ? {
                   icon: <ArrowLeftIcon aria-hidden="true" size={18} />,
-                  label: "Back to orders",
+                  label: t("orders.back"),
                   onClick: onBack,
                 }
               : undefined
           }
-          description="This order doesn’t exist or isn’t available to your account."
-          title="Order not found"
+          description={t("orders.unavailable")}
+          title={t("courier.orderNotFound")}
         />
       </main>
     );
@@ -94,13 +96,16 @@ export function OrderDetailPage({
         variant="tertiary"
       >
         <ArrowLeftIcon aria-hidden="true" size={18} />
-        Back to orders
+        {t("orders.back")}
       </Button>
       <header className="flex [align-items:start] justify-between gap-4">
         <div>
-          <p className="mt-0 mb-2">Order #{order.id.slice(0, 8)}</p>
-          <h1 className="m-0">{ORDER_STATUS_LABELS[order.status]}</h1>
-          <p className="mt-0 mb-2">{ORDER_STATUS_DESCRIPTIONS[order.status]}</p>
+          <p className="mt-0 mb-2">
+            {t("common.orderNumber")}
+            {text(order.id.slice(0, 8))}
+          </p>
+          <h1 className="m-0">{text(ORDER_STATUS_LABELS[order.status])}</h1>
+          <p className="mt-0 mb-2">{text(ORDER_STATUS_DESCRIPTIONS[order.status])}</p>
           <DateTime value={order.createdAt} />
         </div>
         <OrderStatusBadge status={order.status} />
@@ -111,9 +116,9 @@ export function OrderDetailPage({
         className="rounded-card border border-solid border-border bg-surface p-6"
       >
         <h2 className="mt-0" id="restaurant-summary-heading">
-          {order.restaurant?.name ?? "Restaurant unavailable"}
+          {text(order.restaurant?.name ?? t("common.restaurantUnavailable"))}
         </h2>
-        {order.restaurant ? <p>{order.restaurant.address}</p> : null}
+        {order.restaurant ? <p>{text(order.restaurant.address)}</p> : null}
       </section>
 
       <section
@@ -121,7 +126,7 @@ export function OrderDetailPage({
         className="rounded-card border border-solid border-border bg-surface p-6"
       >
         <h2 className="mt-0" id="progress-heading">
-          Order progress
+          {t("orders.progress")}
         </h2>
         <OrderTimeline status={order.status} />
       </section>
@@ -131,7 +136,7 @@ export function OrderDetailPage({
         className="rounded-card border border-solid border-border bg-surface p-6"
       >
         <h2 className="mt-0" id="items-heading">
-          Items
+          {t("common.items")}
         </h2>
         <ul className="m-0 grid list-none gap-4 p-0">
           {order.items.map((item) => (
@@ -141,13 +146,13 @@ export function OrderDetailPage({
             >
               <div className="flex justify-between gap-3">
                 <strong>
-                  {item.quantity} × {item.dishName}
+                  {formatNumber(item.quantity)} × {text(item.dishName)}
                 </strong>
                 <Money minor={item.lineTotalMinor} />
               </div>
               {item.selectedOptions.map((option) => (
                 <p className="mb-0 text-muted" key={option.optionId}>
-                  {option.name}: {option.choices.map((choice) => choice.name).join(", ")}
+                  {text(option.name)}: {option.choices.map((choice) => choice.name).join(", ")}
                 </p>
               ))}
             </li>
@@ -160,32 +165,32 @@ export function OrderDetailPage({
         className="rounded-card border border-solid border-border bg-surface p-6"
       >
         <h2 className="mt-0" id="summary-heading">
-          Order summary
+          {t("common.orderSummary")}
         </h2>
         <dl className="[&>div]:flex [&>div]:justify-between [&>div]:gap-3 [&_dd]:m-0">
           <div>
-            <dt>Subtotal</dt>
+            <dt>{t("common.subtotal")}</dt>
             <dd>
               <Money minor={order.totalMinor} />
             </dd>
           </div>
           <div>
-            <dt>Delivery</dt>
+            <dt>{t("common.delivery")}</dt>
             <dd>
               <Money minor={0} />
             </dd>
           </div>
           <div>
-            <dt>Total</dt>
+            <dt>{t("common.total")}</dt>
             <dd>
               <Money minor={order.totalMinor} />
             </dd>
           </div>
         </dl>
-        {role === "CUSTOMER" ? <p>Payment completed in demo mode.</p> : null}
+        {role === "CUSTOMER" ? <p>{t("orders.demoPaid")}</p> : null}
       </section>
 
-      {renderedAction ? <div>{renderedAction}</div> : null}
+      {renderedAction ? <div>{text(renderedAction)}</div> : null}
     </main>
   );
 }

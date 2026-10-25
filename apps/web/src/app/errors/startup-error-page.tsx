@@ -1,7 +1,9 @@
-import { ThemeSwitch } from "../theme/theme-switch";
+import { useI18n } from "../../shared/i18n";
+import { AppControls } from "../layouts/app-controls";
 import { useTheme } from "../theme/use-theme";
 
 export function StartupErrorPage() {
+  const { t } = useI18n();
   const { theme } = useTheme();
   return (
     <main className="mx-auto my-[15vh] grid max-w-[40rem] gap-4 p-6" role="alert">
@@ -16,45 +18,37 @@ export function StartupErrorPage() {
           }
           width="174"
         />
-        <ThemeSwitch />
+        <AppControls />
       </div>
-      <h1 className="m-0 text-[length:var(--font-size-page)]">
-        MealDeli isn’t configured correctly.
-      </h1>
-      <p className="m-0 text-muted">Check the application configuration, then reload MealDeli.</p>
+      <h1 className="m-0 text-[length:var(--font-size-page)]">{t("app.startupTitle")}</h1>
+      <p className="m-0 text-muted">{t("app.startupHelp")}</p>
     </main>
   );
 }
 
 export function OfflinePage() {
+  const { t } = useI18n();
   return (
     <section className="mx-auto my-[15vh] grid max-w-[40rem] gap-4 p-6" role="status">
-      <h1 className="m-0 text-[length:var(--font-size-page)]">
-        You’re offline. Connect to continue.
-      </h1>
-      <p className="m-0 text-muted">
-        The MealDeli shell is available, but business data and actions require a connection.
-      </p>
+      <h1 className="m-0 text-[length:var(--font-size-page)]">{t("app.offlineTitle")}</h1>
+      <p className="m-0 text-muted">{t("app.offlineHelp")}</p>
     </section>
   );
 }
 
 export function ChunkLoadErrorPage() {
+  const { t } = useI18n();
   return (
     <main className="mx-auto my-[15vh] grid max-w-[40rem] gap-4 p-6" role="alert">
-      <ThemeSwitch />
-      <h1 className="m-0 text-[length:var(--font-size-page)]">
-        We couldn’t load this part of MealDeli.
-      </h1>
-      <p className="m-0 text-muted">
-        Reload once to get the latest version. If this continues, contact support.
-      </p>
+      <AppControls />
+      <h1 className="m-0 text-[length:var(--font-size-page)]">{t("app.chunkError")}</h1>
+      <p className="m-0 text-muted">{t("app.chunkHelp")}</p>
       <button
         className="inline-flex min-h-control-lg items-center justify-center gap-2 rounded-control border border-solid border-transparent bg-jade px-6 py-0 text-on-primary no-underline hover:bg-jade-dark hover:text-on-primary-hover font-[700]"
         onClick={() => window.location.reload()}
         type="button"
       >
-        Reload
+        {t("common.reload")}
       </button>
     </main>
   );

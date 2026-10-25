@@ -1,3 +1,4 @@
+import { useI18n, message as localizedMessage } from "../../i18n";
 import { Eye, EyeSlash } from "@phosphor-icons/react";
 import { useId, useState } from "react";
 import type {
@@ -19,6 +20,7 @@ type FieldShellProps = {
 };
 
 function FieldShell({ controlId, label, description, error, children }: FieldShellProps) {
+  const { text } = useI18n();
   const descriptionId = description ? `${controlId}-description` : undefined;
   const errorId = error ? `${controlId}-error` : undefined;
   const describedBy = [descriptionId, errorId].filter(Boolean).join(" ") || undefined;
@@ -26,17 +28,17 @@ function FieldShell({ controlId, label, description, error, children }: FieldShe
   return (
     <div className="grid gap-2 font-sans">
       <label className="text-charcoal font-[650]" htmlFor={controlId}>
-        {label}
+        {text(label)}
       </label>
       {description ? (
         <p className="m-0 text-small text-muted" id={descriptionId}>
-          {description}
+          {text(description)}
         </p>
       ) : null}
-      {children(describedBy)}
+      {text(children(describedBy))}
       {error ? (
         <p className="m-0 text-small text-danger-dark" id={errorId}>
-          {error}
+          {text(error)}
         </p>
       ) : null}
     </div>
@@ -50,11 +52,17 @@ export type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "aria-descr
 };
 
 export function Input({ label, description, error, id, className, ...props }: InputProps) {
+  const { text } = useI18n();
   const generatedId = useId();
   const controlId = id ?? generatedId;
 
   return (
-    <FieldShell controlId={controlId} description={description} error={error} label={label}>
+    <FieldShell
+      controlId={controlId}
+      description={text(description)}
+      error={text(error)}
+      label={text(label)}
+    >
       {(describedBy) => (
         <input
           {...props}
@@ -85,12 +93,18 @@ export function PasswordInput({
   className,
   ...props
 }: PasswordInputProps) {
+  const { t, text } = useI18n();
   const generatedId = useId();
   const controlId = id ?? generatedId;
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <FieldShell controlId={controlId} description={description} error={error} label={label}>
+    <FieldShell
+      controlId={controlId}
+      description={text(description)}
+      error={text(error)}
+      label={text(label)}
+    >
       {(describedBy) => (
         <div className="relative">
           <input
@@ -109,7 +123,7 @@ export function PasswordInput({
           />
           <button
             aria-controls={controlId}
-            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-label={text(showPassword ? t("ui.hidePassword") : t("ui.showPassword"))}
             className="absolute right-0 top-0 flex h-full w-11 cursor-pointer items-center justify-center rounded-control border-0 bg-transparent p-0 text-muted hover:text-charcoal focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-info focus-visible:-outline-offset-3"
             onClick={() => setShowPassword((value) => !value)}
             type="button"
@@ -136,11 +150,17 @@ export type TextareaProps = Omit<
 };
 
 export function Textarea({ label, description, error, id, className, ...props }: TextareaProps) {
+  const { text } = useI18n();
   const generatedId = useId();
   const controlId = id ?? generatedId;
 
   return (
-    <FieldShell controlId={controlId} description={description} error={error} label={label}>
+    <FieldShell
+      controlId={controlId}
+      description={text(description)}
+      error={text(error)}
+      label={text(label)}
+    >
       {(describedBy) => (
         <textarea
           {...props}
@@ -175,11 +195,17 @@ export function Select({
   children,
   ...props
 }: SelectProps) {
+  const { text } = useI18n();
   const generatedId = useId();
   const controlId = id ?? generatedId;
 
   return (
-    <FieldShell controlId={controlId} description={description} error={error} label={label}>
+    <FieldShell
+      controlId={controlId}
+      description={text(description)}
+      error={text(error)}
+      label={text(label)}
+    >
       {(describedBy) => (
         <select
           {...props}
@@ -188,7 +214,7 @@ export function Select({
           className={[controlClasses, "min-h-control-md", className].filter(Boolean).join(" ")}
           id={controlId}
         >
-          {children}
+          {text(children)}
         </select>
       )}
     </FieldShell>
@@ -210,8 +236,9 @@ export type FormErrorSummaryProps = {
 export function FormErrorSummary({
   errors,
   onFocus,
-  title = "Please fix the following errors",
+  title = localizedMessage("ui.fixErrors"),
 }: FormErrorSummaryProps) {
+  const { text } = useI18n();
   const titleId = useId();
   if (errors.length === 0) return null;
 
@@ -222,7 +249,7 @@ export function FormErrorSummary({
       role="alert"
     >
       <h2 className="mt-0 mr-0 mb-2 ml-0 text-body" id={titleId}>
-        {title}
+        {text(title)}
       </h2>
       <ul className="m-0 pl-6">
         {errors.map((error) => (
@@ -232,7 +259,7 @@ export function FormErrorSummary({
               onClick={() => onFocus(error.field)}
               type="button"
             >
-              {error.label}: {error.message}
+              {text(error.label)}: {text(error.message)}
             </button>
           </li>
         ))}

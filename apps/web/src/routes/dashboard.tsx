@@ -1,3 +1,4 @@
+import { useI18n } from "../shared/i18n";
 import { createFileRoute } from "@tanstack/react-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
@@ -39,6 +40,7 @@ function DashboardRoute() {
 }
 
 function OwnerDashboardRouteContent() {
+  const { t } = useI18n();
   const runtime = getMealDeliRuntime();
   const selectedRestaurantId = useAtomValue(selectedOwnerRestaurantIdAtom);
   const setSelectedRestaurant = useSetAtom(setSelectedOwnerRestaurantAtom);
@@ -68,8 +70,8 @@ function OwnerDashboardRouteContent() {
     };
   }, [runtime]);
 
-  if (error) return <ErrorState title="We couldn’t load your dashboard." />;
-  if (!data) return <Skeleton aria-label="Loading owner dashboard" className="h-128" />;
+  if (error) return <ErrorState title={t("app.loadDashboardFailed")} />;
+  if (!data) return <Skeleton aria-label={t("app.loadingOwnerDashboard")} className="h-128" />;
   return (
     <>
       <NewOrderNotifier

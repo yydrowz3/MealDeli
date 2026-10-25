@@ -1,3 +1,4 @@
+import { useI18n } from "../shared/i18n";
 import { createRootRoute, Outlet, useRouterState } from "@tanstack/react-router";
 import { ReceiptIcon, StorefrontIcon, UserCircleIcon } from "@phosphor-icons/react";
 import { useAtomValue } from "jotai";
@@ -18,6 +19,7 @@ function current(pathname: string, href: string) {
 }
 
 const RootLayout = () => {
+  const { t, text } = useI18n();
   const runtime = getMealDeliRuntime();
   const identity = useAtomValue(identityAtom);
   const cartCount = useAtomValue(cartCountAtom);
@@ -32,7 +34,7 @@ const RootLayout = () => {
   };
 
   if (identity.status !== "authenticated" || !identity.user) {
-    return <GuestLayout>{content}</GuestLayout>;
+    return <GuestLayout>{text(content)}</GuestLayout>;
   }
 
   if (identity.user.role === "CUSTOMER") {
@@ -41,19 +43,19 @@ const RootLayout = () => {
         cartCount={cartCount}
         navigation={[
           {
-            label: "Restaurants",
+            label: t("common.restaurants"),
             href: "/restaurants",
             icon: StorefrontIcon,
             current: current(pathname, "/restaurants"),
           },
           {
-            label: "Orders",
+            label: t("common.orders"),
             href: "/orders",
             icon: ReceiptIcon,
             current: current(pathname, "/orders"),
           },
           {
-            label: "Profile",
+            label: t("common.profile"),
             href: "/profile",
             icon: UserCircleIcon,
             current: current(pathname, "/profile"),
@@ -61,7 +63,7 @@ const RootLayout = () => {
         ]}
         onCartOpen={() => setCartOpen(true)}
       >
-        {content}
+        {text(content)}
         <CartDrawer
           onBrowseRestaurants={() => navigate("/restaurants")}
           onCheckout={() => navigate("/checkout")}
@@ -76,19 +78,23 @@ const RootLayout = () => {
     return (
       <OwnerLayout
         navigation={[
-          { label: "Dashboard", href: "/dashboard", current: current(pathname, "/dashboard") },
           {
-            label: "Restaurants",
+            label: t("common.dashboard"),
+            href: "/dashboard",
+            current: current(pathname, "/dashboard"),
+          },
+          {
+            label: t("common.restaurants"),
             href: "/restaurants",
             current: current(pathname, "/restaurants"),
           },
-          { label: "Orders", href: "/orders", current: current(pathname, "/orders") },
-          { label: "Profile", href: "/profile", current: current(pathname, "/profile") },
+          { label: t("common.orders"), href: "/orders", current: current(pathname, "/orders") },
+          { label: t("common.profile"), href: "/profile", current: current(pathname, "/profile") },
         ]}
         onLogOut={logout}
         ownerName={identity.user.name}
       >
-        {content}
+        {text(content)}
       </OwnerLayout>
     );
   }
@@ -96,13 +102,17 @@ const RootLayout = () => {
   return (
     <CourierLayout
       navigation={[
-        { label: "Dashboard", href: "/dashboard", current: current(pathname, "/dashboard") },
-        { label: "History", href: "/orders", current: current(pathname, "/orders") },
-        { label: "Profile", href: "/profile", current: current(pathname, "/profile") },
+        {
+          label: t("common.dashboard"),
+          href: "/dashboard",
+          current: current(pathname, "/dashboard"),
+        },
+        { label: t("common.history"), href: "/orders", current: current(pathname, "/orders") },
+        { label: t("common.profile"), href: "/profile", current: current(pathname, "/profile") },
       ]}
       onLogOut={logout}
     >
-      {content}
+      {text(content)}
     </CourierLayout>
   );
 };

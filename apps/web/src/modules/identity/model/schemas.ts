@@ -1,3 +1,4 @@
+import { message as localizedMessage } from "../../../shared/i18n";
 import { z } from "zod";
 
 import type { UserRole } from "./types";
@@ -5,45 +6,56 @@ import type { UserRole } from "./types";
 const normalizedEmail = z
   .string()
   .trim()
-  .max(255, "Use 255 characters or fewer.")
-  .email("Enter a valid email address.")
+  .max(255, localizedMessage("identity.max255"))
+  .email(localizedMessage("identity.validEmail"))
   .transform((value) => value.toLowerCase());
 
 export const loginSchema = z.object({
   email: normalizedEmail,
-  password: z.string().min(1, "Enter your password."),
+  password: z.string().min(1, localizedMessage("identity.passwordRequired")),
 });
 
 export const signupSchema = z.object({
-  name: z.string().trim().min(1, "Enter your full name.").max(100, "Use 100 characters or fewer."),
+  name: z
+    .string()
+    .trim()
+    .min(1, localizedMessage("identity.nameRequired"))
+    .max(100, localizedMessage("common.max100")),
   email: normalizedEmail,
   password: z
     .string()
-    .min(8, "Use at least 8 characters.")
-    .max(128, "Use 128 characters or fewer."),
+    .min(8, localizedMessage("identity.passwordMin"))
+    .max(128, localizedMessage("identity.passwordMax")),
   role: z.enum(["CUSTOMER", "OWNER", "COURIER"], {
-    error: "Choose how you want to use MealDeli.",
+    error: localizedMessage("identity.roleRequired"),
   }),
   demoAcknowledged: z.literal(true, {
-    error: "Confirm that you understand this is a demo account.",
+    error: localizedMessage("identity.demoRequired"),
   }),
 });
 
 export const resendSchema = z.object({ email: normalizedEmail });
 
 export const profileSchema = z.object({
-  name: z.string().trim().min(1, "Enter your full name.").max(100, "Use 100 characters or fewer."),
+  name: z
+    .string()
+    .trim()
+    .min(1, localizedMessage("identity.nameRequired"))
+    .max(100, localizedMessage("common.max100")),
   email: normalizedEmail,
   address: z
     .string()
     .trim()
-    .max(500, "Use 500 characters or fewer.")
+    .max(500, localizedMessage("identity.max500"))
     .transform((value) => value || null),
-  image: z.string().url("Use a valid image URL.").nullable(),
+  image: z.string().url(localizedMessage("identity.validImageUrl")).nullable(),
   password: z
     .string()
-    .max(128, "Use 128 characters or fewer.")
-    .refine((value) => value.length === 0 || value.length >= 8, "Use at least 8 characters."),
+    .max(128, localizedMessage("identity.passwordMax"))
+    .refine(
+      (value) => value.length === 0 || value.length >= 8,
+      localizedMessage("identity.passwordMin"),
+    ),
 });
 
 export type LoginFormValues = z.input<typeof loginSchema>;

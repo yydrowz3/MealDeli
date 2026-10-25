@@ -16,6 +16,7 @@ The React frontend for MealDeli. It provides responsive, role-specific food deli
 - Coordinated token refresh, safe mutation retry rules, and subscription reconnects
 - Shared responsive UI primitives, design tokens, loading states, and notifications
 - Persistent light/dark theme switching for every role on desktop and mobile
+- English, Simplified Chinese, and Japanese throughout the interface, with persistent language switching
 - Installable PWA with safe caching boundaries and production update prompts
 
 ## Stack
@@ -157,6 +158,18 @@ Feature modules access the network through repositories and adapters. They map g
 ### UI system
 
 `src/shared/ui/` contains design tokens and reusable components for buttons, cards, forms, overlays, async states, status badges, dates, money, maps, and charts. Business modules own domain composition and feature-specific styling.
+
+### Internationalization
+
+The interface defaults to English (`en`) independently of browser or operating-system language. Each role's layout and the startup/error screens offer **English / 简体中文 / 日本語**. The selection is stored under `localStorage["mealdeli.language"]`, survives logout, and synchronizes across tabs. Missing, cleared, or unsupported settings use English. When storage is blocked, switching still works for the current page. The application updates the document language and description when the selection changes.
+
+All three languages are bundled under `src/shared/i18n/locales/`, so switching needs no network request and also works offline. English defines the resource shape and translation-key types; the other resources must have identical keys, interpolation variables, plural forms, and rich-text slots. Missing translations fall back to English. Use `useI18n()` for `t`, `text`, the current locale, and number formatting. Add complete sentences with named interpolation values instead of concatenating translated fragments; use `Trans` for sentences containing React elements.
+
+Validation schemas, static presentation data, and saved UI errors use `message(key, values)` references. Resolve those references with `text()` at render time so existing errors change language without resetting forms or application state. `text()` only resolves explicit application references and leaves server/user content untouched. Non-React notification factories accept a resolver and resolve messages when each event arrives. Use `errorMessage(error, fallbackKey)` to display known local messages or a generic fallback while keeping diagnostic errors separate. Tests should assert message references at model/repository boundaries and rendered text at UI boundaries.
+
+Dates, quantities, charts, and USD display use the selected locale (`en-US`, `zh-CN`, `ja-JP`). `Money` and `formatUsd` accept an optional locale override and preserve exact integer cents, including large safe values. `DateTime` still accepts explicit locale and time-zone overrides. Language switching does not convert currencies, change API payloads or routes, translate restaurant/dish names or other business data, or change backend emails and the static PWA installation manifest. To change language programmatically with persistence, use the application-layer `changeLanguage` export.
+
+Run the resource-completeness and language tests alongside the standard frontend checks when adding UI text. Each language test can create an independent instance with `createI18n(language)` and `I18nextProvider`.
 
 ### Styling
 

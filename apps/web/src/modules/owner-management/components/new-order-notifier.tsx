@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
@@ -29,6 +30,7 @@ export function NewOrderNotifier({
   onViewOrder,
   retry,
 }: NewOrderNotifierProps) {
+  const { t, text, locale } = useI18n();
   const [toasts, setToasts] = useState<readonly PendingOrderToast[]>([]);
   const [connection, setConnection] = useState<OrderConnectionState>("connecting");
   const ordersRef = useRef(orders);
@@ -66,11 +68,11 @@ export function NewOrderNotifier({
   return (
     <>
       {connection === "reconnecting" ? (
-        <ConnectionBanner message="Live order updates are reconnecting…" />
+        <ConnectionBanner message={t("ui.liveOrdersReconnecting")} />
       ) : null}
       <div
         className="fixed right-6 bottom-6 z-60 grid max-w-104 gap-3 [@media(max-width:47.99rem)]:right-4 [@media(max-width:47.99rem)]:bottom-4 [@media(max-width:47.99rem)]:left-4 [@media(max-width:47.99rem)]:max-w-none"
-        aria-label="New orders"
+        aria-label={t("owner.newOrders")}
       >
         {toasts.map((toast) => (
           <article
@@ -79,21 +81,22 @@ export function NewOrderNotifier({
             role="status"
           >
             <div>
-              <strong>New order from {toast.restaurantName}</strong>
+              <strong>{t("owner.newOrderRestaurant", { name: text(toast.restaurantName) })}</strong>
               <p className="mx-0 mt-1 mb-0">
-                Order #{toast.shortId} · {formatUsd(toast.totalMinor)}
+                {t("common.orderNumber")}
+                {text(toast.shortId)} · {formatUsd(toast.totalMinor, locale)}
               </p>
             </div>
             <Button onClick={() => onViewOrder(toast.id)} size="sm">
-              View order
+              {t("common.viewOrder")}
             </Button>
             <Button
-              aria-label={`Dismiss order ${toast.shortId}`}
+              aria-label={t("owner.dismissOrder", { id: toast.shortId })}
               onClick={() => notifier.dismiss(toast.id)}
               size="sm"
               variant="tertiary"
             >
-              Dismiss
+              {t("common.dismiss")}
             </Button>
           </article>
         ))}

@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import { useForm } from "@tanstack/react-form";
 import { useEffect, useRef } from "react";
 
@@ -25,6 +26,7 @@ function firstError(errors: unknown[]): string | undefined {
 }
 
 export function CatalogSearchForm({ query, onSearch, debounceMs = 300 }: CatalogSearchFormProps) {
+  const { t, text } = useI18n();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const onSearchRef = useRef(onSearch);
   onSearchRef.current = onSearch;
@@ -70,19 +72,19 @@ export function CatalogSearchForm({ query, onSearch, debounceMs = 300 }: Catalog
         {(field) => (
           <Input
             autoComplete="off"
-            error={firstError(field.state.meta.errors)}
-            label="Search restaurants"
+            error={text(firstError(field.state.meta.errors))}
+            label={t("catalog.searchRestaurants")}
             onBlur={field.handleBlur}
             onChange={(event) => {
               field.handleChange(event.target.value);
               scheduleSearch(event.target.value);
             }}
-            placeholder="Search restaurants"
+            placeholder={t("catalog.searchRestaurants")}
             value={field.state.value}
           />
         )}
       </form.Field>
-      <Button type="submit">Search</Button>
+      <Button type="submit">{t("common.search")}</Button>
       <form.Subscribe selector={(state) => state.values.query}>
         {(value) =>
           value ? (
@@ -95,7 +97,7 @@ export function CatalogSearchForm({ query, onSearch, debounceMs = 300 }: Catalog
               type="button"
               variant="tertiary"
             >
-              Clear
+              {t("common.clear")}
             </Button>
           ) : null
         }

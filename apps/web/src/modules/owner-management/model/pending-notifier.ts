@@ -1,3 +1,4 @@
+import { message as localizedMessage } from "../../../shared/i18n";
 import type { Order } from "../../orders";
 
 export type PendingOrderToast = Readonly<{
@@ -27,7 +28,7 @@ export function createPendingOrderNotifier(
   const publish = () => options.onToasts([...active.values()]);
   const toToast = (order: Order): PendingOrderToast => ({
     id: order.id,
-    restaurantName: order.restaurant?.name ?? "your restaurant",
+    restaurantName: order.restaurant?.name ?? localizedMessage("owner.yourRestaurant"),
     shortId: order.id.slice(-8).toUpperCase(),
     totalMinor: order.totalMinor,
   });

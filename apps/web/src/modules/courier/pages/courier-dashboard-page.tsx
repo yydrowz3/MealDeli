@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
@@ -42,6 +43,9 @@ export function CourierDashboardPage({
   notifier = toastAdapter,
   onNavigateDelivery,
 }: CourierDashboardPageProps) {
+  const { t, text } = useI18n();
+  const translateRef = useRef(t);
+  translateRef.current = t;
   const [data, setData] = useState<DashboardData | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [acceptingId, setAcceptingId] = useState<string | null>(null);
@@ -95,7 +99,7 @@ export function CourierDashboardPage({
       refetch: repository.availableOrders,
       getCurrent: () => availableRef.current,
       replace: replaceAvailable,
-      onNewOrder: () => notifier.info("A new order is ready for pickup."),
+      onNewOrder: () => notifier.info(translateRef.current("courier.newOrder")),
       onConnectionState: setConnectionState,
     });
     void realtime.start();
@@ -133,14 +137,14 @@ export function CourierDashboardPage({
     }
     if (result.kind === "no-longer-available") {
       replaceAvailable(removeAvailableOrder(availableRef.current, order.id));
-      notifier.info("This order was accepted by another courier.");
+      notifier.info(t("courier.alreadyAccepted"));
       focusAfterRemoval(order.id);
       return;
     }
     if (result.kind === "already-active") {
       const activeOrders = await repository.listOrders("PICKED");
       setData((current) => current && { ...current, activeOrders });
-      notifier.info("You already have an active delivery.");
+      notifier.info(t("courier.alreadyActive"));
       return;
     }
     if (result.kind === "timeout") {
@@ -155,12 +159,12 @@ export function CourierDashboardPage({
         return;
       }
     }
-    notifier.error("We couldn’t accept this order. Try again.");
+    notifier.error(t("courier.acceptFailed"));
   };
 
   if (!data && !loadError) {
     return (
-      <main aria-label="Loading courier dashboard">
+      <main aria-label={t("courier.loadingDashboard")}>
         <Skeleton />
         <Skeleton />
         <Skeleton />
@@ -171,8 +175,8 @@ export function CourierDashboardPage({
     return (
       <main className="w-[min(1180px,calc(100%_-_2rem))] mx-auto pt-8 pb-24 [@media(max-width:767px)]:w-[min(100%_-_1rem,680px)] [@media(max-width:767px)]:pt-4">
         <ErrorState
-          action={{ label: "Try again", onClick: load }}
-          title="We couldn’t load the courier dashboard."
+          action={{ label: t("common.tryAgain"), onClick: load }}
+          title={t("courier.loadDashboardFailed")}
         />
       </main>
     );
@@ -182,24 +186,24 @@ export function CourierDashboardPage({
   const selection = selectActiveDelivery(readyData.activeOrders);
   const acceptsDisabled = selection.active !== null || selection.hasInvariantError;
   const disabledReason = selection.hasInvariantError
-    ? "Multiple active deliveries need attention."
+    ? t("courier.multipleActive")
     : selection.active
-      ? "Complete your active delivery before accepting another order."
+      ? t("courier.completeFirst")
       : undefined;
 
   return (
     <main className="w-[min(1180px,calc(100%_-_2rem))] mx-auto pt-8 pb-24 [@media(max-width:767px)]:w-[min(100%_-_1rem,680px)] [@media(max-width:767px)]:pt-4">
       {connectionState === "reconnecting" ? (
-        <ConnectionBanner message="New order updates are reconnecting…" />
+        <ConnectionBanner message={t("courier.reconnectingOrders")} />
       ) : null}
       <header className="flex items-center justify-between gap-4">
         <div>
           <p className="text-jade-text text-[0.82rem] font-bold tracking-[0.08em] uppercase">
-            Courier workspace
+            {t("courier.workspace")}
           </p>
-          <h1>Courier dashboard</h1>
+          <h1>{t("courier.dashboard")}</h1>
         </div>
-        <Badge tone="success">Online</Badge>
+        <Badge tone="success">{t("courier.online")}</Badge>
       </header>
 
       {selection.active ? (
@@ -213,22 +217,22 @@ export function CourierDashboardPage({
           className="border border-solid border-warning rounded-[0.75rem] bg-warning-soft text-warning-text px-4 py-[0.8rem]"
           role="alert"
         >
-          Multiple active deliveries need attention.
+          {t("courier.multipleActive")}
         </p>
       ) : null}
 
       <section aria-labelledby="available-orders-heading">
         <div className="flex items-center justify-between gap-4">
-          <h2 id="available-orders-heading">Available orders</h2>
+          <h2 id="available-orders-heading">{t("courier.availableOrders")}</h2>
           <Button onClick={load} variant="tertiary">
-            Refresh
+            {t("common.refresh")}
           </Button>
         </div>
         {readyData.available.length === 0 ? (
           <div ref={emptyHeadingRef} tabIndex={-1}>
             <EmptyState
-              description="New pickup orders will appear here while you’re online."
-              title="No orders available"
+              description={t("courier.emptyOrdersHelp")}
+              title={t("courier.emptyOrders")}
             />
           </div>
         ) : (
@@ -252,9 +256,9 @@ export function CourierDashboardPage({
       </section>
 
       <section aria-labelledby="recent-deliveries-heading">
-        <h2 id="recent-deliveries-heading">Recent deliveries</h2>
+        <h2 id="recent-deliveries-heading">{t("courier.recentDeliveries")}</h2>
         {readyData.recent.length === 0 ? (
-          <p>No completed deliveries yet.</p>
+          <p>{t("courier.noCompleted")}</p>
         ) : (
           <ul className="list-none p-0">
             {readyData.recent.map((order) => (
@@ -262,7 +266,7 @@ export function CourierDashboardPage({
                 className="flex justify-between gap-4 border-b border-solid border-b-border py-[0.85rem]"
                 key={order.id}
               >
-                <span>{order.restaurant?.name ?? "Restaurant unavailable"}</span>
+                <span>{text(order.restaurant?.name ?? t("common.restaurantUnavailable"))}</span>
                 <Money minor={order.totalMinor} />
               </li>
             ))}

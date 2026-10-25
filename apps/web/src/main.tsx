@@ -1,4 +1,5 @@
 import { StrictMode } from "react";
+import { LanguageProvider } from "./app/i18n/language-provider";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import {
@@ -32,20 +33,24 @@ if (!rootElement.innerHTML) {
     const runtime = initializeMealDeliRuntime(parseRuntimeConfig(import.meta.env));
     root.render(
       <StrictMode>
-        <ThemeProvider>
-          <AppProviders services={runtime.services}>
-            <RouterProvider router={router} />
-            {import.meta.env.PROD ? <PwaUpdatePrompt /> : null}
-          </AppProviders>
-        </ThemeProvider>
+        <LanguageProvider>
+          <ThemeProvider>
+            <AppProviders services={runtime.services}>
+              <RouterProvider router={router} />
+              {import.meta.env.PROD ? <PwaUpdatePrompt /> : null}
+            </AppProviders>
+          </ThemeProvider>
+        </LanguageProvider>
       </StrictMode>,
     );
   } catch {
     root.render(
       <StrictMode>
-        <ThemeProvider>
-          <StartupErrorPage />
-        </ThemeProvider>
+        <LanguageProvider>
+          <ThemeProvider>
+            <StartupErrorPage />
+          </ThemeProvider>
+        </LanguageProvider>
       </StrictMode>,
     );
   }

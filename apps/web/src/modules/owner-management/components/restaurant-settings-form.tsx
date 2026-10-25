@@ -1,3 +1,4 @@
+import { errorMessage, message as localizedMessage, useI18n } from "../../../shared/i18n";
 import { useForm } from "@tanstack/react-form";
 import { useEffect, useState } from "react";
 
@@ -26,6 +27,7 @@ export function RestaurantSettingsForm({
   onDirtyChange,
   onSubmit,
 }: RestaurantSettingsFormProps) {
+  const { t, text } = useI18n();
   const [formError, setFormError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -40,7 +42,7 @@ export function RestaurantSettingsForm({
       setStatus(null);
       const result = await onSubmit(restaurantSettingsSchema.parse(value));
       if (!result.ok) {
-        setFormError(result.message);
+        setFormError(errorMessage(result.message, "owner.saveFailed"));
         return;
       }
       form.reset({
@@ -48,7 +50,7 @@ export function RestaurantSettingsForm({
         address: result.value.address,
         image: result.value.image,
       });
-      setStatus("Restaurant updated.");
+      setStatus(localizedMessage("owner.restaurantUpdated"));
     },
   });
 
@@ -73,12 +75,12 @@ export function RestaurantSettingsForm({
         void form.handleSubmit();
       }}
     >
-      {formError ? <p role="alert">{formError}</p> : null}
+      {formError ? <p role="alert">{text(formError)}</p> : null}
       <form.Field name="name">
         {(field) => (
           <Input
-            error={firstFieldError(field.state.meta.errors)}
-            label="Restaurant name"
+            error={text(firstFieldError(field.state.meta.errors))}
+            label={t("owner.restaurantName")}
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
             value={field.state.value}
@@ -86,17 +88,17 @@ export function RestaurantSettingsForm({
         )}
       </form.Field>
       <Input
-        description="Category can’t be changed."
+        description={t("owner.fixedCategory")}
         disabled
-        label="Category"
+        label={t("common.category")}
         readOnly
         value={restaurant.category.name}
       />
       <form.Field name="address">
         {(field) => (
           <Textarea
-            error={firstFieldError(field.state.meta.errors)}
-            label="Address"
+            error={text(firstFieldError(field.state.meta.errors))}
+            label={t("common.address")}
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
             value={field.state.value}
@@ -106,7 +108,7 @@ export function RestaurantSettingsForm({
       <form.Field name="image">
         {(field) => (
           <ImageField
-            label="Restaurant image"
+            label={t("owner.restaurantImage")}
             onChange={(url) => field.handleChange(url)}
             onProgressChange={(progress: UploadProgress) =>
               setUploading(progress.status === "uploading")
@@ -126,11 +128,11 @@ export function RestaurantSettingsForm({
             size="lg"
             type="submit"
           >
-            Save changes
+            {t("common.saveChanges")}
           </Button>
         )}
       </form.Subscribe>
-      {status ? <p aria-live="polite">{status}</p> : null}
+      {status ? <p aria-live="polite">{text(status)}</p> : null}
     </form>
   );
 }

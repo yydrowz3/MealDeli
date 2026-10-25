@@ -1,3 +1,4 @@
+import { message } from "../../../shared/i18n";
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import { describe, expect, it } from "vitest";
 
@@ -67,7 +68,7 @@ describe("createOrderCommandRepository", () => {
       ),
     ).resolves.toEqual({
       kind: "network-error",
-      message: "We couldn’t place your order. Try again.",
+      message: message("checkout.placeFailed"),
     });
     const timeout = new Error("request timed out");
     timeout.name = "TimeoutError";
@@ -75,7 +76,7 @@ describe("createOrderCommandRepository", () => {
       createOrderCommandRepository(new FakeTransport(undefined, timeout)).create(payload),
     ).resolves.toEqual({
       kind: "timeout",
-      message: "We couldn’t confirm whether your order was placed.",
+      message: message("checkout.unconfirmed"),
     });
   });
 });

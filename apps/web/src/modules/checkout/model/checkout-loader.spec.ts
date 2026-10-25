@@ -1,3 +1,4 @@
+import { message } from "../../../shared/i18n";
 import { describe, expect, it, vi } from "vitest";
 
 import { buildDish, buildRestaurantDetail } from "../../catalog";
@@ -91,7 +92,7 @@ describe("loadCheckout", () => {
     vi.mocked(missing.getRestaurant).mockRejectedValue(new Error("offline"));
     expect(await loadCheckout({ user: customer, cart: buildCart(), catalog: missing })).toEqual({
       kind: "error",
-      message: "We couldn’t load checkout. Try again.",
+      message: message("checkout.loadFailed"),
     });
   });
 });

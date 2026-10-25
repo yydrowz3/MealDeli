@@ -1,3 +1,5 @@
+import { useI18n } from "../../../shared/i18n";
+import { Trans } from "react-i18next";
 import { useForm } from "@tanstack/react-form";
 import { useRef } from "react";
 
@@ -23,6 +25,7 @@ function selected(values: readonly string[], choiceId: string) {
 }
 
 export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
+  const { t, text, i18n, language, formatNumber } = useI18n();
   const optionRefs = useRef(new Map<string, HTMLFieldSetElement>());
   const form = useForm({
     ...createDishCustomizerFormOptions(dish),
@@ -51,8 +54,8 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
       }}
     >
       <header>
-        <h2>{dish.name}</h2>
-        <p>{dish.description}</p>
+        <h2>{text(dish.name)}</h2>
+        <p>{text(dish.description)}</p>
         <Money minor={dish.priceMinor} />
       </header>
       {dish.options.map((option, optionIndex) => (
@@ -69,8 +72,8 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
                 }}
                 tabIndex={-1}
               >
-                <legend>{option.name}</legend>
-                <p>{optionSelectionRule(option.minSelections, option.maxSelections)}</p>
+                <legend>{text(option.name)}</legend>
+                <p>{text(optionSelectionRule(option.minSelections, option.maxSelections))}</p>
                 {option.choices.map((choice) => {
                   const checked = selected(values, choice.id);
                   const single = option.maxSelections === 1;
@@ -94,7 +97,7 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
                         }}
                         type={single && option.minSelections > 0 ? "radio" : "checkbox"}
                       />
-                      <span>{choice.name}</span>
+                      <span>{text(choice.name)}</span>
                       {choice.extraMinor > 0 ? (
                         <span>
                           +<Money minor={choice.extraMinor} />
@@ -105,7 +108,7 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
                 })}
                 {field.state.meta.errors.length > 0 ? (
                   <p className="text-[var(--color-danger-dark)]" role="alert">
-                    {optionSelectionRule(option.minSelections, option.maxSelections)}
+                    {text(optionSelectionRule(option.minSelections, option.maxSelections))}
                   </p>
                 ) : null}
               </fieldset>
@@ -115,9 +118,9 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
       ))}
       <form.Field name="quantity">
         {(field) => (
-          <div aria-label="Quantity" className="flex items-center gap-3" role="group">
+          <div aria-label={t("common.quantity")} className="flex items-center gap-3" role="group">
             <Button
-              aria-label="Decrease quantity"
+              aria-label={t("checkout.decreaseQuantity")}
               className="min-h-11! min-w-11"
               disabled={field.state.value <= 1}
               onClick={() => field.handleChange(field.state.value - 1)}
@@ -125,9 +128,9 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
             >
               −
             </Button>
-            <span aria-live="polite">{field.state.value}</span>
+            <span aria-live="polite">{formatNumber(field.state.value)}</span>
             <Button
-              aria-label="Increase quantity"
+              aria-label={t("checkout.increaseQuantity")}
               className="min-h-11! min-w-11"
               disabled={field.state.value >= 99}
               onClick={() => field.handleChange(field.state.value + 1)}
@@ -141,8 +144,13 @@ export function DishCustomizer({ dish, onAdd, uuid }: DishCustomizerProps) {
       <form.Subscribe selector={(state) => [state.values, state.isSubmitting] as const}>
         {([values, isSubmitting]) => (
           <Button loading={isSubmitting} size="lg" type="submit">
-            Add {values.quantity} to cart ·{" "}
-            <Money minor={getDishSelectionTotalMinor(dish, values)} />
+            <Trans
+              key={language}
+              i18n={i18n}
+              i18nKey="checkout.addToCart"
+              count={values.quantity}
+              components={{ price: <Money minor={getDishSelectionTotalMinor(dish, values)} /> }}
+            />
           </Button>
         )}
       </form.Subscribe>

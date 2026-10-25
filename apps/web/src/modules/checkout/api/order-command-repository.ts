@@ -1,3 +1,4 @@
+import { message as localizedMessage } from "../../../shared/i18n";
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 
 import { CheckoutCreateOrderDocument } from "../../../gql/graphql";
@@ -46,18 +47,18 @@ export function createOrderCommandRepository(
         if (output.ok && output.orderId) return { kind: "success", orderId: output.orderId };
         return {
           kind: "business-error",
-          message: output.error ?? "We couldn’t place your order. Try again.",
+          message: output.error ?? localizedMessage("checkout.placeFailed"),
         };
       } catch (error) {
         if (isTimeout(error)) {
           return {
             kind: "timeout",
-            message: "We couldn’t confirm whether your order was placed.",
+            message: localizedMessage("checkout.unconfirmed"),
           };
         }
         return {
           kind: "network-error",
-          message: "We couldn’t place your order. Try again.",
+          message: localizedMessage("checkout.placeFailed"),
         };
       }
     },

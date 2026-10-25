@@ -1,8 +1,9 @@
+import { message as localizedMessage } from "../../../shared/i18n";
 import { formOptions } from "@tanstack/react-form";
 import { z } from "zod";
 
 export const catalogSearchFormSchema = z.object({
-  query: z.string().trim().max(100, "Use 100 characters or fewer."),
+  query: z.string().trim().max(100, localizedMessage("common.max100")),
 });
 
 export type CatalogSearchFormValues = z.infer<typeof catalogSearchFormSchema>;

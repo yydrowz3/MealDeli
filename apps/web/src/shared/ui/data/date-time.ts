@@ -19,7 +19,7 @@ export function formatDateTime(value: string | Date, options: DateTimeFormatOpti
     year: "numeric",
     hour: "numeric",
     minute: "2-digit",
-    hour12: true,
+    ...(options.locale && !options.locale.startsWith("en") ? {} : { hour12: true }),
     timeZone: options.timeZone,
   }).format(date);
 }

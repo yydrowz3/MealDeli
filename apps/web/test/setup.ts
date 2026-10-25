@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
-import { afterAll, afterEach, beforeAll, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
+import { defaultI18n } from "../src/shared/i18n";
 
 import { testServer } from "./server";
 
@@ -52,6 +53,10 @@ beforeAll(() => {
   testServer.listen({ onUnhandledRequest: "error" });
 });
 
+beforeEach(() => {
+  void defaultI18n.changeLanguage("en");
+});
+
 afterEach(() => {
   cleanup();
   testServer.resetHandlers();
@@ -62,6 +67,7 @@ afterEach(() => {
   window.sessionStorage.clear();
   document.body.replaceChildren();
   document.documentElement.removeAttribute("data-theme");
+  document.documentElement.lang = "en";
   document.head.querySelectorAll("[data-test-owned]").forEach((node) => node.remove());
 });
 

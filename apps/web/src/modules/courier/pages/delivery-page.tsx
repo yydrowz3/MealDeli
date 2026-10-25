@@ -1,3 +1,4 @@
+import { message as localizedMessage, useI18n } from "../../../shared/i18n";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 
@@ -60,6 +61,7 @@ export function DeliveryPage({
   onAssignmentLost,
   renderMap,
 }: DeliveryPageProps) {
+  const { t, text, formatNumber } = useI18n();
   const [order, setOrder] = useState<Order | null>(null);
   const orderRef = useRef<Order | null>(null);
   const [loading, setLoading] = useState(true);
@@ -116,12 +118,12 @@ export function DeliveryPage({
     try {
       const result = await repository.getOrder(orderId);
       if (result.kind === "not-found") {
-        setError("Order not found");
+        setError(localizedMessage("courier.orderNotFound"));
         return;
       }
       applyOrder(result.order);
     } catch {
-      setError("We couldn’t load this delivery.");
+      setError(localizedMessage("courier.loadDeliveryFailed"));
     } finally {
       setLoading(false);
     }
@@ -185,11 +187,11 @@ export function DeliveryPage({
       ) {
         loseAssignment();
       } else {
-        setError("We couldn’t complete the delivery. Try again.");
+        setError(localizedMessage("courier.completeFailed"));
         setConfirming(false);
       }
     } else {
-      setError("We couldn’t complete the delivery. Try again.");
+      setError(localizedMessage("courier.completeFailed"));
       setConfirming(false);
     }
     setSubmitting(false);
@@ -197,7 +199,7 @@ export function DeliveryPage({
 
   if (loading) {
     return (
-      <main aria-label="Loading delivery">
+      <main aria-label={t("courier.loadingDelivery")}>
         <Skeleton />
         <Skeleton />
         <Skeleton />
@@ -211,27 +213,28 @@ export function DeliveryPage({
         aria-live="polite"
       >
         <p className="text-jade-text text-[0.82rem] font-bold tracking-[0.08em] uppercase">
-          Order #{orderId.slice(0, 8)}
+          {t("common.orderNumber")}
+          {text(orderId.slice(0, 8))}
         </p>
-        <h1>Delivery completed</h1>
-        <p>The order is now in your delivery history.</p>
-        <Button onClick={onBackDashboard}>Back to dashboard</Button>
+        <h1>{t("courier.completed")}</h1>
+        <p>{t("courier.completedHelp")}</p>
+        <Button onClick={onBackDashboard}>{t("courier.backToDashboard")}</Button>
       </main>
     );
   }
-  if (!order || error === "Order not found") {
+  if (!order || error === t("courier.orderNotFound")) {
     return (
       <main className="w-[min(1180px,calc(100%_-_2rem))] mx-auto pt-8 pb-24 [@media(max-width:767px)]:w-[min(100%_-_1rem,680px)] [@media(max-width:767px)]:pt-4">
         <ErrorState
-          action={{ label: "Back to dashboard", onClick: onBackDashboard }}
-          title="Order not found"
+          action={{ label: t("courier.backToDashboard"), onClick: onBackDashboard }}
+          title={t("courier.orderNotFound")}
         />
       </main>
     );
   }
 
   const activeRoute = route?.orderId === orderId ? route : null;
-  const restaurantName = order.restaurant?.name ?? "Restaurant unavailable";
+  const restaurantName = order.restaurant?.name ?? t("common.restaurantUnavailable");
   const mapProps = activeRoute
     ? {
         route: activeRoute,
@@ -245,14 +248,14 @@ export function DeliveryPage({
   return (
     <main className="w-[min(1180px,calc(100%_-_2rem))] mx-auto pt-8 pb-24 [@media(max-width:767px)]:w-[min(100%_-_1rem,680px)] [@media(max-width:767px)]:pt-4">
       {connectionState === "reconnecting" ? (
-        <ConnectionBanner message="Delivery updates are reconnecting…" />
+        <ConnectionBanner message={t("courier.reconnectingDelivery")} />
       ) : null}
       {mapFailed ? (
         <div
           className="border border-solid border-warning rounded-[0.75rem] bg-warning-soft text-warning-text px-4 py-[0.8rem]"
           role="status"
         >
-          Map tiles are unavailable. The demo route is still active.
+          {t("courier.tilesUnavailable")}
         </div>
       ) : null}
       <div className="grid grid-cols-[minmax(0,1.8fr)_minmax(300px,1fr)] gap-6 [align-items:start] [@media(max-width:767px)]:grid-cols-1">
@@ -268,7 +271,7 @@ export function DeliveryPage({
           )}
           {reducedMotion && activeRoute ? (
             <Button onClick={() => advanceRoute()} variant="secondary">
-              Advance demo route
+              {t("courier.advanceRoute")}
             </Button>
           ) : null}
         </div>
@@ -279,13 +282,13 @@ export function DeliveryPage({
           tabIndex={-1}
         >
           <p className="text-jade-text text-[0.82rem] font-bold tracking-[0.08em] uppercase">
-            On the way
+            {t("orders.picked")}
           </p>
-          <h1>{restaurantName}</h1>
-          {order.restaurant ? <p>{order.restaurant.address}</p> : null}
-          <h2>Demo delivery destination</h2>
-          <p>Location is simulated for this demo.</p>
-          <h2>Order summary</h2>
+          <h1>{text(restaurantName)}</h1>
+          {order.restaurant ? <p>{text(order.restaurant.address)}</p> : null}
+          <h2>{t("courier.destination")}</h2>
+          <p>{t("courier.simulatedLocation")}</p>
+          <h2>{t("common.orderSummary")}</h2>
           <ul className="list-none p-0">
             {order.items.map((item) => (
               <li
@@ -293,14 +296,15 @@ export function DeliveryPage({
                 key={item.id}
               >
                 <strong>
-                  {item.quantity} × {item.dishName}
+                  {formatNumber(item.quantity)} × {text(item.dishName)}
                 </strong>
                 {item.selectedOptions.length > 0 ? (
                   <details>
-                    <summary>Options</summary>
+                    <summary>{t("common.options")}</summary>
                     {item.selectedOptions.map((option) => (
                       <p key={option.optionId}>
-                        {option.name}: {option.choices.map((choice) => choice.name).join(", ")}
+                        {text(option.name)}:{" "}
+                        {option.choices.map((choice) => choice.name).join(", ")}
                       </p>
                     ))}
                   </details>
@@ -309,11 +313,12 @@ export function DeliveryPage({
             ))}
           </ul>
           <p className="flex justify-between font-bold">
-            Order total <Money minor={order.totalMinor} />
+            {t("common.orderTotal")}
+            <Money minor={order.totalMinor} />
           </p>
-          {error ? <p role="alert">{error}</p> : null}
+          {error ? <p role="alert">{text(error)}</p> : null}
           <Button disabled={submitting} loading={submitting} onClick={() => setConfirming(true)}>
-            Complete delivery
+            {t("courier.complete")}
           </Button>
         </section>
       </div>
@@ -323,19 +328,22 @@ export function DeliveryPage({
         footer={
           <>
             <Button disabled={submitting} onClick={() => void complete()} loading={submitting}>
-              Complete delivery
+              {t("courier.complete")}
             </Button>
             <Button disabled={submitting} onClick={() => setConfirming(false)} variant="secondary">
-              Keep delivering
+              {t("courier.keepDelivering")}
             </Button>
           </>
         }
         onClose={() => setConfirming(false)}
         open={confirming}
-        title="Complete this delivery?"
-        description="This will mark the order as delivered."
+        title={t("courier.confirmComplete")}
+        description={t("courier.confirmCompleteHelp")}
       >
-        <p>Order #{orderId.slice(0, 8)}</p>
+        <p>
+          {t("common.orderNumber")}
+          {text(orderId.slice(0, 8))}
+        </p>
       </Modal>
     </main>
   );

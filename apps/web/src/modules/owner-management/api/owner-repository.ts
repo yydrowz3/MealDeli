@@ -1,3 +1,4 @@
+import { message as localizedMessage, resolveMessage } from "../../../shared/i18n";
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 
 import { useFragment as readFragment } from "../../../gql";
@@ -33,15 +34,18 @@ export interface OwnerManagementGraphqlTransport {
 }
 
 export class OwnerManagementRepositoryError extends Error {
+  readonly localizedMessage: string;
   constructor(message = "The restaurant request failed.", options?: ErrorOptions) {
-    super(message, options);
+    super(resolveMessage(message), options);
+    this.localizedMessage = message;
     this.name = "OwnerManagementRepositoryError";
   }
 }
 
 function safeMessage(message: string | null | undefined, fallback: string): string {
   if (!message) return fallback;
-  if (/permission|don't own|can't edit|can't delete/i.test(message)) return "Restaurant not found.";
+  if (/permission|don't own|can't edit|can't delete/i.test(message))
+    return localizedMessage("common.restaurantNotFound");
   return message;
 }
 
@@ -83,7 +87,7 @@ export function adaptOwnerRestaurant(
     promotedUntil: typeof restaurant.promotedUntil === "string" ? restaurant.promotedUntil : null,
     category: restaurant.category ?? {
       id: restaurant.categoryId,
-      name: "Uncategorized",
+      name: localizedMessage("common.uncategorized"),
       slug: "",
     },
     dishes: (restaurant.dishes ?? []).map(adaptDish),
@@ -150,7 +154,7 @@ export function createOwnerRestaurantRepository(
     if (!output.ok || !output.restaurant) {
       if (/not found/i.test(output.error ?? "")) return null;
       throw new OwnerManagementRepositoryError(
-        safeMessage(output.error, "We couldn’t load this restaurant."),
+        safeMessage(output.error, localizedMessage("common.loadRestaurantFailed")),
       );
     }
     return adaptOwnerRestaurant(output.restaurant);
@@ -158,7 +162,9 @@ export function createOwnerRestaurantRepository(
 
   const refresh = async (restaurantId: string): Promise<OwnerCommandResult<OwnerRestaurant>> => {
     const restaurant = await get(restaurantId);
-    return restaurant ? { ok: true, value: restaurant } : failed("Restaurant not found.");
+    return restaurant
+      ? { ok: true, value: restaurant }
+      : failed(localizedMessage("common.restaurantNotFound"));
   };
 
   const execute = async <T>(operation: () => Promise<T>): Promise<T> => {
@@ -176,7 +182,7 @@ export function createOwnerRestaurantRepository(
         const data = await transport.execute(OwnerManagementMyRestaurantsDocument, {});
         if (!data.myRestaurants.ok) {
           throw new OwnerManagementRepositoryError(
-            safeMessage(data.myRestaurants.error, "We couldn’t load your restaurants."),
+            safeMessage(data.myRestaurants.error, localizedMessage("owner.loadRestaurantsFailed")),
           );
         }
         return (data.myRestaurants.restaurants ?? []).map((restaurant) =>
@@ -196,7 +202,7 @@ export function createOwnerRestaurantRepository(
         });
         const output = data.createRestaurant;
         if (!output.ok || !output.restaurantId) {
-          return failed(safeMessage(output.error, "We couldn’t create the restaurant."));
+          return failed(safeMessage(output.error, localizedMessage("owner.createFailed")));
         }
         return refresh(output.restaurantId);
       });
@@ -208,7 +214,9 @@ export function createOwnerRestaurantRepository(
           input: { restaurantId, ...draft },
         });
         if (!data.editRestaurant.ok) {
-          return failed(safeMessage(data.editRestaurant.error, "We couldn’t save your changes."));
+          return failed(
+            safeMessage(data.editRestaurant.error, localizedMessage("owner.saveFailed")),
+          );
         }
         return refresh(restaurantId);
       });
@@ -221,7 +229,9 @@ export function createOwnerRestaurantRepository(
         });
         return data.deleteRestaurant.ok
           ? { ok: true as const, value: undefined }
-          : failed(safeMessage(data.deleteRestaurant.error, "We couldn’t delete this restaurant."));
+          : failed(
+              safeMessage(data.deleteRestaurant.error, localizedMessage("owner.deleteFailed")),
+            );
       });
     },
 
@@ -231,7 +241,9 @@ export function createOwnerRestaurantRepository(
           input: toCreateDishInput(restaurantId, draft),
         });
         if (!data.createDish.ok) {
-          return failed(safeMessage(data.createDish.error, "We couldn’t add this dish."));
+          return failed(
+            safeMessage(data.createDish.error, localizedMessage("owner.addDishFailed")),
+          );
         }
         return refresh(restaurantId);
       });
@@ -243,7 +255,7 @@ export function createOwnerRestaurantRepository(
           input: toEditDishInput(dishId, draft),
         });
         if (!data.editDish.ok) {
-          return failed(safeMessage(data.editDish.error, "We couldn’t save this dish."));
+          return failed(safeMessage(data.editDish.error, localizedMessage("owner.saveDishFailed")));
         }
         return refresh(restaurantId);
       });
@@ -255,7 +267,9 @@ export function createOwnerRestaurantRepository(
           input: { dishId },
         });
         if (!data.deleteDish.ok) {
-          return failed(safeMessage(data.deleteDish.error, "We couldn’t delete this dish."));
+          return failed(
+            safeMessage(data.deleteDish.error, localizedMessage("owner.deleteDishFailed")),
+          );
         }
         return refresh(restaurantId);
       });

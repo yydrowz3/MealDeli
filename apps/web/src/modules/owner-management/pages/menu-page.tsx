@@ -1,3 +1,4 @@
+import { errorMessage, useI18n } from "../../../shared/i18n";
 import { useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
 
@@ -24,6 +25,7 @@ export type OwnerMenuPageProps = Readonly<{
 }>;
 
 export function OwnerMenuPage({ restaurantId, repository, uploader }: OwnerMenuPageProps) {
+  const { t, text } = useI18n();
   const [restaurant, setRestaurant] = useState<OwnerRestaurant | null | undefined>(undefined);
   const [editor, setEditor] = useState<Dish | "new" | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Dish | null>(null);
@@ -52,7 +54,7 @@ export function OwnerMenuPage({ restaurantId, repository, uploader }: OwnerMenuP
     setDeleteError(null);
     const result = await repository.deleteDish(deleteTarget.id, restaurantId);
     if (!result.ok) {
-      setDeleteError(result.message);
+      setDeleteError(errorMessage(result.message, "owner.deleteDishFailed"));
       setDeleting(false);
       return;
     }
@@ -61,28 +63,28 @@ export function OwnerMenuPage({ restaurantId, repository, uploader }: OwnerMenuP
     setDeleting(false);
   };
 
-  if (error) return <ErrorState title="We couldn’t load this menu." />;
+  if (error) return <ErrorState title={t("owner.loadMenuFailed")} />;
   if (restaurant === undefined) return <Skeleton className="h-120" />;
-  if (restaurant === null) return <ErrorState title="Restaurant not found." />;
+  if (restaurant === null) return <ErrorState title={t("common.restaurantNotFound")} />;
   const editingDish = editor === "new" || editor === null ? undefined : editor;
   return (
     <section className="mx-auto grid max-w-360 gap-6 p-6 [@media(max-width:47.99rem)]:p-4">
       <header className="flex items-center justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]">
         <div>
           <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
-            {restaurant.name}
+            {text(restaurant.name)}
           </p>
-          <h1 className="m-0">Menu</h1>
+          <h1 className="m-0">{t("common.menu")}</h1>
         </div>
         <Button className="[@media(max-width:47.99rem)]:w-full" onClick={() => setEditor("new")}>
-          Add dish
+          {t("owner.addDish")}
         </Button>
       </header>
       {restaurant.dishes.length === 0 ? (
         <EmptyState
-          action={{ label: "Add dish", onClick: () => setEditor("new") }}
-          description="Add dishes so customers can place an order."
-          title="Your menu is empty"
+          action={{ label: t("owner.addDish"), onClick: () => setEditor("new") }}
+          description={t("owner.emptyMenuHelp")}
+          title={t("owner.emptyMenu")}
         />
       ) : (
         <div className="grid gap-3">
@@ -104,18 +106,19 @@ export function OwnerMenuPage({ restaurantId, repository, uploader }: OwnerMenuP
                 />
               )}
               <div>
-                <h2>{dish.name}</h2>
-                <p>{dish.description}</p>
+                <h2>{text(dish.name)}</h2>
+                <p>{text(dish.description)}</p>
                 <p>
-                  <Money minor={dish.priceMinor} /> · {dish.options.length} options
+                  <Money minor={dish.priceMinor} /> ·{" "}
+                  {t("owner.optionCount", { count: dish.options.length })}
                 </p>
               </div>
               <div className="flex flex-wrap gap-3">
                 <Button onClick={() => setEditor(dish)} variant="secondary">
-                  Edit
+                  {t("common.edit")}
                 </Button>
                 <Button onClick={() => setDeleteTarget(dish)} variant="danger">
-                  Delete
+                  {t("common.delete")}
                 </Button>
               </div>
             </Card>
@@ -125,7 +128,9 @@ export function OwnerMenuPage({ restaurantId, repository, uploader }: OwnerMenuP
       <Drawer
         onClose={() => setEditor(null)}
         open={editor !== null}
-        title={editingDish ? `Edit ${editingDish.name}` : "Add dish"}
+        title={text(
+          editingDish ? t("owner.editName", { name: editingDish.name }) : t("owner.addDish"),
+        )}
       >
         {editor !== null ? (
           <DishForm
@@ -149,19 +154,19 @@ export function OwnerMenuPage({ restaurantId, repository, uploader }: OwnerMenuP
         footer={
           <>
             <Button disabled={deleting} onClick={() => setDeleteTarget(null)} variant="secondary">
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button loading={deleting} onClick={() => void remove()} variant="danger">
-              Delete dish
+              {t("owner.deleteDish")}
             </Button>
           </>
         }
         onClose={() => setDeleteTarget(null)}
         open={Boolean(deleteTarget)}
-        title={`Delete ${deleteTarget?.name ?? "dish"}?`}
-        description="This removes the dish from the current menu. Past orders are not changed."
+        title={t("owner.deleteName", { name: deleteTarget?.name ?? "dish" })}
+        description={t("owner.deleteDishHelp")}
       >
-        {deleteError ? <p role="alert">{deleteError}</p> : null}
+        {deleteError ? <p role="alert">{text(deleteError)}</p> : null}
       </Modal>
     </section>
   );

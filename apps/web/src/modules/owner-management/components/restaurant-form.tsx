@@ -1,3 +1,4 @@
+import { errorMessage, message as localizedMessage, useI18n } from "../../../shared/i18n";
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
 
@@ -24,11 +25,12 @@ export function RestaurantForm({
   categories,
   uploader,
   defaultValues,
-  submitLabel = "Create restaurant",
+  submitLabel = localizedMessage("owner.createRestaurant"),
   onCancel,
   onSubmit,
   onSuccess,
 }: RestaurantFormProps) {
+  const { t, text } = useI18n();
   const [formError, setFormError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const form = useForm({
@@ -38,7 +40,7 @@ export function RestaurantForm({
       const draft = restaurantDraftSchema.parse(value);
       const result = await onSubmit(draft);
       if (!result.ok) {
-        setFormError(result.message);
+        setFormError(errorMessage(result.message, "owner.createFailed"));
         return;
       }
       form.reset({
@@ -63,12 +65,12 @@ export function RestaurantForm({
         void form.handleSubmit();
       }}
     >
-      {formError ? <p role="alert">{formError}</p> : null}
+      {formError ? <p role="alert">{text(formError)}</p> : null}
       <form.Field name="name">
         {(field) => (
           <Input
-            error={firstFieldError(field.state.meta.errors)}
-            label="Restaurant name"
+            error={text(firstFieldError(field.state.meta.errors))}
+            label={t("owner.restaurantName")}
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
             value={field.state.value}
@@ -78,16 +80,16 @@ export function RestaurantForm({
       <form.Field name="categoryId">
         {(field) => (
           <Select
-            error={firstFieldError(field.state.meta.errors)}
-            label="Category"
+            error={text(firstFieldError(field.state.meta.errors))}
+            label={t("common.category")}
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
             value={field.state.value}
           >
-            <option value="">Choose a category</option>
+            <option value="">{t("owner.chooseCategory")}</option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
-                {category.name}
+                {text(category.name)}
               </option>
             ))}
           </Select>
@@ -96,8 +98,8 @@ export function RestaurantForm({
       <form.Field name="address">
         {(field) => (
           <Textarea
-            error={firstFieldError(field.state.meta.errors)}
-            label="Address"
+            error={text(firstFieldError(field.state.meta.errors))}
+            label={t("common.address")}
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
             value={field.state.value}
@@ -107,7 +109,7 @@ export function RestaurantForm({
       <form.Field name="image">
         {(field) => (
           <ImageField
-            label="Restaurant image"
+            label={t("owner.restaurantImage")}
             onChange={(url) => field.handleChange(url)}
             onProgressChange={handleProgress}
             uploader={uploader}
@@ -118,7 +120,7 @@ export function RestaurantForm({
       <div className="flex flex-wrap gap-3">
         {onCancel ? (
           <Button onClick={onCancel} type="button" variant="secondary">
-            Cancel
+            {t("common.cancel")}
           </Button>
         ) : null}
         <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting] as const}>
@@ -129,7 +131,7 @@ export function RestaurantForm({
               size="lg"
               type="submit"
             >
-              {submitLabel}
+              {text(submitLabel)}
             </Button>
           )}
         </form.Subscribe>

@@ -32,7 +32,7 @@ describe("catalog adapter", () => {
         categoryId: "cat",
         category: null,
       }).category,
-    ).toEqual({ id: "cat", name: "Uncategorized", slug: "" });
+    ).toEqual({ id: "cat", name: message("common.uncategorized"), slug: "" });
   });
 
   it("maps Dish options and keeps cents as integers", () => {
@@ -143,3 +143,4 @@ describe("catalog adapter", () => {
     );
   });
 });
+import { message } from "../../../shared/i18n";
