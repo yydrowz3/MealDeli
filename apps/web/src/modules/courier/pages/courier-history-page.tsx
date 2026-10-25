@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import { OrderDetailPage, OrdersPage, type Order, type OrderConnectionState } from "../../orders";
 
 export type CourierHistoryPageProps = Readonly<{
@@ -11,13 +12,14 @@ export function CourierHistoryPage({
   onViewOrder,
   onContinueDelivery,
 }: CourierHistoryPageProps) {
+  const { t } = useI18n();
   return (
     <OrdersPage
       onViewOrder={onViewOrder}
       renderAction={(order) =>
         order.status === "PICKED" ? (
           <button onClick={() => onContinueDelivery(order)} type="button">
-            Continue delivery
+            {t("courier.continueDelivery")}
           </button>
         ) : null
       }

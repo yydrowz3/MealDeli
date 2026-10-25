@@ -1,3 +1,4 @@
+import { message as localizedMessage } from "../../../shared/i18n";
 import { z } from "zod";
 
 import type { Dish, DishOption } from "../../catalog";
@@ -19,7 +20,7 @@ const moneyStringSchema = z.string().superRefine((value, context) => {
 const choiceSchema = z.object({
   id: optionalIdSchema,
   uiKey: uiKeySchema,
-  name: requiredTrimmed("Choice name is required."),
+  name: requiredTrimmed(localizedMessage("owner.choiceRequired")),
   extraPrice: moneyStringSchema,
 });
 
@@ -27,33 +28,33 @@ const optionSchema = z
   .object({
     id: optionalIdSchema,
     uiKey: uiKeySchema,
-    name: requiredTrimmed("Option name is required."),
-    minSelections: z.number().int().min(0, "Minimum must be 0 or more."),
-    maxSelections: z.number().int().min(1, "Maximum must be 1 or more."),
-    choices: z.array(choiceSchema).min(1, "Add at least one choice."),
+    name: requiredTrimmed(localizedMessage("owner.optionRequired")),
+    minSelections: z.number().int().min(0, localizedMessage("owner.minNonNegative")),
+    maxSelections: z.number().int().min(1, localizedMessage("owner.maxPositive")),
+    choices: z.array(choiceSchema).min(1, localizedMessage("owner.choiceRequiredList")),
   })
   .superRefine((option, context) => {
     if (option.minSelections > option.maxSelections) {
       context.addIssue({
         code: "custom",
         path: ["minSelections"],
-        message: "Minimum cannot exceed maximum.",
+        message: localizedMessage("owner.minExceedsMax"),
       });
     }
     if (option.maxSelections > option.choices.length) {
       context.addIssue({
         code: "custom",
         path: ["maxSelections"],
-        message: "Maximum cannot exceed the number of choices.",
+        message: localizedMessage("owner.maxExceedsChoices"),
       });
     }
   });
 
 export const dishFormSchema = z.object({
-  name: requiredTrimmed("Dish name is required."),
-  description: requiredTrimmed("Description is required."),
+  name: requiredTrimmed(localizedMessage("owner.dishRequired")),
+  description: requiredTrimmed(localizedMessage("owner.descriptionRequired")),
   price: moneyStringSchema,
-  image: z.union([z.url("Enter a valid image URL."), z.null()]),
+  image: z.union([z.url(localizedMessage("common.imageUrl")), z.null()]),
   options: z.array(optionSchema),
 });
 

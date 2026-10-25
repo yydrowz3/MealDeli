@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import type { DemoRoute } from "../model/demo-route";
 
 export type MapFallbackProps = Readonly<{
@@ -6,6 +7,7 @@ export type MapFallbackProps = Readonly<{
 }>;
 
 export function MapFallback({ route, restaurantName }: MapFallbackProps) {
+  const { t } = useI18n();
   const progress = route.progressIndex / Math.max(route.path.length - 1, 1);
   return (
     <div
@@ -36,21 +38,21 @@ export function MapFallback({ route, restaurantName }: MapFallbackProps) {
         />
       </svg>
       <span
-        aria-label={`Pickup: ${restaurantName}`}
+        aria-label={t("courier.pickup", { name: restaurantName })}
         className="grid place-items-center size-8 border-2 border-solid border-white rounded-[999px] [box-shadow:0_2px_8px_rgb(0_0_0/30%)] text-white font-[800] absolute -translate-1/2 bg-[#087f5b] left-[8%] top-[80%]"
         role="img"
       >
         R
       </span>
       <span
-        aria-label="Demo delivery destination"
+        aria-label={t("courier.destination")}
         className="grid place-items-center size-8 border-2 border-solid border-white rounded-[999px] [box-shadow:0_2px_8px_rgb(0_0_0/30%)] text-white font-[800] absolute -translate-1/2 bg-[#334155] left-[92%] top-[18%]"
         role="img"
       >
         ⌂
       </span>
       <span
-        aria-label="Simulated courier location"
+        aria-label={t("courier.location")}
         className="grid place-items-center size-8 border-2 border-solid border-white rounded-[999px] [box-shadow:0_2px_8px_rgb(0_0_0/30%)] text-white font-[800] absolute -translate-1/2 bg-[#c2410c] motion-reduce:transition-none"
         role="img"
         style={{ left: `${8 + progress * 84}%`, top: `${80 - progress * 62}%` }}

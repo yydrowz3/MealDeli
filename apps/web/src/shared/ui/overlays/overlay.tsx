@@ -1,3 +1,4 @@
+import { useI18n } from "../../i18n";
 import { useEffect, useId, useRef } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode, RefObject } from "react";
 import { createPortal } from "react-dom";
@@ -34,6 +35,7 @@ export function Overlay({
   initialFocusRef,
   kind,
 }: OverlayProps) {
+  const { text } = useI18n();
   const titleId = useId();
   const descriptionId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
@@ -122,16 +124,16 @@ export function Overlay({
       >
         <header>
           <h2 className="m-0 text-section leading-heading" id={titleId}>
-            {title}
+            {text(title)}
           </h2>
           {description ? (
             <p className="mt-2 mr-0 mb-0 ml-0 text-muted" id={descriptionId}>
-              {description}
+              {text(description)}
             </p>
           ) : null}
         </header>
-        <div>{children}</div>
-        {footer ? <footer className="flex justify-end gap-3">{footer}</footer> : null}
+        <div>{text(children)}</div>
+        {footer ? <footer className="flex justify-end gap-3">{text(footer)}</footer> : null}
       </div>
     </div>,
     document.body,

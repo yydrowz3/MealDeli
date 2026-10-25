@@ -1,3 +1,4 @@
+import { message as localizedMessage, useI18n } from "../../../shared/i18n";
 import { useForm } from "@tanstack/react-form";
 import { useEffect, useState } from "react";
 
@@ -14,6 +15,7 @@ export type ResendFormProps = {
 };
 
 export function ResendForm({ repository, email = "", cooldownSeconds = 30 }: ResendFormProps) {
+  const { t, text } = useI18n();
   const [remaining, setRemaining] = useState(0);
   const [status, setStatus] = useState<string | null>(null);
   const form = useForm({
@@ -23,10 +25,10 @@ export function ResendForm({ repository, email = "", cooldownSeconds = 30 }: Res
       const parsed = resendSchema.parse(value);
       const result = await repository.resendVerification(parsed.email);
       if (!result.ok) {
-        setStatus("We couldn’t resend the email. Try again later.");
+        setStatus(localizedMessage("identity.resendFailed"));
         return;
       }
-      setStatus("Verification email sent.");
+      setStatus(localizedMessage("identity.emailSent"));
       setRemaining(cooldownSeconds);
     },
   });
@@ -49,8 +51,8 @@ export function ResendForm({ repository, email = "", cooldownSeconds = 30 }: Res
         {(field) => (
           <Input
             autoComplete="email"
-            error={firstFieldError(field.state.meta.errors)}
-            label="Email address"
+            error={text(firstFieldError(field.state.meta.errors))}
+            label={t("identity.email")}
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
             type="email"
@@ -61,11 +63,13 @@ export function ResendForm({ repository, email = "", cooldownSeconds = 30 }: Res
       <form.Subscribe selector={(state) => state.isSubmitting}>
         {(isSubmitting) => (
           <Button disabled={remaining > 0} loading={isSubmitting} type="submit" variant="secondary">
-            {remaining > 0 ? `Resend email in ${remaining}s` : "Resend email"}
+            {remaining > 0
+              ? t("identity.resendCountdown", { count: remaining })
+              : t("identity.resend")}
           </Button>
         )}
       </form.Subscribe>
-      {status ? <p aria-live="polite">{status}</p> : null}
+      {status ? <p aria-live="polite">{text(status)}</p> : null}
     </form>
   );
 }

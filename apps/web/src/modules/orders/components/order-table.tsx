@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import type { ReactNode } from "react";
 
 import { Button, DateTime, Money } from "../../../shared/ui";
@@ -18,25 +19,28 @@ const rowClasses =
   "[@media(max-width:47.99rem)]:block [@media(max-width:47.99rem)]:mb-4 [@media(max-width:47.99rem)]:rounded-card [@media(max-width:47.99rem)]:border [@media(max-width:47.99rem)]:border-solid [@media(max-width:47.99rem)]:border-border [@media(max-width:47.99rem)]:p-4";
 
 export function OrderTable({ orders, onView, renderAction }: OrderTableProps) {
+  const { t, text } = useI18n();
   return (
     <div className="overflow-x-auto [@media(max-width:47.99rem)]:overflow-visible">
       <table className="w-full border-collapse [@media(max-width:47.99rem)]:block">
         <thead className="[@media(max-width:47.99rem)]:hidden">
           <tr className={rowClasses}>
-            <th className={headerCellClasses}>Order</th>
-            <th className={headerCellClasses}>Restaurant</th>
-            <th className={headerCellClasses}>Placed</th>
-            <th className={headerCellClasses}>Status</th>
-            <th className={headerCellClasses}>Items</th>
-            <th className={headerCellClasses}>Total</th>
-            <th className={headerCellClasses}>Action</th>
+            <th className={headerCellClasses}>{t("orders.order")}</th>
+            <th className={headerCellClasses}>{t("common.restaurant")}</th>
+            <th className={headerCellClasses}>{t("orders.placed")}</th>
+            <th className={headerCellClasses}>{t("orders.status")}</th>
+            <th className={headerCellClasses}>{t("common.items")}</th>
+            <th className={headerCellClasses}>{t("common.total")}</th>
+            <th className={headerCellClasses}>{t("orders.action")}</th>
           </tr>
         </thead>
         <tbody className="[@media(max-width:47.99rem)]:block">
           {orders.map((order) => (
             <tr className={rowClasses} key={order.id}>
-              <td className={cellClasses}>#{order.id.slice(0, 8)}</td>
-              <td className={cellClasses}>{order.restaurant?.name ?? "Restaurant unavailable"}</td>
+              <td className={cellClasses}>#{text(order.id.slice(0, 8))}</td>
+              <td className={cellClasses}>
+                {text(order.restaurant?.name ?? t("common.restaurantUnavailable"))}
+              </td>
               <td className={cellClasses}>
                 <DateTime value={order.createdAt} />
               </td>
@@ -53,7 +57,7 @@ export function OrderTable({ orders, onView, renderAction }: OrderTableProps) {
                 {renderAction?.(order) ??
                   (onView ? (
                     <Button onClick={() => onView(order)} size="sm" variant="secondary">
-                      View order
+                      {t("common.viewOrder")}
                     </Button>
                   ) : null)}
               </td>

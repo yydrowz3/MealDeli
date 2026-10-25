@@ -1,3 +1,4 @@
+import { message as localizedMessage, resolveMessage } from "../../../shared/i18n";
 import { z } from "zod";
 
 export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
@@ -7,25 +8,30 @@ const acceptedTypes = new Set<string>(ACCEPTED_IMAGE_TYPES);
 
 export const imageFileSchema = z
   .custom<File>((value) => value instanceof File, {
-    message: "Choose an image file.",
+    message: localizedMessage("media.required"),
   })
   .superRefine((file, context) => {
     if (file.size > MAX_IMAGE_BYTES) {
       context.addIssue({
         code: "custom",
-        message: "Image must be 5 MB or smaller.",
+        message: localizedMessage("media.tooLarge"),
       });
     }
 
     if (!acceptedTypes.has(file.type)) {
       context.addIssue({
         code: "custom",
-        message: "Choose a JPEG, PNG, or WebP image.",
+        message: localizedMessage("media.invalidType"),
       });
     }
   });
 
-export function validateImageFile(file: File): string | null {
+export function validateImageFile(
+  file: File,
+  resolve: (value: string) => string = resolveMessage,
+): string | null {
   const result = imageFileSchema.safeParse(file);
-  return result.success ? null : (result.error.issues[0]?.message ?? "Choose a valid image.");
+  return result.success
+    ? null
+    : resolve(result.error.issues[0]?.message ?? localizedMessage("media.invalidImage"));
 }

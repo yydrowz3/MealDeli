@@ -78,7 +78,7 @@ describe("OrdersPage", () => {
         state={{ kind: "error", message: "Network unavailable." }}
       />,
     );
-    expect(screen.getByText("Network unavailable.")).toBeInTheDocument();
+    expect(screen.getByText("Check your connection and try again.")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Try again" }));
     expect(retry).toHaveBeenCalledOnce();
   });
@@ -92,7 +92,7 @@ describe("OrderDetailPage", () => {
     const timeline = screen.getByRole("list", { name: "Order progress" });
     expect(within(timeline).getAllByRole("listitem")).toHaveLength(5);
     expect(within(timeline).getByRole("listitem", { current: "step" })).toHaveTextContent(
-      ORDER_STATUS_LABELS[status],
+      resolveMessage(ORDER_STATUS_LABELS[status]),
     );
     expect(screen.getByText("Payment completed in demo mode.")).toBeInTheDocument();
   });
@@ -142,3 +142,4 @@ describe("OrderDetailPage", () => {
     expect(retry).toHaveBeenCalledOnce();
   });
 });
+import { resolveMessage } from "../../../shared/i18n";

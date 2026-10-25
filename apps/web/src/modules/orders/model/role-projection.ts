@@ -1,3 +1,4 @@
+import { message as localizedMessage } from "../../../shared/i18n";
 import type { Order, OrderRole, OrderStatus } from "./types";
 
 export type OwnerOrderFilters = Readonly<{
@@ -29,12 +30,12 @@ export function projectOrdersForRole(
     return [
       {
         id: "current",
-        label: "Current",
+        label: localizedMessage("orders.current"),
         orders: sorted.filter((order) => order.status !== "DELIVERED"),
       },
       {
         id: "past",
-        label: "Past",
+        label: localizedMessage("orders.past"),
         orders: sorted.filter((order) => order.status === "DELIVERED"),
       },
     ];
@@ -44,12 +45,12 @@ export function projectOrdersForRole(
     return [
       {
         id: "active",
-        label: "Active",
+        label: localizedMessage("orders.active"),
         orders: sorted.filter((order) => order.status === "PICKED"),
       },
       {
         id: "completed",
-        label: "Completed",
+        label: localizedMessage("orders.completed"),
         orders: sorted.filter((order) => order.status === "DELIVERED"),
       },
     ];
@@ -58,7 +59,7 @@ export function projectOrdersForRole(
   return [
     {
       id: "all",
-      label: "All orders",
+      label: localizedMessage("orders.allOrders"),
       orders: sorted.filter(
         (order) =>
           (!ownerFilters.restaurantId || order.restaurantId === ownerFilters.restaurantId) &&

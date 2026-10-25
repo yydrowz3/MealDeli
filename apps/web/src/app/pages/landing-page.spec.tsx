@@ -43,6 +43,8 @@ describe("LandingPage", () => {
     await user.tab();
     expect(screen.getByRole("button", { name: "Switch to dark mode" })).toHaveFocus();
     await user.tab();
+    expect(screen.getByRole("combobox", { name: "Language" })).toHaveFocus();
+    await user.tab();
     expect(screen.getAllByRole("link", { name: "Log in" })[0]).toHaveFocus();
     await user.tab();
     expect(screen.getAllByRole("link", { name: "Sign up" })[0]).toHaveFocus();

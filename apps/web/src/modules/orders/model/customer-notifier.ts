@@ -1,12 +1,13 @@
+import { message as localizedMessage, resolveMessage } from "../../../shared/i18n";
 import { ORDER_STATUS_LABELS } from "./status-machine";
 import type { Order } from "./types";
 
 const customerMessages: Readonly<Record<Order["status"], string>> = {
-  PENDING: "Your order was placed.",
-  COOKING: "The restaurant started preparing your order.",
-  WAITING: "Your order is ready for pickup.",
-  PICKED: "Your order is on the way.",
-  DELIVERED: "Your order was delivered.",
+  PENDING: localizedMessage("orders.notificationPending"),
+  COOKING: localizedMessage("orders.notificationCooking"),
+  WAITING: localizedMessage("orders.notificationWaiting"),
+  PICKED: localizedMessage("orders.notificationPicked"),
+  DELIVERED: localizedMessage("orders.notificationDelivered"),
 };
 
 export type CustomerOrderNotification = Readonly<{
@@ -16,6 +17,7 @@ export type CustomerOrderNotification = Readonly<{
 
 export function createCustomerOrderStatusNotifier(
   notify: (notification: CustomerOrderNotification) => void,
+  resolve: (value: string) => string = resolveMessage,
 ): (order: Order) => void {
   const seen = new Set<string>();
   return (order) => {
@@ -25,8 +27,8 @@ export function createCustomerOrderStatusNotifier(
     }
     seen.add(key);
     notify({
-      title: ORDER_STATUS_LABELS[order.status],
-      description: customerMessages[order.status],
+      title: resolve(ORDER_STATUS_LABELS[order.status]),
+      description: resolve(customerMessages[order.status]),
     });
   };
 }

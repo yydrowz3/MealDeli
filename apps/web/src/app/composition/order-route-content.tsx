@@ -1,3 +1,5 @@
+import { errorMessage } from "../../shared/i18n";
+
 import { useAtomValue } from "jotai";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -35,7 +37,7 @@ export function OrdersRouteContent() {
     } catch (error) {
       setState({
         kind: "error",
-        message: error instanceof Error ? error.message : "The orders request failed.",
+        message: errorMessage(error, "orders.loadFailed"),
       });
     }
   }, [runtime]);
@@ -130,7 +132,7 @@ export function OrderDetailRouteContent({ orderId }: Readonly<{ orderId: string 
         result.kind === "found" ? { kind: "ready", order: result.order } : { kind: "not-found" },
       );
     } catch (error) {
-      setState({ kind: "error", message: error instanceof Error ? error.message : undefined });
+      setState({ kind: "error", message: errorMessage(error, "orders.loadOrderFailed") });
     }
   }, [orderId, runtime]);
 

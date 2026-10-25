@@ -1,3 +1,4 @@
+import { message as localizedMessage } from "../../../shared/i18n";
 export const DEMO_PROMOTION = {
   priceMinor: 999,
   currency: "USD",
@@ -107,13 +108,13 @@ export function createPromotionCoordinator(
         }
         return {
           kind: "error",
-          message: "We couldn’t confirm the promotion. Try again.",
+          message: localizedMessage("insights.confirmFailed"),
           transactionId: attemptedTransactionId,
         };
       } catch {
         return {
           kind: "error",
-          message: "We couldn’t activate the promotion. Try again.",
+          message: localizedMessage("insights.activateFailed"),
           transactionId: attemptedTransactionId,
         };
       }

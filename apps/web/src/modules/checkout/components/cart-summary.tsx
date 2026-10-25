@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import { TrashIcon } from "@phosphor-icons/react";
 
 import { Button, Money } from "../../../shared/ui";
@@ -19,6 +20,7 @@ export function CartSummary({
   onChangeQuantity,
   disabled = false,
 }: CartSummaryProps) {
+  const { t, text, formatNumber } = useI18n();
   const totalMinor = getCartTotalMinor(cart);
   return (
     <div>
@@ -32,23 +34,23 @@ export function CartSummary({
               key={line.lineId}
             >
               <div>
-                <h3>{line.dishName}</h3>
+                <h3>{text(line.dishName)}</h3>
                 {line.options.map((option) => (
                   <p className="text-[var(--color-muted)]" key={option.optionId}>
-                    {option.name}: {option.choices.map((choice) => choice.name).join(", ")}
+                    {text(option.name)}: {option.choices.map((choice) => choice.name).join(", ")}
                   </p>
                 ))}
-                {invalid ? <p role="alert">This item is no longer available.</p> : null}
+                {invalid ? <p role="alert">{t("checkout.unavailableItem")}</p> : null}
               </div>
               <Money minor={getCartLineTotalMinor(line)} />
               {onChangeQuantity ? (
                 <div
-                  aria-label={`Quantity for ${line.dishName}`}
+                  aria-label={t("checkout.quantityFor", { name: line.dishName })}
                   className="flex items-center gap-3"
                   role="group"
                 >
                   <button
-                    aria-label={`Decrease ${line.dishName} quantity`}
+                    aria-label={t("checkout.decreaseItem", { name: line.dishName })}
                     className="min-h-11 min-w-11"
                     disabled={disabled}
                     onClick={() => onChangeQuantity(line.lineId, line.quantity - 1)}
@@ -56,9 +58,9 @@ export function CartSummary({
                   >
                     −
                   </button>
-                  <span aria-live="polite">{line.quantity}</span>
+                  <span aria-live="polite">{formatNumber(line.quantity)}</span>
                   <button
-                    aria-label={`Increase ${line.dishName} quantity`}
+                    aria-label={t("checkout.increaseItem", { name: line.dishName })}
                     className="min-h-11 min-w-11"
                     disabled={disabled || line.quantity >= 99}
                     onClick={() => onChangeQuantity(line.lineId, line.quantity + 1)}
@@ -68,11 +70,13 @@ export function CartSummary({
                   </button>
                 </div>
               ) : (
-                <p>Quantity: {line.quantity}</p>
+                <p>
+                  {t("checkout.quantityLabel")} {formatNumber(line.quantity)}
+                </p>
               )}
               {onRemove ? (
                 <Button
-                  aria-label={`Remove ${line.dishName}`}
+                  aria-label={t("checkout.removeNamedItem", { name: line.dishName })}
                   className="[justify-self:start] text-action! [&>span]:inline-flex [&>span]:items-center [&>span]:gap-2"
                   disabled={disabled}
                   onClick={() => onRemove(line.lineId)}
@@ -80,7 +84,7 @@ export function CartSummary({
                   variant="tertiary"
                 >
                   <TrashIcon aria-hidden="true" size={16} />
-                  Remove
+                  {t("common.remove")}
                 </Button>
               ) : null}
             </li>
@@ -89,19 +93,19 @@ export function CartSummary({
       </ul>
       <dl>
         <div className="flex justify-between">
-          <dt>Subtotal</dt>
+          <dt>{t("common.subtotal")}</dt>
           <dd>
             <Money minor={totalMinor} />
           </dd>
         </div>
         <div className="flex justify-between">
-          <dt>Delivery</dt>
+          <dt>{t("common.delivery")}</dt>
           <dd>
             <Money minor={0} />
           </dd>
         </div>
         <div className="flex justify-between font-bold">
-          <dt>Total</dt>
+          <dt>{t("common.total")}</dt>
           <dd>
             <Money minor={totalMinor} />
           </dd>

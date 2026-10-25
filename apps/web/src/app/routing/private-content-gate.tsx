@@ -1,3 +1,4 @@
+import { useI18n } from "../../shared/i18n";
 import type { ReactNode } from "react";
 import { Skeleton } from "../../shared/ui";
 import type { AccessDecision } from "./access-policy";
@@ -7,10 +8,11 @@ export function PrivateContentGate(props: {
   children: ReactNode;
   onRedirect: (to: string) => void;
 }) {
+  const { t } = useI18n();
   if (props.decision.kind === "checking") {
     return (
       <main
-        aria-label="Checking your session"
+        aria-label={t("app.checkingSession")}
         className="mx-auto my-[15vh] grid max-w-[40rem] gap-4 p-6"
       >
         <Skeleton className="min-h-12! w-[55%]" />
@@ -24,15 +26,13 @@ export function PrivateContentGate(props: {
     if (decision.reason === "role") {
       return (
         <main className="mx-auto my-[15vh] grid max-w-[40rem] gap-4 p-6" role="alert">
-          <h1 className="m-0 text-[length:var(--font-size-page)]">
-            You don’t have access to this page.
-          </h1>
+          <h1 className="m-0 text-[length:var(--font-size-page)]">{t("app.accessDenied")}</h1>
           <button
             className="cursor-pointer [justify-self:start] border-0 border-none bg-transparent text-action underline"
             onClick={() => props.onRedirect(decision.to)}
             type="button"
           >
-            Continue
+            {t("common.continue")}
           </button>
         </main>
       );

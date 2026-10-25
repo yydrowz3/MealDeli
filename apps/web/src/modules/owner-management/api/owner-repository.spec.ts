@@ -1,3 +1,4 @@
+import { message } from "../../../shared/i18n";
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import { describe, expect, it } from "vitest";
 
@@ -196,10 +197,10 @@ describe("owner restaurant repository", () => {
     ).resolves.toEqual({ ok: false, message: "Duplicate restaurant" });
     await expect(
       failure.update(restaurant.id, { name: "N", address: "A", image: null }),
-    ).resolves.toEqual({ ok: false, message: "Restaurant not found." });
+    ).resolves.toEqual({ ok: false, message: message("common.restaurantNotFound") });
     await expect(failure.delete(restaurant.id)).resolves.toEqual({
       ok: false,
-      message: "We couldn’t delete this restaurant.",
+      message: message("owner.deleteFailed"),
     });
   });
 
@@ -241,10 +242,10 @@ describe("owner restaurant repository", () => {
     );
     await expect(failure.createDish(restaurant.id, draft)).resolves.toEqual({
       ok: false,
-      message: "We couldn’t add this dish.",
+      message: message("owner.addDishFailed"),
     });
     await expect(
       failure.updateDish(restaurant.dishes[0]!.id, restaurant.id, draft),
-    ).resolves.toEqual({ ok: false, message: "Restaurant not found." });
+    ).resolves.toEqual({ ok: false, message: message("common.restaurantNotFound") });
   });
 });

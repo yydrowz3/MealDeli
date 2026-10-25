@@ -1,4 +1,5 @@
 import { Badge } from "../feedback/badge";
+import { useI18n } from "../../i18n";
 import { getOrderStatusPresentation } from "./order-status";
 import type { OrderStatus } from "./order-status";
 
@@ -7,7 +8,8 @@ export type StatusBadgeProps = {
 };
 
 export function StatusBadge({ status }: StatusBadgeProps) {
-  const { label, tone, Icon } = getOrderStatusPresentation(status);
+  const { text } = useI18n();
+  const { label, tone, Icon } = getOrderStatusPresentation(status, text);
   return (
     <Badge icon={<Icon aria-hidden="true" size={18} />} tone={tone}>
       {label}

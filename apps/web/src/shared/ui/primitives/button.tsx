@@ -1,3 +1,4 @@
+import { useI18n } from "../../i18n";
 import { CircleNotch } from "@phosphor-icons/react";
 import type { ButtonHTMLAttributes } from "react";
 
@@ -35,6 +36,7 @@ export function Button({
   type = "button",
   ...props
 }: ButtonProps) {
+  const { text } = useI18n();
   if (iconOnly && !props["aria-label"]) {
     throw new Error("Icon-only buttons require an aria-label.");
   }
@@ -57,7 +59,7 @@ export function Button({
       disabled={disabled || loading}
       type={type}
     >
-      <span className={loading ? "invisible" : undefined}>{children}</span>
+      <span className={loading ? "invisible" : undefined}>{text(children)}</span>
       {loading ? (
         <CircleNotch aria-hidden="true" className="absolute animate-ui-spin" size={20} />
       ) : null}

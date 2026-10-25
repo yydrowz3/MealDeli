@@ -1,3 +1,4 @@
+import { useI18n } from "../../i18n";
 import type { HTMLAttributes } from "react";
 
 import { formatDateTime, toValidDate } from "./date-time";
@@ -10,11 +11,12 @@ export type DateTimeProps = Omit<HTMLAttributes<HTMLTimeElement>, "children"> &
   };
 
 export function DateTime({ value, locale, timeZone, relativeLabel, ...props }: DateTimeProps) {
+  const { text, locale: currentLocale } = useI18n();
   const date = toValidDate(value);
   return (
     <time {...props} dateTime={date.toISOString()}>
-      {formatDateTime(date, { locale, timeZone })}
-      {relativeLabel ? ` (${relativeLabel})` : null}
+      {text(formatDateTime(date, { locale: locale ?? currentLocale, timeZone }))}
+      {text(relativeLabel ? ` (${relativeLabel})` : null)}
     </time>
   );
 }

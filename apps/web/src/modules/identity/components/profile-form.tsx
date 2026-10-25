@@ -1,3 +1,4 @@
+import { message as localizedMessage, useI18n } from "../../../shared/i18n";
 import { useForm } from "@tanstack/react-form";
 import { useAtomValue, useStore } from "jotai";
 import { useState } from "react";
@@ -19,7 +20,11 @@ export type ProfileFormProps = {
   onVerificationRequired?: () => void;
 };
 
-const roleLabels = { CUSTOMER: "Customer", OWNER: "Owner", COURIER: "Courier" } as const;
+const roleLabels = {
+  CUSTOMER: localizedMessage("identity.customer"),
+  OWNER: localizedMessage("identity.owner"),
+  COURIER: localizedMessage("identity.courier"),
+} as const;
 
 export function ProfileForm({
   repository,
@@ -27,6 +32,7 @@ export function ProfileForm({
   store: injectedStore,
   onVerificationRequired,
 }: ProfileFormProps) {
+  const { t, text } = useI18n();
   const contextStore = useStore();
   const store = injectedStore ?? contextStore;
   const user = useAtomValue(sessionUserAtom, { store });
@@ -39,7 +45,7 @@ export function ProfileForm({
       setFormError(null);
       setStatus(null);
       if (!accessToken || !user) {
-        setFormError("Your session expired. Please log in again.");
+        setFormError(localizedMessage("common.sessionExpired"));
         return;
       }
       const parsed = profileSchema.parse(value);
@@ -52,14 +58,12 @@ export function ProfileForm({
         ...(parsed.password ? { password: parsed.password } : {}),
       });
       if (!result.ok) {
-        setFormError(
-          identityErrorMessage(result.code, "We couldn’t save your changes. Try again."),
-        );
+        setFormError(identityErrorMessage(result.code, localizedMessage("common.saveFailed")));
         return;
       }
       const refreshed = await repository.me(accessToken);
       if (!refreshed.ok) {
-        setFormError("We couldn’t refresh your profile. Try again.");
+        setFormError(localizedMessage("common.refreshProfileFailed"));
         return;
       }
       store.set(setSessionUserAtom, refreshed.value);
@@ -70,12 +74,12 @@ export function ProfileForm({
         image: refreshed.value.image,
         password: "",
       });
-      setStatus("Profile updated.");
+      setStatus(localizedMessage("identity.profileUpdated"));
       if (emailChanged || !refreshed.value.verifiedAt) onVerificationRequired?.();
     },
   });
 
-  if (!user) return <p>Your session expired. Please log in again.</p>;
+  if (!user) return <p>{t("common.sessionExpired")}</p>;
 
   return (
     <form
@@ -87,13 +91,13 @@ export function ProfileForm({
     >
       {formError ? (
         <p className="text-danger-dark" role="alert">
-          {formError}
+          {text(formError)}
         </p>
       ) : null}
       <form.Field name="image">
         {(field) => (
           <ImageField
-            label="Avatar"
+            label={t("identity.avatar")}
             onChange={(url) => field.handleChange(url)}
             uploader={uploader}
             value={field.state.value}
@@ -104,8 +108,8 @@ export function ProfileForm({
         {(field) => (
           <Input
             autoComplete="name"
-            error={firstFieldError(field.state.meta.errors)}
-            label="Full name"
+            error={text(firstFieldError(field.state.meta.errors))}
+            label={t("identity.fullName")}
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
             value={field.state.value}
@@ -116,8 +120,8 @@ export function ProfileForm({
         {(field) => (
           <Input
             autoComplete="email"
-            error={firstFieldError(field.state.meta.errors)}
-            label="Email address"
+            error={text(firstFieldError(field.state.meta.errors))}
+            label={t("identity.email")}
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
             type="email"
@@ -128,8 +132,8 @@ export function ProfileForm({
       <form.Field name="address">
         {(field) => (
           <Textarea
-            error={firstFieldError(field.state.meta.errors)}
-            label="Address"
+            error={text(firstFieldError(field.state.meta.errors))}
+            label={t("common.address")}
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value ?? "")}
             value={field.state.value ?? ""}
@@ -140,9 +144,9 @@ export function ProfileForm({
         {(field) => (
           <Input
             autoComplete="new-password"
-            description="Leave blank to keep your current password."
-            error={firstFieldError(field.state.meta.errors)}
-            label="New password"
+            description={t("identity.keepPassword")}
+            error={text(firstFieldError(field.state.meta.errors))}
+            label={t("identity.newPassword")}
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
             type="password"
@@ -150,15 +154,15 @@ export function ProfileForm({
           />
         )}
       </form.Field>
-      <Input disabled label="Role" readOnly value={roleLabels[user.role]} />
+      <Input disabled label={t("identity.role")} readOnly value={text(roleLabels[user.role])} />
       <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting] as const}>
         {([canSubmit, isSubmitting]) => (
           <Button disabled={!canSubmit} loading={isSubmitting} size="lg" type="submit">
-            Save changes
+            {t("common.saveChanges")}
           </Button>
         )}
       </form.Subscribe>
-      {status ? <p aria-live="polite">{status}</p> : null}
+      {status ? <p aria-live="polite">{text(status)}</p> : null}
     </form>
   );
 }

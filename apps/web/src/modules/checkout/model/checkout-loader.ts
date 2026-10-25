@@ -1,3 +1,4 @@
+import { message as localizedMessage } from "../../../shared/i18n";
 import type { CatalogRepository, RestaurantDetail } from "../../catalog";
 import type { SessionUser } from "../../identity";
 import type { CartLine, CartState } from "./types";
@@ -57,6 +58,6 @@ export async function loadCheckout(input: {
       .filter((line) => line !== null);
     return { kind: "ready", restaurant, address: input.user.address, invalidLines };
   } catch {
-    return { kind: "error", message: "We couldn’t load checkout. Try again." };
+    return { kind: "error", message: localizedMessage("checkout.loadFailed") };
   }
 }

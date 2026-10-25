@@ -1,3 +1,4 @@
+import { message as localizedMessage } from "../../../shared/i18n";
 import { z } from "zod";
 
 import { useFragment as readFragment } from "../../../gql";
@@ -148,7 +149,7 @@ export function adaptRestaurantSummary(value: unknown): RestaurantSummary {
     promotedUntil: restaurant.promotedUntil ?? null,
     category: restaurant.category ?? {
       id: restaurant.categoryId,
-      name: "Uncategorized",
+      name: localizedMessage("common.uncategorized"),
       slug: "",
     },
   };

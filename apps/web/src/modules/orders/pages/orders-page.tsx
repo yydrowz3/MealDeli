@@ -1,3 +1,4 @@
+import { errorMessage, message as localizedMessage, useI18n } from "../../../shared/i18n";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 import { Button, EmptyState, ErrorState, Select, Skeleton } from "../../../shared/ui";
@@ -23,11 +24,14 @@ export type OrdersPageProps = Readonly<{
 }>;
 
 const emptyCopy = {
-  current: ["No active orders", "When you place an order, its live status will appear here."],
-  past: ["No past orders yet", "Completed orders will appear here."],
-  active: ["No active delivery", "Accepted deliveries will appear here."],
-  completed: ["No completed deliveries yet", "Completed deliveries will appear here."],
-  all: ["No orders found", "Try changing the restaurant or status filter."],
+  current: [localizedMessage("orders.emptyActive"), localizedMessage("orders.emptyActiveHelp")],
+  past: [localizedMessage("orders.emptyPast"), localizedMessage("orders.emptyPastHelp")],
+  active: [localizedMessage("orders.emptyDelivery"), localizedMessage("orders.emptyDeliveryHelp")],
+  completed: [
+    localizedMessage("orders.emptyCompleted"),
+    localizedMessage("orders.emptyCompletedHelp"),
+  ],
+  all: [localizedMessage("orders.emptyAll"), localizedMessage("orders.emptyAllHelp")],
 } as const;
 
 export function OrdersPage({
@@ -38,6 +42,7 @@ export function OrdersPage({
   onViewOrder,
   renderAction,
 }: OrdersPageProps) {
+  const { t, text } = useI18n();
   const [selectedSection, setSelectedSection] = useState(role === "COURIER" ? "active" : "current");
   const [restaurantId, setRestaurantId] = useState("");
   const [status, setStatus] = useState<OrderStatus | "">("");
@@ -58,16 +63,20 @@ export function OrdersPage({
   );
   const activeSection = sections.find((section) => section.id === selectedSection) ?? sections[0];
   const title =
-    role === "CUSTOMER" ? "Your orders" : role === "COURIER" ? "Delivery history" : "Orders";
+    role === "CUSTOMER"
+      ? t("orders.yourOrders")
+      : role === "COURIER"
+        ? t("orders.deliveryHistory")
+        : t("common.orders");
 
   return (
     <main className="mx-auto grid w-full max-w-content gap-6 p-6 font-sans text-charcoal">
       <header>
-        <h1 className="m-0 text-page">{title}</h1>
+        <h1 className="m-0 text-page">{text(title)}</h1>
       </header>
 
       {state.kind === "loading" ? (
-        <div aria-label="Loading orders" className="grid gap-4">
+        <div aria-label={t("orders.loading")} className="grid gap-4">
           <Skeleton className="min-h-40!" />
           <Skeleton className="min-h-40!" />
           <Skeleton className="min-h-40!" />
@@ -76,35 +85,35 @@ export function OrdersPage({
 
       {state.kind === "error" ? (
         <ErrorState
-          action={onRetry ? { label: "Try again", onClick: onRetry } : undefined}
-          description={state.message}
-          title="We couldn’t load your orders."
+          action={onRetry ? { label: t("common.tryAgain"), onClick: onRetry } : undefined}
+          description={text(errorMessage(state.message, "common.connectionRetry"))}
+          title={t("orders.loadFailed")}
         />
       ) : null}
 
       {state.kind === "ready" && role === "OWNER" ? (
         <div className="grid grid-cols-[repeat(2,minmax(0,18rem))] gap-4 [@media(max-width:47.99rem)]:grid-cols-[1fr]">
           <Select
-            label="Restaurant"
+            label={t("common.restaurant")}
             onChange={(event) => setRestaurantId(event.target.value)}
             value={restaurantId}
           >
-            <option value="">All restaurants</option>
+            <option value="">{t("common.allRestaurants")}</option>
             {restaurants.map((restaurant) => (
               <option key={restaurant.id} value={restaurant.id}>
-                {restaurant.name}
+                {text(restaurant.name)}
               </option>
             ))}
           </Select>
           <Select
-            label="Status"
+            label={t("orders.status")}
             onChange={(event) => setStatus(event.target.value as OrderStatus | "")}
             value={status}
           >
-            <option value="">All statuses</option>
+            <option value="">{t("orders.allStatuses")}</option>
             {ORDER_STATUSES.map((orderStatus) => (
               <option key={orderStatus} value={orderStatus}>
-                {ORDER_STATUS_LABELS[orderStatus]}
+                {text(ORDER_STATUS_LABELS[orderStatus])}
               </option>
             ))}
           </Select>
@@ -112,7 +121,7 @@ export function OrdersPage({
       ) : null}
 
       {state.kind === "ready" && role !== "OWNER" ? (
-        <div aria-label="Order sections" className="flex gap-2" role="tablist">
+        <div aria-label={t("orders.sections")} className="flex gap-2" role="tablist">
           {sections.map((section) => (
             <Button
               aria-selected={activeSection?.id === section.id}
@@ -121,7 +130,7 @@ export function OrdersPage({
               role="tab"
               variant={activeSection?.id === section.id ? "primary" : "secondary"}
             >
-              {section.label}
+              {text(section.label)}
             </Button>
           ))}
         </div>
@@ -130,8 +139,8 @@ export function OrdersPage({
       {state.kind === "ready" && activeSection ? (
         activeSection.orders.length === 0 ? (
           <EmptyState
-            description={emptyCopy[activeSection.id][1]}
-            title={emptyCopy[activeSection.id][0]}
+            description={text(emptyCopy[activeSection.id][1])}
+            title={text(emptyCopy[activeSection.id][0])}
           />
         ) : role === "OWNER" ? (
           <OrderTable
@@ -147,13 +156,13 @@ export function OrdersPage({
                 key={order.id}
                 onView={onViewOrder}
                 order={order}
-                viewLabel={
+                viewLabel={text(
                   role === "COURIER" && order.status === "PICKED"
-                    ? "Continue delivery"
+                    ? t("courier.continueDelivery")
                     : order.status === "DELIVERED"
-                      ? "View order"
-                      : "Track order"
-                }
+                      ? t("common.viewOrder")
+                      : t("orders.track"),
+                )}
               />
             ))}
           </div>

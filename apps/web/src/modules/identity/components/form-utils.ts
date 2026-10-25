@@ -1,9 +1,10 @@
+import { message as localizedMessage, validationMessage } from "../../../shared/i18n";
 export function firstFieldError(errors: unknown[]): string | undefined {
   for (const error of errors) {
-    if (typeof error === "string") return error;
+    if (typeof error === "string") return validationMessage(error);
     if (error && typeof error === "object" && "message" in error) {
       const message = (error as { message?: unknown }).message;
-      if (typeof message === "string") return message;
+      if (typeof message === "string") return validationMessage(message);
     }
   }
   return undefined;
@@ -11,10 +12,10 @@ export function firstFieldError(errors: unknown[]): string | undefined {
 
 export function identityErrorMessage(
   code: string,
-  fallback = "Something went wrong. Try again.",
+  fallback = localizedMessage("common.genericError"),
 ): string {
-  if (code === "INVALID_CREDENTIALS") return "Incorrect email or password.";
-  if (code === "DUPLICATE_EMAIL") return "An account with this email already exists.";
+  if (code === "INVALID_CREDENTIALS") return localizedMessage("identity.invalidCredentials");
+  if (code === "DUPLICATE_EMAIL") return localizedMessage("identity.duplicateEmail");
   if (code === "NETWORK") return fallback;
-  return "Something went wrong. Try again.";
+  return localizedMessage("common.genericError");
 }

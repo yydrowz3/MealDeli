@@ -1,3 +1,4 @@
+import { message as localizedMessage } from "../../../shared/i18n";
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 
 import { useFragment as readFragment, type FragmentType } from "../../../gql";
@@ -60,14 +61,14 @@ export function createPromotionRepository(
         if (!restaurantOutput.ok || !restaurantOutput.restaurant) {
           if (/not found|permission|don't own/i.test(restaurantOutput.error ?? "")) return null;
           throw new PromotionRepositoryError(
-            restaurantOutput.error ?? "We couldn’t load this restaurant.",
+            restaurantOutput.error ?? localizedMessage("common.loadRestaurantFailed"),
           );
         }
         if (!historyData.getPayments.ok || !historyData.myRestaurants.ok) {
           throw new PromotionRepositoryError(
             historyData.getPayments.error ??
               historyData.myRestaurants.error ??
-              "We couldn’t load promotion history.",
+              localizedMessage("insights.loadHistoryFailed"),
           );
         }
         const restaurantNames = new Map(
@@ -78,7 +79,9 @@ export function createPromotionRepository(
             id: payment.id,
             transactionId: payment.transactionId,
             restaurantId: payment.restaurantId,
-            restaurantName: restaurantNames.get(payment.restaurantId) ?? "Restaurant unavailable",
+            restaurantName:
+              restaurantNames.get(payment.restaurantId) ??
+              localizedMessage("common.restaurantUnavailable"),
             createdAt: String(payment.createdAt),
           }))
           .sort((left, right) => Date.parse(right.createdAt) - Date.parse(left.createdAt));
@@ -102,7 +105,7 @@ export function createPromotionRepository(
         if (isDuplicateMessage(output.error)) return { kind: "duplicate" };
         return {
           kind: "failed",
-          message: output.error ?? "We couldn’t activate the promotion. Try again.",
+          message: output.error ?? localizedMessage("insights.activateFailed"),
         };
       } catch (error) {
         throw new PromotionRepositoryError(undefined, { cause: error });

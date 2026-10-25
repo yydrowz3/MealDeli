@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import { useAtomValue, useStore } from "jotai";
 import { useEffect, useRef, useState } from "react";
 
@@ -27,6 +28,7 @@ export function VerifyEmailPage({
   navigate,
   store: injectedStore,
 }: VerifyEmailPageProps) {
+  const { t, text } = useI18n();
   const contextStore = useStore();
   const store = injectedStore ?? contextStore;
   const accessToken = useAtomValue(accessTokenAtom, { store });
@@ -73,40 +75,40 @@ export function VerifyEmailPage({
       <Card className="w-full max-w-[440px] border! border-solid! border-border! [@media(max-width:639px)]:[box-shadow:none]">
         {state === "loading" ? (
           <>
-            <h1 className="mt-0 mb-2">Verifying your email…</h1>
-            <p role="status">Please wait.</p>
+            <h1 className="mt-0 mb-2">{t("identity.verifying")}</h1>
+            <p role="status">{t("identity.pleaseWait")}</p>
           </>
         ) : null}
         {state === "success" ? (
           <>
             <h1 className="mt-0 mb-2" tabIndex={-1}>
-              Email verified
+              {t("identity.verified")}
             </h1>
-            <p>Your MealDeli account is ready.</p>
+            <p>{t("identity.accountReady")}</p>
             <Button onClick={() => navigate(verifiedRole ? getRoleHome(verifiedRole) : "/login")}>
-              {verifiedRole ? "Continue to MealDeli" : "Continue to log in"}
+              {text(verifiedRole ? t("identity.continueApp") : t("identity.continueLogin"))}
             </Button>
           </>
         ) : null}
         {state === "invalid" ? (
           <>
             <h1 className="mt-0 mb-2" tabIndex={-1}>
-              This verification link is no longer valid
+              {t("identity.invalidLink")}
             </h1>
-            <p>Request a new email to verify your account.</p>
+            <p>{t("identity.requestNewLink")}</p>
             <ResendForm repository={repository} />
             <Button onClick={() => navigate("/login")} variant="tertiary">
-              Back to log in
+              {t("identity.backToLogin")}
             </Button>
           </>
         ) : null}
         {state === "network" ? (
           <>
             <h1 className="mt-0 mb-2" tabIndex={-1}>
-              We couldn’t verify your email
+              {t("identity.verifyFailed")}
             </h1>
-            <p>Check your connection and try again.</p>
-            <Button onClick={retry}>Try again</Button>
+            <p>{t("common.connectionRetry")}</p>
+            <Button onClick={retry}>{t("common.tryAgain")}</Button>
           </>
         ) : null}
       </Card>

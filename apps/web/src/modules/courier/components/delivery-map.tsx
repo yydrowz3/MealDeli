@@ -1,5 +1,9 @@
+import { useI18n } from "../../../shared/i18n";
 import { divIcon } from "leaflet";
-import { MapContainer, Marker, Polyline, TileLayer } from "react-leaflet";
+import type { Marker as LeafletMarker } from "leaflet";
+import { MapContainer, Marker, Polyline, TileLayer, ZoomControl } from "react-leaflet";
+import type { MarkerProps } from "react-leaflet";
+import { useEffect, useRef } from "react";
 
 import { MapFrame } from "../../../shared/ui";
 import type { DemoRoute } from "../model/demo-route";
@@ -28,6 +32,16 @@ const courierIcon = divIcon({
   html: "➤",
 });
 
+function AccessibleMarker({ label, ...props }: MarkerProps & { label: string }) {
+  const marker = useRef<LeafletMarker>(null);
+  useEffect(() => {
+    // Leaflet only applies alt to image icons. Our div icons need an explicit
+    // accessible name, including when the language changes during a delivery.
+    marker.current?.getElement()?.setAttribute("aria-label", label);
+  }, [label]);
+  return <Marker {...props} ref={marker} alt={label} title={label} />;
+}
+
 export type DeliveryMapProps = Readonly<{
   route: DemoRoute;
   restaurantName: string;
@@ -43,6 +57,7 @@ export function DeliveryMap({
   onTileFailure,
   onSkipMap,
 }: DeliveryMapProps) {
+  const { t, language } = useI18n();
   const courier = route.path[route.progressIndex] ?? route.restaurant;
   const completed = route.path.slice(0, route.progressIndex + 1);
   const remaining = route.path.slice(route.progressIndex);
@@ -50,14 +65,14 @@ export function DeliveryMap({
   return (
     <MapFrame
       attribution={failed ? null : <span>© OpenStreetMap contributors</span>}
-      description="Location is simulated for this demo."
+      description={t("courier.simulatedLocation")}
       fallbackSlot={<MapFallback restaurantName={restaurantName} route={route} />}
       onSkipMap={onSkipMap}
       state={failed ? "fallback" : "ready"}
-      title="Demo route"
+      title={t("courier.demoRoute")}
     >
       <div
-        aria-label="Simulated delivery map"
+        aria-label={t("courier.mapLabel")}
         className="relative min-h-[460px] overflow-hidden rounded-[0.9rem] [@media(max-width:767px)]:min-h-[48vh]"
       >
         <MapContainer
@@ -66,7 +81,13 @@ export function DeliveryMap({
           center={courier}
           scrollWheelZoom={false}
           zoom={14}
+          zoomControl={false}
         >
+          <ZoomControl
+            key={language}
+            zoomInTitle={t("courier.zoomIn")}
+            zoomOutTitle={t("courier.zoomOut")}
+          />
           <TileLayer
             attribution="© OpenStreetMap contributors"
             eventHandlers={{ tileerror: () => onTileFailure?.() }}
@@ -74,18 +95,22 @@ export function DeliveryMap({
           />
           <Polyline pathOptions={{ color: "#b7c2bd", weight: 6 }} positions={remaining} />
           <Polyline pathOptions={{ color: "#087f5b", weight: 7 }} positions={completed} />
-          <Marker alt={`Pickup: ${restaurantName}`} icon={pickupIcon} position={route.restaurant} />
-          <Marker
-            alt="Demo delivery destination"
+          <AccessibleMarker
+            label={t("courier.pickup", { name: restaurantName })}
+            icon={pickupIcon}
+            position={route.restaurant}
+          />
+          <AccessibleMarker
+            label={t("courier.destination")}
             icon={destinationIcon}
             position={route.destination}
           />
-          <Marker alt="Simulated courier location" icon={courierIcon} position={courier} />
+          <AccessibleMarker label={t("courier.location")} icon={courierIcon} position={courier} />
         </MapContainer>
         <ul className="list-none p-0 absolute [inline-size:1px] [block-size:1px] overflow-hidden [clip:rect(0,0,0,0)]">
-          <li>Pickup: {restaurantName}</li>
-          <li>Demo delivery destination</li>
-          <li>Simulated courier location</li>
+          <li>{t("courier.pickup", { name: restaurantName })}</li>
+          <li>{t("courier.destination")}</li>
+          <li>{t("courier.location")}</li>
         </ul>
       </div>
     </MapFrame>

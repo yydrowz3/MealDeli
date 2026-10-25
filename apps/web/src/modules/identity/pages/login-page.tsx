@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import { useAtomValue, useStore } from "jotai";
 
 import { Card } from "../../../shared/ui";
@@ -16,6 +17,7 @@ export type LoginPageProps = {
 };
 
 export function LoginPage(props: LoginPageProps) {
+  const { t } = useI18n();
   const contextStore = useStore();
   const store = props.store ?? contextStore;
   const user = useAtomValue(sessionUserAtom, { store });
@@ -36,8 +38,8 @@ export function LoginPage(props: LoginPageProps) {
   return (
     <main className="flex min-h-dvh items-center justify-center bg-warm-white px-4 py-6 [@media(max-width:639px)]:[align-items:start] [@media(max-width:639px)]:pt-8">
       <Card className="w-full max-w-[440px] border! border-solid! border-border! [@media(max-width:639px)]:[box-shadow:none]">
-        <h1 className="mt-0 mb-2">Welcome back</h1>
-        <p>Log in to continue to MealDeli.</p>
+        <h1 className="mt-0 mb-2">{t("identity.welcomeBack")}</h1>
+        <p>{t("identity.loginDescription")}</p>
         <LoginForm {...props} store={store} />
       </Card>
     </main>

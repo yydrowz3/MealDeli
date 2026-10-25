@@ -1,3 +1,4 @@
+import { message as localizedMessage } from "../../../shared/i18n";
 import { z } from "zod";
 
 import type { Dish } from "../../catalog";
@@ -22,7 +23,11 @@ const selectionShape = z.object({
 export function createDishSelectionSchema(dish: Dish) {
   return z
     .object({
-      quantity: z.number().int().min(1).max(99),
+      quantity: z
+        .number({ error: localizedMessage("checkout.validQuantity") })
+        .int(localizedMessage("checkout.validQuantity"))
+        .min(1, localizedMessage("checkout.validQuantity"))
+        .max(99, localizedMessage("checkout.validQuantity")),
       selections: z.array(selectionShape),
     })
     .superRefine((value, context) => {
@@ -31,7 +36,7 @@ export function createDishSelectionSchema(dish: Dish) {
         if (seenOptions.has(selection.optionId)) {
           context.addIssue({
             code: "custom",
-            message: "Each option may only be selected once.",
+            message: localizedMessage("checkout.duplicateOption"),
             path: ["selections", selectionIndex, "optionId"],
           });
           continue;
@@ -41,7 +46,7 @@ export function createDishSelectionSchema(dish: Dish) {
         if (!option) {
           context.addIssue({
             code: "custom",
-            message: "This option is no longer available.",
+            message: localizedMessage("checkout.optionUnavailable"),
             path: ["selections", selectionIndex, "optionId"],
           });
           continue;
@@ -49,7 +54,7 @@ export function createDishSelectionSchema(dish: Dish) {
         if (new Set(selection.choiceIds).size !== selection.choiceIds.length) {
           context.addIssue({
             code: "custom",
-            message: "A choice cannot be selected more than once.",
+            message: localizedMessage("checkout.duplicateChoice"),
             path: ["selections", selectionIndex, "choiceIds"],
           });
         }
@@ -57,7 +62,7 @@ export function createDishSelectionSchema(dish: Dish) {
         if (selection.choiceIds.some((choiceId) => !knownChoices.has(choiceId))) {
           context.addIssue({
             code: "custom",
-            message: "A selected choice is no longer available.",
+            message: localizedMessage("checkout.choiceUnavailable"),
             path: ["selections", selectionIndex, "choiceIds"],
           });
         }
@@ -92,11 +97,12 @@ export function createDishSelectionDefaults(dish: Dish): DishSelectionValues {
 }
 
 export function optionSelectionRule(minSelections: number, maxSelections: number): string {
-  if (minSelections === 1 && maxSelections === 1) return "Choose 1 option.";
-  if (minSelections === 0 && maxSelections === 1) return "Optional";
-  if (minSelections === 0) return `Choose up to ${maxSelections}.`;
-  if (minSelections === maxSelections) return `Choose ${minSelections}.`;
-  return `Choose ${minSelections}–${maxSelections}.`;
+  if (minSelections === 1 && maxSelections === 1) return localizedMessage("checkout.chooseOne");
+  if (minSelections === 0 && maxSelections === 1) return localizedMessage("checkout.optional");
+  if (minSelections === 0) return localizedMessage("checkout.chooseUpTo", { count: maxSelections });
+  if (minSelections === maxSelections)
+    return localizedMessage("checkout.chooseExact", { count: minSelections });
+  return localizedMessage("checkout.chooseRange", { min: minSelections, max: maxSelections });
 }
 
 export function getDishSelectionUnitMinor(dish: Dish, values: DishSelectionValues): number {

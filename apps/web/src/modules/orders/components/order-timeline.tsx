@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import { Check } from "@phosphor-icons/react";
 
 import { buildOrderTimeline, type OrderTimelineStep } from "../model/status-machine";
@@ -18,9 +19,10 @@ const markerClasses = {
 } satisfies Record<OrderTimelineStep["state"], string>;
 
 export function OrderTimeline({ status }: OrderTimelineProps) {
+  const { t, text } = useI18n();
   return (
     <ol
-      aria-label="Order progress"
+      aria-label={t("orders.progress")}
       className="m-0 grid list-none gap-4 p-0 md:grid-cols-[repeat(5,1fr)]"
     >
       {buildOrderTimeline(status).map((step) => (
@@ -37,8 +39,8 @@ export function OrderTimeline({ status }: OrderTimelineProps) {
             {step.state === "complete" ? <Check weight="bold" /> : null}
           </span>
           <span>
-            <strong className="block">{step.label}</strong>
-            <small className="block">{step.description}</small>
+            <strong className="block">{text(step.label)}</strong>
+            <small className="block">{text(step.description)}</small>
           </span>
         </li>
       ))}

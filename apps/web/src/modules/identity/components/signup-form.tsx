@@ -1,3 +1,4 @@
+import { message as localizedMessage, useI18n } from "../../../shared/i18n";
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
 
@@ -14,6 +15,7 @@ export type SignupFormProps = {
 };
 
 export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
+  const { t, text } = useI18n();
   const [formError, setFormError] = useState<string | null>(null);
   const form = useForm({
     ...createSignupFormOptions(role),
@@ -22,9 +24,7 @@ export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
       const { demoAcknowledged: _demoAcknowledged, ...signUpInput } = signupSchema.parse(value);
       const result = await repository.signUp(signUpInput);
       if (!result.ok) {
-        setFormError(
-          identityErrorMessage(result.code, "We couldn’t create your account. Try again."),
-        );
+        setFormError(identityErrorMessage(result.code, localizedMessage("identity.signupFailed")));
         form.setFieldValue("password", "");
         return;
       }
@@ -43,23 +43,23 @@ export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
     >
       {formError ? (
         <p className="text-danger-dark" role="alert">
-          {formError}
+          {text(formError)}
         </p>
       ) : null}
       {!role ? (
         <form.Field name="role">
           {(field) => (
             <Select
-              error={firstFieldError(field.state.meta.errors)}
-              label="How do you want to use MealDeli?"
+              error={text(firstFieldError(field.state.meta.errors))}
+              label={t("identity.chooseRoleQuestion")}
               onBlur={field.handleBlur}
               onChange={(event) => field.handleChange(event.target.value as UserRole | "")}
               value={field.state.value}
             >
-              <option value="">Choose a role</option>
-              <option value="CUSTOMER">Customer</option>
-              <option value="OWNER">Owner</option>
-              <option value="COURIER">Courier</option>
+              <option value="">{t("identity.chooseRole")}</option>
+              <option value="CUSTOMER">{t("identity.customer")}</option>
+              <option value="OWNER">{t("identity.owner")}</option>
+              <option value="COURIER">{t("identity.courier")}</option>
             </Select>
           )}
         </form.Field>
@@ -68,8 +68,8 @@ export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
         {(field) => (
           <Input
             autoComplete="name"
-            error={firstFieldError(field.state.meta.errors)}
-            label="Full name"
+            error={text(firstFieldError(field.state.meta.errors))}
+            label={t("identity.fullName")}
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
             value={field.state.value}
@@ -80,8 +80,8 @@ export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
         {(field) => (
           <Input
             autoComplete="email"
-            error={firstFieldError(field.state.meta.errors)}
-            label="Email address"
+            error={text(firstFieldError(field.state.meta.errors))}
+            label={t("identity.email")}
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
             type="email"
@@ -93,9 +93,9 @@ export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
         {(field) => (
           <PasswordInput
             autoComplete="new-password"
-            description="At least 8 characters"
-            error={firstFieldError(field.state.meta.errors)}
-            label="Password"
+            description={t("identity.passwordHint")}
+            error={text(firstFieldError(field.state.meta.errors))}
+            label={t("identity.password")}
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
             value={field.state.value}
@@ -115,14 +115,14 @@ export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
                   onChange={(event) => field.handleChange(event.target.checked)}
                   type="checkbox"
                 />
-                <span>I understand this is a MealDeli demo account.</span>
+                <span>{t("identity.demoAcknowledgement")}</span>
               </label>
               {error ? (
                 <span
                   className="ml-7 block text-[0.875rem] text-danger-dark"
                   id="demo-acknowledged-error"
                 >
-                  {error}
+                  {text(error)}
                 </span>
               ) : null}
             </div>
@@ -132,7 +132,7 @@ export function SignupForm({ repository, role, onSuccess }: SignupFormProps) {
       <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting] as const}>
         {([canSubmit, isSubmitting]) => (
           <Button disabled={!canSubmit} loading={isSubmitting} size="lg" type="submit">
-            Create account
+            {t("identity.createAccount")}
           </Button>
         )}
       </form.Subscribe>

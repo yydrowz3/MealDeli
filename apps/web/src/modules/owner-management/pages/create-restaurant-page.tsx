@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import { useSetAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 
@@ -21,6 +22,7 @@ export function OwnerCreateRestaurantPage({
   uploader,
   navigate,
 }: OwnerCreateRestaurantPageProps) {
+  const { t } = useI18n();
   const [categories, setCategories] = useState<readonly CategorySummary[] | null>(null);
   const [error, setError] = useState(false);
   const select = useSetAtom(setSelectedOwnerRestaurantAtom);
@@ -38,8 +40,8 @@ export function OwnerCreateRestaurantPage({
   if (error)
     return (
       <ErrorState
-        action={{ label: "Try again", onClick: () => void load() }}
-        title="We couldn’t load categories."
+        action={{ label: t("common.tryAgain"), onClick: () => void load() }}
+        title={t("owner.loadCategoriesFailed")}
       />
     );
   if (!categories) return <Skeleton className="h-96" />;
@@ -48,9 +50,9 @@ export function OwnerCreateRestaurantPage({
       <header className="flex items-center justify-between gap-4 [@media(max-width:47.99rem)]:grid [@media(max-width:47.99rem)]:items-stretch [@media(max-width:47.99rem)]:grid-cols-[1fr]">
         <div>
           <p className="m-0 [color:var(--color-text-muted)] [font-size:var(--font-size-sm)] font-bold tracking-[0.08em] uppercase">
-            Restaurant details
+            {t("insights.restaurantDetails")}
           </p>
-          <h1 className="m-0">Create restaurant</h1>
+          <h1 className="m-0">{t("owner.createRestaurant")}</h1>
         </div>
       </header>
       <RestaurantForm

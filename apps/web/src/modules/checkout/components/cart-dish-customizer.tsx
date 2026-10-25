@@ -1,3 +1,4 @@
+import { useI18n } from "../../../shared/i18n";
 import { useStore } from "jotai";
 import { useState } from "react";
 
@@ -15,6 +16,7 @@ export type CartDishCustomizerProps = {
 };
 
 export function CartDishCustomizer({ dish, restaurant, onAdded, uuid }: CartDishCustomizerProps) {
+  const { t } = useI18n();
   const store = useStore();
   const [pending, setPending] = useState<CartLine | null>(null);
   const [currentRestaurantName, setCurrentRestaurantName] = useState("");
@@ -36,7 +38,7 @@ export function CartDishCustomizer({ dish, restaurant, onAdded, uuid }: CartDish
         footer={
           <div className="flex items-center gap-3">
             <Button onClick={() => setPending(null)} variant="secondary">
-              Keep current cart
+              {t("checkout.keepCart")}
             </Button>
             <Button
               onClick={() => {
@@ -46,18 +48,15 @@ export function CartDishCustomizer({ dish, restaurant, onAdded, uuid }: CartDish
                 onAdded?.();
               }}
             >
-              Start new cart
+              {t("checkout.newCart")}
             </Button>
           </div>
         }
         onClose={() => setPending(null)}
         open={pending !== null}
-        title="Start a new cart?"
+        title={t("checkout.confirmNewCart")}
       >
-        <p>
-          Your cart contains items from {currentRestaurantName}. Adding this item will clear your
-          current cart.
-        </p>
+        <p>{t("checkout.replaceCart", { restaurant: currentRestaurantName })}</p>
       </Modal>
     </>
   );

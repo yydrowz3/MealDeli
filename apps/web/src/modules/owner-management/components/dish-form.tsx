@@ -1,3 +1,4 @@
+import { errorMessage, useI18n } from "../../../shared/i18n";
 import { useForm } from "@tanstack/react-form";
 import { useRef, useState } from "react";
 
@@ -26,6 +27,7 @@ export type DishFormProps = Readonly<{
 }>;
 
 export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: DishFormProps) {
+  const { t, text } = useI18n();
   const createKey = useRef(createUiKeyFactory()).current;
   const [formError, setFormError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -36,7 +38,7 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
       setFormError(null);
       const result = await onSubmit(toDishWriteDraft(value));
       if (!result.ok) {
-        setFormError(result.message);
+        setFormError(errorMessage(result.message, "owner.saveDishFailed"));
         return;
       }
       onSuccess(result.value);
@@ -51,12 +53,12 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
         void form.handleSubmit();
       }}
     >
-      {formError ? <p role="alert">{formError}</p> : null}
+      {formError ? <p role="alert">{text(formError)}</p> : null}
       <form.Field name="name">
         {(field) => (
           <Input
-            error={firstFieldError(field.state.meta.errors)}
-            label="Dish name"
+            error={text(firstFieldError(field.state.meta.errors))}
+            label={t("owner.dishName")}
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
             value={field.state.value}
@@ -66,8 +68,8 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
       <form.Field name="description">
         {(field) => (
           <Textarea
-            error={firstFieldError(field.state.meta.errors)}
-            label="Description"
+            error={text(firstFieldError(field.state.meta.errors))}
+            label={t("owner.description")}
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
             value={field.state.value}
@@ -77,9 +79,9 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
       <form.Field name="price">
         {(field) => (
           <Input
-            error={firstFieldError(field.state.meta.errors)}
+            error={text(firstFieldError(field.state.meta.errors))}
             inputMode="decimal"
-            label="Price (USD)"
+            label={t("owner.priceUsd")}
             onBlur={field.handleBlur}
             onChange={(event) => field.handleChange(event.target.value)}
             placeholder="0.00"
@@ -90,7 +92,7 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
       <form.Field name="image">
         {(field) => (
           <ImageField
-            label="Dish image"
+            label={t("owner.dishImage")}
             onChange={(url) => field.handleChange(url)}
             onProgressChange={(progress: UploadProgress) =>
               setUploading(progress.status === "uploading")
@@ -103,7 +105,7 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
 
       <section className="grid gap-4" aria-labelledby="dish-options-title">
         <div className="flex items-center justify-between gap-4">
-          <h3 id="dish-options-title">Options</h3>
+          <h3 id="dish-options-title">{t("common.options")}</h3>
           <form.Field name="options" mode="array">
             {(optionsField) => (
               <Button
@@ -112,14 +114,14 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
                 type="button"
                 variant="secondary"
               >
-                Add option
+                {t("owner.addOption")}
               </Button>
             )}
           </form.Field>
         </div>
         {removedExistingOption ? (
           <p className="text-warning-text" role="status">
-            Past orders keep their saved option snapshots and are not changed.
+            {t("owner.savedOptionsHelp")}
           </p>
         ) : null}
         <form.Field name="options" mode="array">
@@ -129,8 +131,8 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
                 <form.Field name={`options[${optionIndex}].name`}>
                   {(field) => (
                     <Input
-                      error={firstFieldError(field.state.meta.errors)}
-                      label="Option name"
+                      error={text(firstFieldError(field.state.meta.errors))}
+                      label={t("owner.optionName")}
                       onBlur={field.handleBlur}
                       onChange={(event) => field.handleChange(event.target.value)}
                       value={field.state.value}
@@ -141,8 +143,8 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
                   <form.Field name={`options[${optionIndex}].minSelections`}>
                     {(field) => (
                       <Input
-                        error={firstFieldError(field.state.meta.errors)}
-                        label="Minimum selections"
+                        error={text(firstFieldError(field.state.meta.errors))}
+                        label={t("owner.minSelections")}
                         min={0}
                         onBlur={field.handleBlur}
                         onChange={(event) => field.handleChange(event.target.valueAsNumber)}
@@ -154,8 +156,8 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
                   <form.Field name={`options[${optionIndex}].maxSelections`}>
                     {(field) => (
                       <Input
-                        error={firstFieldError(field.state.meta.errors)}
-                        label="Maximum selections"
+                        error={text(firstFieldError(field.state.meta.errors))}
+                        label={t("owner.maxSelections")}
                         min={1}
                         onBlur={field.handleBlur}
                         onChange={(event) => field.handleChange(event.target.valueAsNumber)}
@@ -176,8 +178,8 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
                           <form.Field name={`options[${optionIndex}].choices[${choiceIndex}].name`}>
                             {(field) => (
                               <Input
-                                error={firstFieldError(field.state.meta.errors)}
-                                label="Choice name"
+                                error={text(firstFieldError(field.state.meta.errors))}
+                                label={t("owner.choiceName")}
                                 onBlur={field.handleBlur}
                                 onChange={(event) => field.handleChange(event.target.value)}
                                 value={field.state.value}
@@ -189,9 +191,9 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
                           >
                             {(field) => (
                               <Input
-                                error={firstFieldError(field.state.meta.errors)}
+                                error={text(firstFieldError(field.state.meta.errors))}
                                 inputMode="decimal"
-                                label="Extra price (USD)"
+                                label={t("owner.extraPrice")}
                                 onBlur={field.handleBlur}
                                 onChange={(event) => field.handleChange(event.target.value)}
                                 value={field.state.value}
@@ -205,7 +207,7 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
                             type="button"
                             variant="tertiary"
                           >
-                            Remove choice
+                            {t("owner.removeChoice")}
                           </Button>
                         </div>
                       ))}
@@ -215,7 +217,7 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
                         type="button"
                         variant="secondary"
                       >
-                        Add choice
+                        {t("owner.addChoice")}
                       </Button>
                     </div>
                   )}
@@ -229,7 +231,7 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
                   type="button"
                   variant="danger"
                 >
-                  Remove option
+                  {t("owner.removeOption")}
                 </Button>
               </Card>
             ))
@@ -238,12 +240,12 @@ export function DishForm({ dish, uploader, onCancel, onSubmit, onSuccess }: Dish
       </section>
       <div className="flex flex-wrap gap-3">
         <Button onClick={onCancel} type="button" variant="secondary">
-          Cancel
+          {t("common.cancel")}
         </Button>
         <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting] as const}>
           {([canSubmit, isSubmitting]) => (
             <Button disabled={!canSubmit || uploading} loading={isSubmitting} type="submit">
-              {dish ? "Save changes" : "Add dish"}
+              {text(dish ? t("common.saveChanges") : t("owner.addDish"))}
             </Button>
           )}
         </form.Subscribe>

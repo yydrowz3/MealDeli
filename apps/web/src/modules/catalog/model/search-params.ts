@@ -1,10 +1,11 @@
+import { message as localizedMessage } from "../../../shared/i18n";
 import { z } from "zod";
 
 import type { CatalogSearch } from "./types";
 
 const optionalFilterSchema = z.preprocess(
   (value) => (typeof value === "string" ? value.trim() || undefined : undefined),
-  z.string().max(100, "Use 100 characters or fewer.").optional(),
+  z.string().max(100, localizedMessage("common.max100")).optional(),
 );
 
 const pageSchema = z.preprocess((value) => {
