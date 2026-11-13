@@ -1,0 +1,23 @@
+process.env.NODE_ENV ??= 'test';
+process.env.PORT ??= '3001';
+process.env.DATABASE_URL ??=
+  'postgresql://mealrelay_test:mealrelay_test@localhost:5432/mealrelay_test';
+process.env.CORS_ORIGINS ??= 'http://localhost:5173';
+process.env.JWT_SECRET ??= 'test-only-jwt-secret-with-at-least-32-bytes';
+process.env.JWT_ACCESS_TTL_SECONDS ??= '900';
+process.env.JWT_ISSUER ??= 'mealrelay-api-test';
+process.env.JWT_AUDIENCE ??= 'mealrelay-web-test';
+process.env.EMAIL_VERIFICATION_TTL_SECONDS ??= '3600';
+process.env.FRONTEND_VERIFY_EMAIL_URL ??= 'http://localhost:5173/confirm-email';
+process.env.RESEND_API_KEY ??= 'test-only-resend-key';
+process.env.RESEND_FROM ??= 'MealRelay Test <noreply@example.test>';
+process.env.RESEND_TIMEOUT_MS ??= '500';
+process.env.PADDLE_ENVIRONMENT ??= 'sandbox';
+process.env.PADDLE_API_KEY ??= 'test-only-paddle-api-key';
+process.env.PADDLE_WEBHOOK_SECRET ??= 'test-only-paddle-webhook-secret';
+process.env.PADDLE_PROMOTION_PRICE_ID ??= 'pri_01gsz8z1q1n00f12qt82y31smh';
+process.env.PADDLE_PROMOTION_UNIT_PRICE_MINOR ??= '1000';
+process.env.PADDLE_PROMOTION_CURRENCY ??= 'USD';
+process.env.PADDLE_API_TIMEOUT_MS ??= '500';
+process.env.PROMOTION_EXPIRY_BATCH_SIZE ??= '100';
+process.env.PROMOTION_EXPIRY_MAX_BATCHES ??= '10';

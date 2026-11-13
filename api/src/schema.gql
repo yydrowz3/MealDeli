@@ -1,0 +1,415 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AllCategoriesPayload {
+  categories: [Category!]!
+  error: String
+  ok: Boolean!
+}
+
+type AuthPayload {
+  accessToken: String
+  error: String
+  expiresIn: Int
+  ok: Boolean!
+  user: User
+}
+
+type Category {
+  coverImageUrl: String
+  createdAt: DateTime!
+  id: ID!
+  name: String!
+  restaurantCount: Int!
+  slug: String!
+  updatedAt: DateTime!
+}
+
+input CategoryInput {
+  page: Int! = 1
+  slug: String!
+}
+
+type CategoryPayload {
+  category: Category
+  error: String
+  ok: Boolean!
+  restaurants: [Restaurant!]!
+  totalPages: Int!
+  totalResults: Int!
+}
+
+input ChangeEmailInput {
+  currentPassword: String!
+  newEmail: String!
+}
+
+input ChangePasswordInput {
+  currentPassword: String!
+  newPassword: String!
+}
+
+type CookedOrderOffer {
+  createdAt: DateTime!
+  id: ID!
+  restaurant: OrderRestaurant!
+  status: OrderStatus!
+  version: Int!
+}
+
+input CreateDishInput {
+  description: String!
+  name: String!
+  options: [DishOptionInput!]! = []
+  photoUrl: String
+  priceMinor: Int!
+  restaurantId: ID!
+}
+
+type CreateDishPayload {
+  dishId: ID
+  error: String
+  ok: Boolean!
+}
+
+input CreateOrderInput {
+  """A client-generated UUID v4 scoped to the authenticated customer"""
+  idempotencyKey: ID!
+  items: [CreateOrderItemInput!]!
+  restaurantId: ID!
+}
+
+input CreateOrderItemInput {
+  dishId: ID!
+  options: [OrderOptionSelectionInput!]! = []
+}
+
+type CreateOrderPayload {
+  error: String
+  ok: Boolean!
+  orderId: ID
+  replayed: Boolean!
+}
+
+input CreateRestaurantInput {
+  address: String!
+  categoryName: String!
+  coverImageUrl: String!
+  name: String!
+}
+
+type CreateRestaurantPayload {
+  error: String
+  ok: Boolean!
+  restaurantId: ID
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input DeleteDishInput {
+  dishId: ID!
+}
+
+input DeleteRestaurantInput {
+  restaurantId: ID!
+}
+
+type Dish {
+  createdAt: DateTime!
+  description: String!
+  id: ID!
+  name: String!
+  options: [DishOption!]!
+  photoUrl: String
+  priceMinor: Int!
+  updatedAt: DateTime!
+}
+
+type DishChoice {
+  extraMinor: Int!
+  name: String!
+}
+
+input DishChoiceInput {
+  extraMinor: Int!
+  name: String!
+}
+
+type DishOperationPayload {
+  error: String
+  ok: Boolean!
+}
+
+type DishOption {
+  choices: [DishChoice!]
+  extraMinor: Int
+  name: String!
+}
+
+input DishOptionInput {
+  choices: [DishChoiceInput!]
+  extraMinor: Int
+  name: String!
+}
+
+input EditDishInput {
+  description: String
+  dishId: ID!
+  name: String
+  options: [DishOptionInput!]
+  photoUrl: String
+  priceMinor: Int
+}
+
+input EditOrderInput {
+  orderId: ID!
+  status: OrderStatus!
+}
+
+input EditRestaurantInput {
+  address: String
+  categoryName: String
+  coverImageUrl: String
+  name: String
+  restaurantId: ID!
+}
+
+input GetOrderInput {
+  orderId: ID!
+}
+
+type GetOrderPayload {
+  error: String
+  ok: Boolean!
+  order: Order
+}
+
+input GetOrdersInput {
+  page: Int! = 1
+  status: OrderStatus
+}
+
+type GetOrdersPayload {
+  error: String
+  ok: Boolean!
+  orders: [Order!]!
+  totalPages: Int!
+  totalResults: Int!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  changeEmail(input: ChangeEmailInput!): UpdateUserPayload!
+  changePassword(input: ChangePasswordInput!): UpdateUserPayload!
+  createDish(input: CreateDishInput!): CreateDishPayload!
+  createOrder(input: CreateOrderInput!): CreateOrderPayload!
+  createRestaurant(input: CreateRestaurantInput!): CreateRestaurantPayload!
+  deleteDish(input: DeleteDishInput!): DishOperationPayload!
+  deleteRestaurant(input: DeleteRestaurantInput!): RestaurantOperationPayload!
+  editDish(input: EditDishInput!): DishOperationPayload!
+  editOrder(input: EditOrderInput!): OrderOperationPayload!
+  editRestaurant(input: EditRestaurantInput!): RestaurantOperationPayload!
+  login(input: LoginInput!): AuthPayload!
+  register(input: RegisterInput!): RegisterPayload!
+  resendVerificationEmail: ResendVerificationEmailPayload!
+  takeOrder(input: TakeOrderInput!): OrderOperationPayload!
+  verifyEmail(input: VerifyEmailInput!): VerifyEmailPayload!
+}
+
+type Order {
+  courier: OrderParty
+  createdAt: DateTime!
+  customer: OrderParty!
+  id: ID!
+  items: [OrderItem!]!
+  restaurant: OrderRestaurant!
+  status: OrderStatus!
+  totalMinor: Int!
+  updatedAt: DateTime!
+  version: Int!
+}
+
+type OrderItem {
+  basePriceMinor: Int!
+  dishId: ID!
+  dishName: String!
+  id: ID!
+  lineTotalMinor: Int!
+  optionsExtraMinor: Int!
+  selectedOptions: [SelectedOrderOption!]!
+}
+
+type OrderOperationPayload {
+  error: String
+  ok: Boolean!
+  replayed: Boolean!
+}
+
+input OrderOptionSelectionInput {
+  choice: String
+  name: String!
+}
+
+type OrderParty {
+  email: String!
+  id: ID!
+}
+
+type OrderRestaurant {
+  address: String!
+  id: ID!
+  name: String!
+}
+
+"""The lifecycle state of an order"""
+enum OrderStatus {
+  COOKED
+  COOKING
+  DELIVERED
+  PENDING
+  PICKED_UP
+}
+
+input OrderUpdatesInput {
+  orderId: ID!
+}
+
+type Query {
+  allCategories: AllCategoriesPayload!
+
+  """Reports whether the API process is available."""
+  apiStatus: String!
+  category(input: CategoryInput!): CategoryPayload!
+  getOrder(input: GetOrderInput!): GetOrderPayload!
+  getOrders(input: GetOrdersInput! = { page: 1 }): GetOrdersPayload!
+  me: User!
+  myRestaurant(input: RestaurantInput!): RestaurantPayload!
+  myRestaurants(input: RestaurantsInput! = { page: 1 }): RestaurantsPayload!
+  restaurant(input: RestaurantInput!): RestaurantPayload!
+  restaurants(input: RestaurantsInput!): RestaurantsPayload!
+  searchRestaurant(input: SearchRestaurantInput!): SearchRestaurantPayload!
+}
+
+input RegisterInput {
+  email: String!
+  password: String!
+  role: UserRole!
+}
+
+type RegisterPayload {
+  error: String
+  ok: Boolean!
+  user: User
+}
+
+type ResendVerificationEmailPayload {
+  error: String
+  ok: Boolean!
+}
+
+type Restaurant {
+  address: String!
+  category: Category!
+  coverImageUrl: String!
+  createdAt: DateTime!
+  id: ID!
+  menu: [Dish!]!
+  name: String!
+  updatedAt: DateTime!
+}
+
+input RestaurantInput {
+  restaurantId: ID!
+}
+
+type RestaurantOperationPayload {
+  error: String
+  ok: Boolean!
+}
+
+type RestaurantPayload {
+  error: String
+  ok: Boolean!
+  restaurant: Restaurant
+}
+
+input RestaurantsInput {
+  page: Int! = 1
+}
+
+type RestaurantsPayload {
+  error: String
+  ok: Boolean!
+  results: [Restaurant!]!
+  totalPages: Int!
+  totalResults: Int!
+}
+
+input SearchRestaurantInput {
+  page: Int! = 1
+  query: String!
+}
+
+type SearchRestaurantPayload {
+  error: String
+  ok: Boolean!
+  restaurants: [Restaurant!]!
+  totalPages: Int!
+  totalResults: Int!
+}
+
+type SelectedOrderOption {
+  choice: String
+  extraMinor: Int!
+  name: String!
+}
+
+type Subscription {
+  cookedOrders: CookedOrderOffer!
+  orderUpdates(input: OrderUpdatesInput!): Order!
+  pendingOrders: Order!
+}
+
+input TakeOrderInput {
+  orderId: ID!
+}
+
+type UpdateUserPayload {
+  error: String
+  ok: Boolean!
+  user: User
+}
+
+type User {
+  createdAt: DateTime!
+  email: String!
+  emailVerified: Boolean!
+  id: ID!
+  role: UserRole!
+  updatedAt: DateTime!
+}
+
+"""The role of the user in the system"""
+enum UserRole {
+  COURIER
+  CUSTOMER
+  OWNER
+}
+
+input VerifyEmailInput {
+  token: String!
+}
+
+type VerifyEmailPayload {
+  error: String
+  ok: Boolean!
+  verified: Boolean!
+}

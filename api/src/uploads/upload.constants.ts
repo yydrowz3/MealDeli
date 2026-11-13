@@ -1,0 +1,10 @@
+export const UPLOAD_FILE_FIELD = 'file';
+export const UPLOAD_MAX_SOURCE_BYTES = 5 * 1024 * 1024;
+export const UPLOAD_MAX_DIMENSION = 4_096;
+export const UPLOAD_MAX_PIXELS = 16_000_000;
+export const UPLOAD_MAX_OUTPUT_BYTES = 5 * 1024 * 1024;
+export const UPLOAD_OUTPUT_CONTENT_TYPE = 'image/webp' as const;
+export const UPLOAD_OUTPUT_EXTENSION = 'webp' as const;
+export const UPLOAD_PUBLIC_CACHE_SECONDS = 31_536_000;
+export const UPLOAD_RATE_LIMIT_TTL_MS = 60_000;
+export const UPLOAD_RATE_LIMIT_MAX = 10;
