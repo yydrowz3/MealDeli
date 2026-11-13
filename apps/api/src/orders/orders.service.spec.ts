@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { PubSub } from 'graphql-subscriptions';
 import { PrismaService } from '../prisma/prisma.service';
 import { User } from '../users/entities/user.entity';
@@ -5,10 +6,10 @@ import { OrdersService } from './orders.service';
 
 describe('OrdersService', () => {
   let service: OrdersService;
-  const restaurantFindUnique = jest.fn();
-  const dishFindUnique = jest.fn();
-  const orderCreate = jest.fn();
-  const publish = jest.fn();
+  const restaurantFindUnique = vi.fn();
+  const dishFindUnique = vi.fn();
+  const orderCreate = vi.fn();
+  const publish = vi.fn();
 
   const customer = { id: 'customer-id' } as User;
   const createOrderInput = {
@@ -26,7 +27,7 @@ describe('OrdersService', () => {
   };
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     service = new OrdersService(
       {
         restaurant: { findUnique: restaurantFindUnique },
@@ -165,7 +166,7 @@ describe('OrdersService', () => {
               }),
             ],
           },
-        }),
+        }) as unknown,
       }),
     );
   });

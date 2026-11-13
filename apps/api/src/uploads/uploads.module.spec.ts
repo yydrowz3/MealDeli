@@ -1,14 +1,15 @@
+import { describe, it, expect, vi } from 'vitest';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 
-jest.mock('../prisma/prisma.service', () => ({
+vi.mock('../prisma/prisma.service', () => ({
   PrismaService: class PrismaService {},
 }));
-jest.mock('../users/users.service', () => ({
+vi.mock('../users/users.service', () => ({
   UsersService: class UsersService {},
 }));
-jest.mock('../mails/mails.service', () => ({
+vi.mock('../mails/mails.service', () => ({
   MailsService: class MailsService {},
 }));
 
@@ -29,9 +30,9 @@ describe('UploadsModule assembly', () => {
       ],
     })
       .overrideProvider(UsersService)
-      .useValue({ findUserByActiveSession: jest.fn() })
+      .useValue({ findUserByActiveSession: vi.fn() })
       .overrideProvider(UPLOADS_STORAGE)
-      .useValue({ put: jest.fn() })
+      .useValue({ put: vi.fn() })
       .compile();
 
     expect(moduleRef.get(UploadsController)).toBeInstanceOf(UploadsController);

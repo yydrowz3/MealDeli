@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { validate } from 'class-validator';
 import { EditProfileInput } from './edit-profile.dto';
 

@@ -1,7 +1,8 @@
+import { describe, it, expect, vi } from 'vitest';
 import { BadRequestException } from '@nestjs/common';
 import type { Express } from 'express';
 
-jest.mock('../auth/rest-access-token.guard', () => ({
+vi.mock('../auth/rest-access-token.guard', () => ({
   RestAccessTokenGuard: class {},
 }));
 
@@ -16,7 +17,7 @@ describe('UploadsController', () => {
 
   it('delegates validated multipart input to the upload service', async () => {
     const file = { originalname: 'meal.png' } as Express.Multer.File;
-    const upload = jest.fn().mockResolvedValue({
+    const upload = vi.fn().mockResolvedValue({
       key: 'uploads/id.png',
       url: 'https://assets.example.com/uploads/id.png',
     });

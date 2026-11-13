@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import type { Order, OrderRepository } from "../../orders";
+import { buildOrder, buildOrderItem } from "../../orders/testing/fixtures";
 import { cartAtom, cartStorageAtom, createCartTestStore } from "./cart-atoms";
 import {
   createCheckoutCoordinator,
@@ -83,6 +84,48 @@ describe("order command", () => {
       expect(store.get(cartAtom)).toEqual(cart);
     }
   });
+
+  it.each(["business-error", "network-error", "rejection"] as const)(
+    "releases the submit lock after %s and allows an explicit retry",
+    async (failure) => {
+      const cart = buildCart();
+      const store = createCartTestStore({ initialState: cart });
+      const create = vi.fn();
+      const error = new Error("offline");
+      if (failure === "rejection") create.mockRejectedValueOnce(error);
+      else create.mockResolvedValueOnce({ kind: failure, message: "failed" });
+      create.mockResolvedValueOnce({ kind: "success", orderId: "retry-order" });
+      const onOrderCreated = vi.fn();
+      const reconcile = vi.fn();
+      const coordinator = createCheckoutCoordinator({
+        store,
+        repository: { create },
+        reconcile,
+        onOrderCreated,
+      });
+
+      const first = coordinator.submit();
+      expect(coordinator.isSubmitting).toBe(true);
+      if (failure === "rejection") await expect(first).rejects.toBe(error);
+      else await expect(first).resolves.toEqual({ kind: "error", message: "failed" });
+
+      expect(coordinator.isSubmitting).toBe(false);
+      expect(store.get(cartAtom)).toEqual(cart);
+      expect(create).toHaveBeenCalledOnce();
+      expect(onOrderCreated).not.toHaveBeenCalled();
+      expect(reconcile).not.toHaveBeenCalled();
+
+      await expect(coordinator.submit()).resolves.toEqual({
+        kind: "success",
+        orderId: "retry-order",
+        reconciled: false,
+      });
+      expect(create).toHaveBeenCalledTimes(2);
+      expect(coordinator.isSubmitting).toBe(false);
+      expect(store.get(cartAtom).lines).toHaveLength(0);
+      expect(onOrderCreated).toHaveBeenCalledExactlyOnceWith("retry-order");
+    },
+  );
 
   it("coordinates timeout by querying and never automatically retries mutation", async () => {
     const cart = buildCart();
@@ -191,5 +234,153 @@ describe("order command", () => {
     await expect(
       createRecentOrderReconciler(repository)(payload, Date.parse("2026-08-17T00:00:00.000Z")),
     ).resolves.toBe("order-1");
+  });
+});
+
+describe("recent order reconciliation", () => {
+  const submittedAt = Date.parse("2026-08-17T00:00:00.000Z");
+  const cart = buildCart();
+  const payload = mapCartToCreateOrderPayload(cart);
+  const item = buildOrderItem({
+    dishId: "dish-bibimbap",
+    quantity: 1,
+    selectedOptions: cart.lines[0].options,
+  });
+  const order = buildOrder({
+    restaurantId: "restaurant-seoul-kitchen",
+    createdAt: new Date(submittedAt).toISOString(),
+    items: [item],
+  });
+
+  function repositoryWith(orders: Order[]): OrderRepository {
+    return { list: vi.fn().mockResolvedValue(orders), get: vi.fn(), updateStatus: vi.fn() };
+  }
+
+  it.each([
+    ["restaurant", { restaurantId: "another-restaurant" }],
+    ["dish", { items: [{ ...item, dishId: "another-dish" }] }],
+    ["quantity", { items: [{ ...item, quantity: 2 }] }],
+    [
+      "option",
+      {
+        items: [
+          {
+            ...item,
+            selectedOptions: [
+              {
+                ...item.selectedOptions[0],
+                optionId: "another-option",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    [
+      "choice",
+      {
+        items: [
+          {
+            ...item,
+            selectedOptions: [
+              {
+                ...item.selectedOptions[0],
+                choices: [{ choiceId: "another-choice", name: "Mild", extraMinor: 0 }],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    ["missing items", { items: [] }],
+    ["extra items", { items: [item, buildOrderItem({ id: "extra", position: 1 })] }],
+  ] satisfies Array<[string, Partial<Order>]>)(
+    "rejects mismatched %s",
+    async (_label, overrides) => {
+      const repository = repositoryWith([{ ...order, ...overrides }]);
+      await expect(
+        createRecentOrderReconciler(repository)(payload, submittedAt),
+      ).resolves.toBeNull();
+      expect(repository.list).toHaveBeenCalledOnce();
+    },
+  );
+
+  it.each([
+    ["at the tolerance boundary", -5_000, true],
+    ["just before the tolerance boundary", -5_001, false],
+    ["at submission", 0, true],
+    ["after submission", 1_000, true],
+  ] as const)("matches timestamps %s", async (_label, offset, matches) => {
+    const repository = repositoryWith([
+      { ...order, createdAt: new Date(submittedAt + offset).toISOString() },
+    ]);
+    await expect(createRecentOrderReconciler(repository)(payload, submittedAt)).resolves.toBe(
+      matches ? order.id : null,
+    );
+  });
+
+  it("does not match an invalid timestamp or an empty order list", async () => {
+    for (const orders of [[], [{ ...order, createdAt: "invalid" }]]) {
+      await expect(
+        createRecentOrderReconciler(repositoryWith(orders))(payload, submittedAt),
+      ).resolves.toBeNull();
+    }
+  });
+
+  it("finds the matching order after unrelated orders", async () => {
+    const repository = repositoryWith([
+      { ...order, id: "unrelated", restaurantId: "another-restaurant" },
+      order,
+    ]);
+    await expect(createRecentOrderReconciler(repository)(payload, submittedAt)).resolves.toBe(
+      order.id,
+    );
+  });
+
+  it("matches option and choice IDs regardless of their order and display snapshots", async () => {
+    const customizedPayload = {
+      restaurantId: payload.restaurantId,
+      items: [
+        {
+          dishId: "dish-bibimbap",
+          quantity: 1,
+          options: [
+            { optionId: "heat", choiceIds: ["mild", "spicy"] },
+            { optionId: "side", choiceIds: ["rice"] },
+          ],
+        },
+      ],
+    };
+    const customizedOrder = {
+      ...order,
+      items: [
+        {
+          ...item,
+          dishName: "Renamed dish",
+          lineTotalMinor: 9_999,
+          selectedOptions: [
+            {
+              optionId: "side",
+              name: "Side",
+              choices: [{ choiceId: "rice", name: "Rice", extraMinor: 10 }],
+            },
+            {
+              optionId: "heat",
+              name: "Heat",
+              choices: [
+                { choiceId: "spicy", name: "Spicy", extraMinor: 20 },
+                { choiceId: "mild", name: "Mild", extraMinor: 30 },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    await expect(
+      createRecentOrderReconciler(repositoryWith([customizedOrder]))(
+        customizedPayload,
+        submittedAt,
+      ),
+    ).resolves.toBe(order.id);
   });
 });

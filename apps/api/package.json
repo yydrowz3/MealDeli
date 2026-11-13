@@ -17,11 +17,12 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test": "pnpm prisma:generate && vitest run",
+    "test:watch": "pnpm prisma:generate && vitest --watch",
+    "test:cov": "pnpm prisma:generate && vitest run --coverage",
+    "test:debug": "pnpm prisma:generate && vitest run --inspect-brk --no-file-parallelism --maxWorkers=1",
+    "test:e2e": "pnpm prisma:generate && vitest run --config vitest.e2e.config.mts",
+    "test:types": "pnpm prisma:generate && tsc --noEmit --incremental false"
   },
   "dependencies": {
     "@apollo/server": "^5.5.1",
@@ -56,7 +57,6 @@
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
     "@types/express": "^5.0.0",
-    "@types/jest": "^30.0.0",
     "@types/multer": "^2.2.0",
     "@types/node": "^24.0.0",
     "@types/supertest": "^7.0.0",
@@ -65,34 +65,19 @@
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
     "globals": "^17.0.0",
-    "jest": "^30.0.0",
     "oxfmt": "^0.62.0",
     "prettier": "^3.4.2",
     "prisma": "^7.9.1",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
-    "ts-jest": "^29.2.5",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.20.0"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testEnvironment": "node",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    }
+    "typescript-eslint": "^8.20.0",
+    "vitest": "4.1.10",
+    "@vitest/coverage-v8": "4.1.10",
+    "@swc/core": "^1.15.0",
+    "unplugin-swc": "^1.5.9"
   }
 }
