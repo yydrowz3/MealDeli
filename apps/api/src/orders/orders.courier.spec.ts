@@ -1,11 +1,19 @@
+import { beforeEach, describe, it, expect, vi } from 'vitest';
+import { Logger } from '@nestjs/common';
 import { PubSub } from 'graphql-subscriptions';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserRole } from '../users/enums/role.enum';
 import { User } from '../users/entities/user.entity';
 import { OrderStatus } from './enums/status.enum';
 import { OrdersService } from './orders.service';
+import { Prisma } from '../generated/prisma/client';
+
+type ClaimCallback = (transaction: { order: unknown }) => Promise<unknown>;
 
 describe('OrdersService courier dispatch contract', () => {
+  beforeEach(() => {
+    vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
+  });
   const courier = { id: 'courier-id', role: UserRole.COURIER } as User;
   const order = {
     id: 'order-id',
@@ -21,10 +29,10 @@ describe('OrdersService courier dispatch contract', () => {
   };
 
   it('filters and deterministically sorts available orders', async () => {
-    const findMany = jest.fn().mockResolvedValue([]);
+    const findMany = vi.fn().mockResolvedValue([]);
     const service = new OrdersService(
       { order: { findMany } } as unknown as PrismaService,
-      { publish: jest.fn() } as unknown as PubSub,
+      { publish: vi.fn() } as unknown as PubSub,
     );
 
     await expect(service.getAvailableOrders()).resolves.toEqual({
@@ -39,14 +47,14 @@ describe('OrdersService courier dispatch contract', () => {
 
   it('uses a Serializable active check and conditional claim before publishing', async () => {
     const transactionOrder = {
-      findFirst: jest.fn().mockResolvedValue(null),
-      updateMany: jest.fn().mockResolvedValue({ count: 1 }),
-      findUniqueOrThrow: jest.fn().mockResolvedValue(order),
+      findFirst: vi.fn().mockResolvedValue(null),
+      updateMany: vi.fn().mockResolvedValue({ count: 1 }),
+      findUniqueOrThrow: vi.fn().mockResolvedValue(order),
     };
-    const transaction = jest.fn(async (callback) =>
+    const transaction = vi.fn((callback: ClaimCallback) =>
       callback({ order: transactionOrder }),
     );
-    const publish = jest.fn().mockResolvedValue(undefined);
+    const publish = vi.fn().mockResolvedValue(undefined);
     const service = new OrdersService(
       { $transaction: transaction } as unknown as PrismaService,
       { publish } as unknown as PubSub,
@@ -55,7 +63,7 @@ describe('OrdersService courier dispatch contract', () => {
     await expect(
       service.takeOrder(courier, { id: 'order-id' }),
     ).resolves.toEqual({ ok: true });
-    expect(transaction.mock.calls[0][1]).toEqual({
+    expect(transaction).toHaveBeenCalledWith(expect.any(Function), {
       isolationLevel: 'Serializable',
     });
     expect(transactionOrder.findFirst).toHaveBeenCalledWith({
@@ -77,9 +85,9 @@ describe('OrdersService courier dispatch contract', () => {
   it('publishes an owner-ready order to the courier realtime stream', async () => {
     const cooking = { ...order, status: OrderStatus.COOKING, courierId: null };
     const ready = { ...cooking, status: OrderStatus.WAITING };
-    const findUnique = jest.fn().mockResolvedValue(cooking);
-    const update = jest.fn().mockResolvedValue(ready);
-    const publish = jest.fn().mockResolvedValue(undefined);
+    const findUnique = vi.fn().mockResolvedValue(cooking);
+    const update = vi.fn().mockResolvedValue(ready);
+    const publish = vi.fn().mockResolvedValue(undefined);
     const service = new OrdersService(
       { order: { findUnique, update } } as unknown as PrismaService,
       { publish } as unknown as PubSub,
@@ -97,17 +105,17 @@ describe('OrdersService courier dispatch contract', () => {
   });
 
   it('coordinates active and same-order conflicts without a second claim', async () => {
-    const activeTransaction = jest.fn(async (callback) =>
+    const activeTransaction = vi.fn((callback: ClaimCallback) =>
       callback({
         order: {
-          findFirst: jest.fn().mockResolvedValue({ id: 'active-id' }),
-          updateMany: jest.fn(),
+          findFirst: vi.fn().mockResolvedValue({ id: 'active-id' }),
+          updateMany: vi.fn(),
         },
       }),
     );
     const service = new OrdersService(
       { $transaction: activeTransaction } as unknown as PrismaService,
-      { publish: jest.fn() } as unknown as PubSub,
+      { publish: vi.fn() } as unknown as PubSub,
     );
     await expect(
       service.takeOrder(courier, { id: 'other-id' }),
@@ -116,17 +124,17 @@ describe('OrdersService courier dispatch contract', () => {
       error: 'You already have an active delivery.',
     });
 
-    const unavailableTransaction = jest.fn(async (callback) =>
+    const unavailableTransaction = vi.fn((callback: ClaimCallback) =>
       callback({
         order: {
-          findFirst: jest.fn().mockResolvedValue(null),
-          updateMany: jest.fn().mockResolvedValue({ count: 0 }),
+          findFirst: vi.fn().mockResolvedValue(null),
+          updateMany: vi.fn().mockResolvedValue({ count: 0 }),
         },
       }),
     );
     const competing = new OrdersService(
       { $transaction: unavailableTransaction } as unknown as PrismaService,
-      { publish: jest.fn() } as unknown as PubSub,
+      { publish: vi.fn() } as unknown as PubSub,
     );
     await expect(
       competing.takeOrder(courier, { id: 'order-id' }),
@@ -137,24 +145,25 @@ describe('OrdersService courier dispatch contract', () => {
   });
 
   it('retries one serialization conflict and does not roll back on publish failure', async () => {
-    const conflict = Object.assign(new Error('serialization conflict'), {
-      code: 'P2034',
-    });
+    const conflict = new Prisma.PrismaClientKnownRequestError(
+      'serialization conflict',
+      { code: 'P2034', clientVersion: 'test' },
+    );
     const transactionOrder = {
-      findFirst: jest.fn().mockResolvedValue(null),
-      updateMany: jest.fn().mockResolvedValue({ count: 1 }),
-      findUniqueOrThrow: jest.fn().mockResolvedValue(order),
+      findFirst: vi.fn().mockResolvedValue(null),
+      updateMany: vi.fn().mockResolvedValue({ count: 1 }),
+      findUniqueOrThrow: vi.fn().mockResolvedValue(order),
     };
-    const transaction = jest
+    const transaction = vi
       .fn()
       .mockRejectedValueOnce(conflict)
-      .mockImplementationOnce(async (callback) =>
+      .mockImplementationOnce((callback: ClaimCallback) =>
         callback({ order: transactionOrder }),
       );
     const service = new OrdersService(
       { $transaction: transaction } as unknown as PrismaService,
       {
-        publish: jest.fn().mockRejectedValue(new Error('pubsub unavailable')),
+        publish: vi.fn().mockRejectedValue(new Error('pubsub unavailable')),
       } as unknown as PubSub,
     );
 
@@ -165,13 +174,13 @@ describe('OrdersService courier dispatch contract', () => {
   });
 
   it('only completes an assigned PICKED order to DELIVERED', async () => {
-    const findUnique = jest.fn().mockResolvedValue(order);
-    const update = jest
+    const findUnique = vi.fn().mockResolvedValue(order);
+    const update = vi
       .fn()
       .mockResolvedValue({ ...order, status: OrderStatus.DELIVERED });
     const service = new OrdersService(
       { order: { findUnique, update } } as unknown as PrismaService,
-      { publish: jest.fn().mockResolvedValue(undefined) } as unknown as PubSub,
+      { publish: vi.fn().mockResolvedValue(undefined) } as unknown as PubSub,
     );
     await expect(
       service.editOrder(courier, {

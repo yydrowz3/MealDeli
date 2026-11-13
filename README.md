@@ -107,7 +107,7 @@ https://github.com/user-attachments/assets/f5f1f1cd-a971-4913-98bc-43f00e7465c2
 | API           | NestJS 11, Apollo Server, GraphQL, graphql-ws, class-validator                          |
 | Data and auth | PostgreSQL, Prisma 7, JWT, Argon2                                                       |
 | Integrations  | Resend, S3-compatible object storage                                                    |
-| Testing       | Jest, Supertest, Vitest, Testing Library, MSW                                           |
+| Testing       | Vitest, Supertest, Testing Library, MSW                                           |
 
 ## 🏗️ Architecture
 
@@ -160,7 +160,7 @@ The repository does not have a root `package.json`. Install dependencies and run
 ### ⚙️ 1. Configure the API
 
 ```bash
-cd api
+cd apps/api
 pnpm install
 cp .env.example .env
 ```
@@ -277,8 +277,10 @@ Do not manually edit `api/src/generated/prisma/`, `web/src/gql/`, or `web/src/ro
 
 ## ✅ Verification before review
 
+The API uses Vitest for unit tests and isolated HTTP/GraphQL tests. Test commands generate the Prisma client automatically; no database, email, S3 service, or `.env` is required. External providers are mocked, so the suite does not verify real PostgreSQL transactions. See the [API testing guide](apps/api/README.md#testing-and-quality).
+
 ```bash
-cd api
+cd apps/api
 pnpm lint
 pnpm test
 pnpm test:e2e

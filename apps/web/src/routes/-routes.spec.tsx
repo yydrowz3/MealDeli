@@ -262,7 +262,7 @@ beforeAll(async () => {
   modules.forEach((module, index) => {
     routeModules[names[index]] = module.Route as unknown as FakeRoute;
   });
-});
+}, 30_000);
 
 function renderRoute(name: string) {
   const Component = routeModules[name].component;

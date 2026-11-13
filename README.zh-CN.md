@@ -107,7 +107,7 @@ https://github.com/user-attachments/assets/f5f1f1cd-a971-4913-98bc-43f00e7465c2
 | API        | NestJS 11、Apollo Server、GraphQL、graphql-ws、class-validator                          |
 | 数据与认证 | PostgreSQL、Prisma 7、JWT、Argon2                                                       |
 | 集成服务   | Resend、兼容 S3 的对象存储                                                              |
-| 测试       | Jest、Supertest、Vitest、Testing Library、MSW                                           |
+| 测试       | Vitest、Supertest、Testing Library、MSW                                           |
 
 ## 🏗️ 系统架构
 
@@ -160,7 +160,7 @@ MealDeli/
 ### ⚙️ 1. 配置 API
 
 ```bash
-cd api
+cd apps/api
 pnpm install
 cp .env.example .env
 ```
@@ -277,8 +277,10 @@ pnpm codegen
 
 ## ✅ 评审前验证
 
+后端使用 Vitest 运行单元测试和隔离的 HTTP/GraphQL 接口测试。测试命令会自动生成 Prisma 客户端，无需数据库、邮件、S3 服务或 `.env`。外部依赖使用 mock，因此不验证真实 PostgreSQL 事务。详见[后端测试说明](apps/api/README.md#testing-and-quality)。
+
 ```bash
-cd api
+cd apps/api
 pnpm lint
 pnpm test
 pnpm test:e2e

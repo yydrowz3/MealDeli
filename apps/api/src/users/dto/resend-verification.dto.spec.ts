@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { validate } from 'class-validator';
 import { ResendVerificationInput } from './resend-verification.dto';
 
@@ -17,7 +18,7 @@ describe('ResendVerificationInput', () => {
 
     expect(errors).toHaveLength(1);
     expect(errors[0].constraints).toMatchObject({
-      maxLength: expect.any(String),
+      maxLength: expect.any(String) as string,
     });
   });
 });

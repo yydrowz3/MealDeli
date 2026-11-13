@@ -12,8 +12,178 @@ import {
   createOrderRealtimeAdapter,
   createOrderSubscriptionPort,
   createOwnerPendingRealtimeAdapter,
+  createRealtimeSubscription,
 } from "./subscription-adapter";
 import type { Order, OrderRealtimeEvent } from "../model/types";
+
+describe("realtime subscription lifecycle", () => {
+  it("shares one running subscription and supports repeated disposal", async () => {
+    const stream = new ControllableAsyncIterable<number>();
+    const connect = vi.fn(() => stream);
+    const onEvent = vi.fn();
+    const refetch = vi.fn();
+    const retry = vi.fn();
+    const onConnectionState = vi.fn();
+    const subscription = createRealtimeSubscription({
+      connect,
+      onEvent,
+      refetch,
+      retry,
+      onAuthoritative: vi.fn(),
+      onConnectionState,
+    });
+    const running = subscription.start();
+
+    try {
+      expect(subscription.start()).toBe(running);
+      expect(connect).toHaveBeenCalledOnce();
+      stream.push(1);
+      await flushOrdersRealtime();
+      expect(onEvent).toHaveBeenCalledExactlyOnceWith(1);
+      expect(refetch).not.toHaveBeenCalled();
+
+      await subscription.dispose();
+      await subscription.dispose();
+      await running;
+      expect(stream.returnCount).toBeGreaterThan(0);
+      expect(onConnectionState.mock.calls.map(([state]) => state)).toEqual([
+        "connecting",
+        "connected",
+        "disconnected",
+      ]);
+      expect(subscription.start()).toBe(running);
+      stream.push(2);
+      await flushOrdersRealtime();
+      expect(connect).toHaveBeenCalledOnce();
+      expect(onEvent).toHaveBeenCalledOnce();
+      expect(retry).not.toHaveBeenCalled();
+    } finally {
+      await subscription.dispose();
+    }
+  });
+
+  it("retries an initial connection failure after the default delay", async () => {
+    vi.useFakeTimers();
+    const stream = new ControllableAsyncIterable<number>();
+    const error = new Error("offline");
+    const connect = vi
+      .fn<() => AsyncIterable<number>>()
+      .mockImplementationOnce(() => {
+        throw error;
+      })
+      .mockReturnValue(stream);
+    const onEvent = vi.fn();
+    const refetch = vi.fn();
+    const diagnostic = vi.fn();
+    const subscription = createRealtimeSubscription({
+      connect,
+      onEvent,
+      refetch,
+      onAuthoritative: vi.fn(),
+      diagnostic,
+    });
+    const running = subscription.start();
+
+    try {
+      expect(diagnostic).toHaveBeenCalledWith("Order subscription disconnected.", {
+        attempt: 1,
+        error: "offline",
+      });
+      await vi.advanceTimersByTimeAsync(999);
+      expect(connect).toHaveBeenCalledOnce();
+      await vi.advanceTimersByTimeAsync(1);
+      expect(connect).toHaveBeenCalledTimes(2);
+      expect(refetch).not.toHaveBeenCalled();
+      stream.push(42);
+      await flushOrdersRealtime();
+      expect(onEvent).toHaveBeenCalledExactlyOnceWith(42);
+    } finally {
+      await subscription.dispose();
+      await running;
+    }
+    expect(stream.returnCount).toBeGreaterThan(0);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("reconnects and refetches after a stream ends normally", async () => {
+    const first = new ControllableAsyncIterable<number>();
+    const second = new ControllableAsyncIterable<number>();
+    const connect = vi.fn().mockReturnValueOnce(first).mockReturnValue(second);
+    const refetch = vi.fn().mockResolvedValue([10]);
+    const onAuthoritative = vi.fn();
+    const retry = vi.fn().mockResolvedValue(undefined);
+    const onEvent = vi.fn();
+    const subscription = createRealtimeSubscription({
+      connect,
+      refetch,
+      onAuthoritative,
+      retry,
+      onEvent,
+    });
+    const running = subscription.start();
+
+    try {
+      first.complete();
+      await flushOrdersRealtime();
+      expect(first.returnCount).toBeGreaterThan(0);
+      expect(retry).toHaveBeenCalledExactlyOnceWith(1);
+      expect(connect).toHaveBeenCalledTimes(2);
+      expect(refetch).toHaveBeenCalledOnce();
+      expect(onAuthoritative).toHaveBeenCalledExactlyOnceWith([10]);
+      second.push(11);
+      await flushOrdersRealtime();
+      expect(onEvent).toHaveBeenCalledExactlyOnceWith(11);
+    } finally {
+      await subscription.dispose();
+      await running;
+    }
+    expect(second.returnCount).toBeGreaterThan(0);
+  });
+
+  it("disposes during a pending retry without waiting for or reconnecting after it", async () => {
+    const stream = new ControllableAsyncIterable<number>();
+    const connect = vi.fn(() => stream);
+    let resolveRetry!: () => void;
+    const retry = vi.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveRetry = resolve;
+        }),
+    );
+    const refetch = vi.fn();
+    const onEvent = vi.fn();
+    const onConnectionState = vi.fn();
+    const subscription = createRealtimeSubscription({
+      connect,
+      retry,
+      refetch,
+      onEvent,
+      onAuthoritative: vi.fn(),
+      onConnectionState,
+    });
+    const running = subscription.start();
+
+    try {
+      stream.fail(new Error("offline"));
+      await flushOrdersRealtime();
+      expect(retry).toHaveBeenCalledExactlyOnceWith(1);
+      await subscription.dispose();
+      await subscription.dispose();
+      await running;
+      expect(stream.returnCount).toBeGreaterThan(0);
+      expect(onConnectionState.mock.calls.at(-1)).toEqual(["disconnected"]);
+
+      resolveRetry();
+      stream.push(99);
+      await flushOrdersRealtime();
+      expect(connect).toHaveBeenCalledOnce();
+      expect(refetch).not.toHaveBeenCalled();
+      expect(onEvent).not.toHaveBeenCalled();
+    } finally {
+      await subscription.dispose();
+    }
+  });
+});
 
 describe("subscription transport adapter", () => {
   it("adapts wrapped operation payloads without a real WebSocket", async () => {

@@ -1,7 +1,8 @@
+import { describe, it, expect, vi } from 'vitest';
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-jest.mock('../users/users.service', () => ({ UsersService: class {} }));
+vi.mock('../users/users.service', () => ({ UsersService: class {} }));
 
 import { AccessTokenVerifier } from './access-token-verifier';
 import { UsersService } from '../users/users.service';
@@ -28,14 +29,14 @@ describe('AccessTokenVerifier', () => {
     'allows an active %s session',
     async (role) => {
       const jwt = {
-        verifyAsync: jest.fn().mockResolvedValue({
+        verifyAsync: vi.fn().mockResolvedValue({
           sub: 'user-id',
           sid: 'session-id',
           tokenType: 'access',
         }),
       } as unknown as JwtService;
       const users = {
-        findUserByActiveSession: jest.fn().mockResolvedValue(user(role)),
+        findUserByActiveSession: vi.fn().mockResolvedValue(user(role)),
       } as unknown as UsersService;
 
       await expect(
@@ -53,8 +54,8 @@ describe('AccessTokenVerifier', () => {
   ])('rejects a %s token', async (_label, token, verificationError) => {
     const jwt = {
       verifyAsync: verificationError
-        ? jest.fn().mockRejectedValue(verificationError)
-        : jest.fn(),
+        ? vi.fn().mockRejectedValue(verificationError)
+        : vi.fn(),
     } as unknown as JwtService;
     const users = {} as UsersService;
     await expect(
@@ -64,14 +65,14 @@ describe('AccessTokenVerifier', () => {
 
   it('rejects revoked or expired sessions', async () => {
     const jwt = {
-      verifyAsync: jest.fn().mockResolvedValue({
+      verifyAsync: vi.fn().mockResolvedValue({
         sub: 'user-id',
         sid: 'session-id',
         tokenType: 'access',
       }),
     } as unknown as JwtService;
     const users = {
-      findUserByActiveSession: jest.fn().mockResolvedValue(null),
+      findUserByActiveSession: vi.fn().mockResolvedValue(null),
     } as unknown as UsersService;
     await expect(
       new AccessTokenVerifier(jwt, users).verify('token'),
@@ -80,7 +81,7 @@ describe('AccessTokenVerifier', () => {
 
   it('rejects refresh tokens at the REST boundary', async () => {
     const jwt = {
-      verifyAsync: jest.fn().mockResolvedValue({
+      verifyAsync: vi.fn().mockResolvedValue({
         sub: 'user-id',
         sid: 'session-id',
         tokenType: 'refresh',

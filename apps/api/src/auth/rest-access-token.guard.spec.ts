@@ -1,6 +1,7 @@
+import { describe, it, expect, vi } from 'vitest';
 import type { ExecutionContext } from '@nestjs/common';
 
-jest.mock('../users/users.service', () => ({ UsersService: class {} }));
+vi.mock('../users/users.service', () => ({ UsersService: class {} }));
 
 import { RestAccessTokenGuard } from './rest-access-token.guard';
 import { AccessTokenVerifier } from './access-token-verifier';
@@ -16,7 +17,7 @@ function contextWithAuthorization(authorization?: string) {
 describe('RestAccessTokenGuard', () => {
   it('reads Bearer access tokens and attaches the verified session', async () => {
     const verified = { user: { id: 'user-id' }, sessionId: 'session-id' };
-    const verifier = { verify: jest.fn().mockResolvedValue(verified) };
+    const verifier = { verify: vi.fn().mockResolvedValue(verified) };
     const guard = new RestAccessTokenGuard(
       verifier as unknown as AccessTokenVerifier,
     );
@@ -33,7 +34,7 @@ describe('RestAccessTokenGuard', () => {
     'passes malformed authorization %s to the verifier as missing',
     async (authorization) => {
       const verifier = {
-        verify: jest.fn().mockRejectedValue(new Error('unauthorized')),
+        verify: vi.fn().mockRejectedValue(new Error('unauthorized')),
       };
       const guard = new RestAccessTokenGuard(
         verifier as unknown as AccessTokenVerifier,

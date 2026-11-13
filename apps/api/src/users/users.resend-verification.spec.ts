@@ -1,3 +1,6 @@
+import { beforeEach, describe, it, expect, vi } from 'vitest';
+import { Logger } from '@nestjs/common';
+import { NOW } from '../../test/fixtures';
 import { createHash } from 'node:crypto';
 import { UsersService } from './users.service';
 import type { PrismaService } from '../prisma/prisma.service';
@@ -13,10 +16,15 @@ type TestUser = {
 };
 
 describe('UsersService.resendVerification', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(NOW);
+    vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
+  });
   const createSubject = (user: TestUser | null) => {
-    const findUnique = jest.fn().mockResolvedValue(user);
-    const upsert = jest.fn().mockResolvedValue({});
-    const sendVerificationEmail = jest.fn().mockResolvedValue({ id: 'mail-1' });
+    const findUnique = vi.fn().mockResolvedValue(user);
+    const upsert = vi.fn().mockResolvedValue({});
+    const sendVerificationEmail = vi.fn().mockResolvedValue({ id: 'mail-1' });
     const prisma = {
       user: { findUnique },
       emailVerification: { upsert },
@@ -84,17 +92,16 @@ describe('UsersService.resendVerification', () => {
     ).resolves.toEqual({ ok: true });
 
     const sentToken = subject.sendVerificationEmail.mock.calls[0][1] as string;
-    const data = subject.upsert.mock.calls[0][0].update as {
-      tokenHash: string;
-      expiresAt: Date;
+    const argument = subject.upsert.mock.calls[0][0] as {
+      update: { tokenHash: string; expiresAt: Date };
     };
+    const data = argument.update;
     expect(sentToken).toMatch(/^[a-f0-9]{64}$/);
     expect(data.tokenHash).toBe(
       createHash('sha256').update(sentToken).digest('hex'),
     );
     expect(data.tokenHash).not.toBe(sentToken);
-    expect(data.expiresAt.getTime()).toBeGreaterThanOrEqual(before + 3_599_000);
-    expect(data.expiresAt.getTime()).toBeLessThanOrEqual(before + 3_601_000);
+    expect(data.expiresAt.getTime()).toBe(before + 3_600_000);
   });
 
   it('returns a generic error when sending fails', async () => {

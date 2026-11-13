@@ -254,6 +254,21 @@ The test suite uses:
 
 Coverage thresholds are 80% for lines, functions, statements, and branches.
 
+Keep tests beside the behavior they cover as `*.spec.ts` or `*.spec.tsx`. Reuse the
+module's testing fixtures, the MSW server in `test/server.ts`, and controllable
+async streams for subscriptions. Use controlled promises or fake timers for
+pending requests and retries rather than real network connections or delays.
+
+To run only the tests you are working on, pass their paths or filename filters:
+
+```bash
+pnpm test src/modules/checkout/model/order-command.spec.ts
+pnpm test:watch src/modules/identity/model/session-atoms.spec.ts
+```
+
+The route composition suite allows 30 seconds for its initial batch of dynamic
+imports; individual tests retain Vitest's default timeout.
+
 Run the standard review checks:
 
 ```bash
@@ -267,6 +282,10 @@ Run the coverage suite when changing critical logic:
 ```bash
 pnpm test:coverage
 ```
+
+Coverage reports are written to the ignored `coverage/` directory: open
+`coverage/index.html` for the HTML report, or use `coverage/lcov.info` with coverage
+tools. Keep generated coverage reports and build output out of commits.
 
 ## Conventions
 

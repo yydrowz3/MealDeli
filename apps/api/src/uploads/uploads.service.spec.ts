@@ -1,4 +1,12 @@
 import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  vi,
+  type MockedFunction,
+} from 'vitest';
+import {
   InternalServerErrorException,
   PayloadTooLargeException,
   UnsupportedMediaTypeException,
@@ -35,13 +43,13 @@ function buildFile(
 
 describe('UploadsService', () => {
   let puts: StoreUploadInput[];
-  let put: jest.MockedFunction<UploadsStorage['put']>;
+  let put: MockedFunction<UploadsStorage['put']>;
   let storage: UploadsStorage;
   let service: UploadsService;
 
   beforeEach(() => {
     puts = [];
-    put = jest.fn((input) => {
+    put = vi.fn((input) => {
       puts.push(input);
       return Promise.resolve();
     });

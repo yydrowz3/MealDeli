@@ -25,7 +25,7 @@ The backend for MealDeli, built with NestJS, Apollo Server, Prisma, and PostgreS
 - JWT, Argon2, and class-validator
 - Resend for verification email
 - AWS SDK for S3-compatible storage
-- Jest and Supertest
+- Vitest, SWC, and Supertest
 
 ## Project structure
 
@@ -243,10 +243,12 @@ Credentialed cross-origin requests require `FRONTEND_URL` to match the browser o
 | `pnpm start:prod` | Run `dist/src/main` |
 | `pnpm lint` | Run ESLint with automatic fixes |
 | `pnpm format` | Format source and e2e tests with Prettier |
-| `pnpm test` | Run Jest unit tests |
+| `pnpm test` | Run Vitest unit tests |
 | `pnpm test:watch` | Run unit tests in watch mode |
-| `pnpm test:cov` | Generate the Jest coverage report |
-| `pnpm test:e2e` | Run Supertest end-to-end tests |
+| `pnpm test:cov` | Generate Vitest text, HTML, and lcov coverage reports |
+| `pnpm test:e2e` | Run isolated Nest HTTP/GraphQL tests with Supertest |
+| `pnpm test:debug` | Debug tests with one worker; waits for an inspector to attach |
+| `pnpm test:types` | Generate Prisma client and type-check source and tests |
 
 ## Testing and quality
 
@@ -258,6 +260,10 @@ pnpm test
 pnpm test:e2e
 pnpm build
 ```
+
+All test commands generate the Prisma client before running; generation does not connect to PostgreSQL. No `.env`, database, Resend, or S3 service is needed. The e2e suite reuses real feature modules, JWT signing/verification, guards, validation, resolvers, and controllers while replacing Prisma, email, and storage providers. It validates interface behavior rather than PostgreSQL transaction semantics. GraphQL schemas are generated in memory.
+
+Vitest uses SWC to preserve the decorator metadata required by Nest dependency injection. Tests import Vitest APIs explicitly; production builds retain the Nest compiler. Coverage reports are written to `coverage/` with no global threshold.
 
 Service, resolver, authentication, persistence, and transition changes should cover both success and failure paths. Unit tests live beside the implementation as `*.spec.ts`; end-to-end tests live in `test/`.
 
