@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api:
+    name: API
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: apps/api
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 12.20.0
+          run_install: false
+          cache: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: apps/api/pnpm-lock.yaml
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Check types and generate Prisma client
+        run: pnpm test:types
+      - name: Report lint issues (non-blocking)
+        id: lint
+        continue-on-error: true
+        run: pnpm lint:check
+      - name: Summarize lint issues
+        if: ${{ steps.lint.outcome == 'failure' }}
+        run: |
+          echo '::warning::API lint reported issues. This check is temporarily non-blocking; see the lint step for details.'
+          echo '### API lint: issues reported' >> "$GITHUB_STEP_SUMMARY"
+          echo 'API lint is temporarily non-blocking while existing issues are addressed. See the lint step for details. Type checks, tests, and builds must still pass.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Run unit tests
+        run: pnpm test --maxWorkers=2
+      - name: Run isolated HTTP and GraphQL tests
+        run: pnpm test:e2e --maxWorkers=2
+      - name: Build
+        run: pnpm build
+
+  web:
+    name: Web
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: apps/web
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 12.20.0
+          run_install: false
+          cache: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: apps/web/pnpm-lock.yaml
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Lint
+        run: pnpm lint
+      - name: Run unit tests
+        run: pnpm test --maxWorkers=2
+      - name: Build
+        env:
+          VITE_API_HTTP_URL: http://localhost:8091/graphql
+          VITE_API_WS_URL: ws://localhost:8091/graphql
+          VITE_APP_ORIGIN: http://localhost:5173
+        run: pnpm build

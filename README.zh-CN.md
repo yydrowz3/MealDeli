@@ -294,6 +294,22 @@ pnpm build
 
 如有数据库变更，请在提交前检查生成的迁移 SQL。如有 UI 变更，请在拉取请求中附上截图；如有 API 变更，请附上有代表性的 GraphQL 操作。
 
+### GitHub Actions CI
+
+[CI 工作流](.github/workflows/ci.yml) 在目标为 `main` 的拉取请求、推送到 `main`
+以及 Actions 页面手动触发时运行。API 和 Web 作为两个独立任务并行执行，使用
+Ubuntu 24.04、Node.js 24 和 pnpm 12.20.0。每个任务分别按自己的锁文件缓存依赖，
+并通过 `--frozen-lockfile` 安装。同一拉取请求或分支的新运行会取消旧运行。
+
+- API 执行类型检查、只读 lint（`pnpm lint:check`）、单元测试、隔离的
+  HTTP/GraphQL 接口测试和生产构建，自动生成 Prisma 客户端。
+- Web 执行 lint、单元测试和生产构建，构建过程包含类型检查。
+- 测试使用两个 worker，无需数据库、邮件、S3 服务、`.env` 或仓库 secrets。
+  Web 构建仅使用本地占位 URL。
+- 后端 lint 因存在历史问题，暂不阻塞 CI；失败会显示警告并写入运行摘要。
+  其他检查必须全部通过。
+- CI 不执行覆盖率检查或应用部署。
+
 ## 🔒 生产环境注意事项
 
 - 全面使用 HTTPS 和 WSS，并分别设置高熵的访问令牌密钥与刷新令牌密钥。
