@@ -17,6 +17,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "lint:check": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "test": "pnpm prisma:generate && vitest run",
     "test:watch": "pnpm prisma:generate && vitest --watch",
     "test:cov": "pnpm prisma:generate && vitest run --coverage",

@@ -294,6 +294,23 @@ pnpm build
 
 For database changes, inspect the generated migration SQL before committing it. For UI changes, include screenshots in the pull request; for API changes, include representative GraphQL operations.
 
+### GitHub Actions CI
+
+The [CI workflow](.github/workflows/ci.yml) runs for pull requests targeting `main`,
+pushes to `main`, and manual dispatches from the Actions tab. API and Web run as
+independent parallel jobs on Ubuntu 24.04 with Node.js 24 and pnpm 12.20.0. Each job
+uses its own lockfile for dependency caching and installs with `--frozen-lockfile`.
+New runs cancel older runs for the same pull request or branch.
+
+- API checks types, runs read-only lint (`pnpm lint:check`), unit tests, isolated
+  HTTP/GraphQL tests, and the production build. Prisma generation is automatic.
+- Web runs lint, unit tests, and the production build, which also checks types.
+- Tests use two workers. No database, email, S3 service, `.env`, or repository
+  secrets are required. Web builds use local placeholder URLs only.
+- API lint is temporarily non-blocking because of existing issues: failures
+  produce a warning and a run-summary entry. All other checks must pass.
+- CI does not run coverage checks or deploy the application.
+
 ## 🔒 Production notes
 
 - Use HTTPS and WSS everywhere, with separate high-entropy access and refresh secrets.
